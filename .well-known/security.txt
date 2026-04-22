@@ -1,0 +1,7 @@
+Contact: https://fnc-tool.nl/security
+Expires: 2027-04-22T00:00:00.000Z
+Preferred-Languages: nl, en
+Canonical: https://fnc-tool.nl/.well-known/security.txt
+
+# Vul Contact aan met je e-mail of vul bovenstaande security-URL
+# Geldig tot 22 april 2027 — vervolgens refreshen.

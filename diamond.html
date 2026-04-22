@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — Kennisbank / Diamond Model</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <link rel="manifest" href="manifest.json">
+  <script src="theme.js"></script>
+  <style>
+    .diamond-wrap { max-width: 800px; margin: 0 auto; }
+    .diamond-visual {
+      position: relative;
+      width: 400px; height: 400px;
+      margin: 40px auto;
+    }
+    .diamond-node {
+      position: absolute;
+      width: 140px;
+      text-align: center;
+      padding: 14px 10px;
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      font-size: 13px;
+      box-shadow: var(--shadow-md);
+      z-index: 2;
+    }
+    .diamond-node small { display: block; font-weight: 400; font-size: 10px; margin-top: 4px; color: rgba(255,255,255,0.8); }
+    .node-adversary { top: 0; left: 50%; transform: translateX(-50%); background: var(--red); color: white; }
+    .node-capability { top: 50%; right: 0; transform: translateY(-50%); background: var(--yellow); color: white; }
+    .node-victim { bottom: 0; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; }
+    .node-infrastructure { top: 50%; left: 0; transform: translateY(-50%); background: var(--purple); color: white; }
+
+    .diamond-lines {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+    }
+    .diamond-lines svg { width: 100%; height: 100%; }
+    .diamond-lines line { stroke: var(--border); stroke-width: 2; stroke-dasharray: 6 4; }
+
+    .diamond-center {
+      position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      background: var(--bg-surface);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      width: 80px; height: 80px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 600; color: var(--text-muted);
+      text-align: center;
+      z-index: 3;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .dm-section { margin-bottom: 32px; }
+    .dm-section h2 { font-size: 16px; color: var(--text-primary); margin-bottom: 12px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+    .dm-section h3 { font-size: 14px; color: var(--accent); margin: 16px 0 8px; }
+
+    .dm-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 16px 0; }
+    .dm-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .dm-card h4 { font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .dm-card h4 .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dm-card p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+    .dm-card ul { font-size: 12px; color: var(--text-secondary); line-height: 1.6; padding-left: 16px; margin-top: 6px; }
+
+    .dm-meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    .dm-meta {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+    .dm-meta strong { font-size: 11px; color: var(--text-primary); display: block; margin-bottom: 4px; }
+    .dm-meta span { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+    .dm-example {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .dm-example h4 { font-size: 12px; color: var(--accent); margin-bottom: 8px; }
+    .dm-example p, .dm-example li { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    .dm-relation {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; margin: 6px 0;
+      background: var(--bg-elevated);
+      border-radius: var(--radius);
+      font-size: 12px; color: var(--text-secondary);
+    }
+    .dm-relation .arrow { color: var(--accent); font-weight: 600; font-size: 14px; }
+
+    @media (max-width: 600px) {
+      .diamond-visual { width: 300px; height: 300px; }
+      .diamond-node { width: 110px; font-size: 11px; padding: 10px 6px; }
+      .dm-cards { grid-template-columns: 1fr; }
+      .dm-meta-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay"></div>
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="knowledge" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">Diamond Model</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">Kennisbank — Diamond Model</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Diamond Model of Intrusion Analysis</div>
+        <div class="page-subtitle">Sergio Caltagirone, Andrew Pendergast & Christopher Betz (2013)</div>
+      </div>
+      <div class="global-search">
+        <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+        <div id="globalSearchResults" class="global-search-results"></div>
+      </div>
+    </div>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <div class="content-area diamond-wrap">
+
+      <!-- OVERZICHT -->
+      <div class="dm-section" id="overzicht">
+        <h2>Wat is het Diamond Model?</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          Het Diamond Model is een analytisch framework voor het beschrijven en analyseren van cyberinbreuken.
+          Elke inbraak (event) wordt beschreven als een relatie tussen vier kerncomponenten: een <strong>tegenstander</strong>
+          zet een <strong>vermogen</strong> in via een <strong>infrastructuur</strong> tegen een <strong>slachtoffer</strong>.
+          Door deze componenten systematisch in kaart te brengen, ontstaat inzicht in wie aanvalt, hoe, waarmee en op wie.
+          Het model is complementair aan andere frameworks zoals MITRE ATT&CK (wat beschrijft de aanvaller), de Cyber Kill Chain
+          (welke fase) en STIX/TAXII (hoe deel je de informatie).
+        </p>
+
+        <!-- Visueel Diamond -->
+        <div class="diamond-visual">
+          <div class="diamond-lines">
+            <svg viewBox="0 0 400 400">
+              <line x1="200" y1="50" x2="340" y2="200" />
+              <line x1="340" y1="200" x2="200" y2="350" />
+              <line x1="200" y1="350" x2="60" y2="200" />
+              <line x1="60" y1="200" x2="200" y2="50" />
+              <line x1="200" y1="50" x2="200" y2="350" />
+              <line x1="60" y1="200" x2="340" y2="200" />
+            </svg>
+          </div>
+          <div class="diamond-node node-adversary">Adversary<small>Tegenstander</small></div>
+          <div class="diamond-node node-capability">Capability<small>Vermogen</small></div>
+          <div class="diamond-node node-victim">Victim<small>Slachtoffer</small></div>
+          <div class="diamond-node node-infrastructure">Infrastructure<small>Infrastructuur</small></div>
+          <div class="diamond-center">Intrusion<br>Event</div>
+        </div>
+      </div>
+
+      <!-- 4 COMPONENTEN -->
+      <div class="dm-section" id="componenten">
+        <h2>De 4 Kerncomponenten</h2>
+
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> Adversary (Tegenstander)</h4>
+            <p>De actor die de aanval uitvoert of aanstuurt. Dit kan een individu, groep, organisatie of natiestaat zijn.</p>
+            <ul>
+              <li><strong>Adversary Operator:</strong> de persoon die de aanval daadwerkelijk uitvoert (de hacker achter het toetsenbord)</li>
+              <li><strong>Adversary Customer:</strong> de opdrachtgever die profiteert van de aanval (bijv. een inlichtingendienst of criminele organisatie)</li>
+            </ul>
+            <p style="margin-top:8px">Vaak is de tegenstander bij het begin van de analyse onbekend. Door de andere drie componenten te analyseren kan de tegenstander worden geïdentificeerd of geattribueerd.</p>
+          </div>
+
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> Capability (Vermogen)</h4>
+            <p>De tools, technieken en procedures (TTPs) die de tegenstander gebruikt om de aanval uit te voeren.</p>
+            <ul>
+              <li><strong>Capability Capacity:</strong> het totale arsenaal van de tegenstander — alle kwetsbaarheden die deze kan uitbuiten</li>
+              <li><strong>Adversary Arsenal:</strong> de specifieke tools en malware die worden ingezet</li>
+            </ul>
+            <p style="margin-top:8px">Voorbeelden: phishing-mails, exploit kits, ransomware, zero-day exploits, custom backdoors, social engineering.</p>
+          </div>
+
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--purple)"></span> Infrastructure (Infrastructuur)</h4>
+            <p>De fysieke en logische communicatiestructuren die de tegenstander gebruikt om het vermogen in te zetten en het slachtoffer te bereiken.</p>
+            <ul>
+              <li><strong>Type 1:</strong> volledig in eigendom/beheer van de tegenstander (eigen servers, domeinen)</li>
+              <li><strong>Type 2:</strong> gecompromitteerde of gehuurde infrastructuur (botnets, bulletproof hosting, VPN-diensten)</li>
+              <li><strong>Service Providers:</strong> legitieme diensten die (onbewust) worden misbruikt (cloud, CDN, DNS)</li>
+            </ul>
+          </div>
+
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--accent)"></span> Victim (Slachtoffer)</h4>
+            <p>Het doelwit van de aanval — de organisatie, het netwerk, het systeem of de persoon die wordt aangevallen.</p>
+            <ul>
+              <li><strong>Victim Persona:</strong> de mensen en organisaties die worden getarget (wie)</li>
+              <li><strong>Victim Asset:</strong> de specifieke systemen, netwerken, accounts of data die worden aangevallen (wat)</li>
+            </ul>
+            <p style="margin-top:8px">Het begrijpen van waarom juist dit slachtoffer is gekozen, geeft inzicht in de motivatie van de tegenstander.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RELATIES -->
+      <div class="dm-section" id="relaties">
+        <h2>Relaties tussen componenten</h2>
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">
+          Elke zijde van de diamant vertegenwoordigt een relatie. Door deze relaties te analyseren ontstaan bruikbare inzichten.
+        </p>
+
+        <div class="dm-relation">
+          <span style="color:var(--red);font-weight:600">Adversary</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--purple);font-weight:600">Infrastructure</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Welke infra gebruikt de aanvaller? Eigen servers, gehuurde VPS, gecompromitteerde hosts?</span>
+        </div>
+        <div class="dm-relation">
+          <span style="color:var(--red);font-weight:600">Adversary</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--yellow);font-weight:600">Capability</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Welke tools en technieken heeft de aanvaller? Custom malware of off-the-shelf?</span>
+        </div>
+        <div class="dm-relation">
+          <span style="color:var(--yellow);font-weight:600">Capability</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--purple);font-weight:600">Infrastructure</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Hoe wordt de tool geleverd? Via welk C2-kanaal? Welke domeinen/IPs?</span>
+        </div>
+        <div class="dm-relation">
+          <span style="color:var(--purple);font-weight:600">Infrastructure</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--accent);font-weight:600">Victim</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Hoe bereikt de infra het slachtoffer? Phishing, watering hole, direct exploit?</span>
+        </div>
+        <div class="dm-relation">
+          <span style="color:var(--yellow);font-weight:600">Capability</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--accent);font-weight:600">Victim</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Welke kwetsbaarheid bij het slachtoffer wordt uitgebuit?</span>
+        </div>
+        <div class="dm-relation">
+          <span style="color:var(--red);font-weight:600">Adversary</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--accent);font-weight:600">Victim</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Waarom dit slachtoffer? Motivatie: spionage, sabotage, financieel, ideologisch?</span>
+        </div>
+      </div>
+
+      <!-- META-FEATURES -->
+      <div class="dm-section" id="meta">
+        <h2>Meta-features</h2>
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">
+          Naast de 4 kerncomponenten kent het Diamond Model 6 meta-features die context geven aan elk event.
+        </p>
+
+        <div class="dm-meta-grid">
+          <div class="dm-meta">
+            <strong>Timestamp</strong>
+            <span>Wanneer vond het event plaats? Start- en eindtijd van de activiteit. Cruciaal voor tijdlijnreconstructie.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Phase</strong>
+            <span>In welke fase van de aanval bevindt het event zich? Vergelijkbaar met de Cyber Kill Chain stappen.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Result</strong>
+            <span>Was de actie succesvol of niet? Succes, falen, onbekend. Bepaalt of de aanvaller zijn doel heeft bereikt.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Direction</strong>
+            <span>De richting van de communicatie: Adversary→Victim, Victim→Adversary, bidirectioneel, of intern.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Methodology</strong>
+            <span>Het type aanval: phishing, brute force, watering hole, supply chain, insider threat, etc.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Resources</strong>
+            <span>Wat heeft de aanvaller nodig? Software, hardware, geld, toegang, kennis, tijd. Geeft inzicht in het niveau van de tegenstander.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOEPASSING -->
+      <div class="dm-section" id="toepassing">
+        <h2>Toepassing in de praktijk</h2>
+
+        <h3>Wanneer gebruik je het Diamond Model?</h3>
+        <div class="dm-cards" style="grid-template-columns:1fr">
+          <div class="dm-card">
+            <ul>
+              <li><strong>Incident analyse:</strong> Systematisch een inbraak ontleden — wie, wat, hoe, waarom</li>
+              <li><strong>Threat intelligence:</strong> Verbanden leggen tussen incidenten, campagnes identificeren</li>
+              <li><strong>Attributie:</strong> Door meerdere events te correleren kun je de tegenstander identificeren</li>
+              <li><strong>Pivoting:</strong> Vanuit één bekende component (bijv. een IP-adres) de andere componenten achterhalen</li>
+              <li><strong>Communicatie:</strong> Uniforme taal voor het rapporteren van dreigingen aan management en partners</li>
+              <li><strong>Planning:</strong> Verdedigingsmaatregelen richten op de juiste component (blokkeer de infra, detecteer de capability, bescherm de victim)</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Relatie met andere frameworks</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4>Diamond Model + MITRE ATT&CK</h4>
+            <p>ATT&CK beschrijft de <strong>Capability</strong> in detail: welke tactieken en technieken worden gebruikt. Het Diamond Model geeft de context: wie zet die technieken in, via welke infra, tegen wie.</p>
+          </div>
+          <div class="dm-card">
+            <h4>Diamond Model + Cyber Kill Chain</h4>
+            <p>De Kill Chain beschrijft de <strong>Phase</strong> (meta-feature): in welke stap van de aanval zitten we? Het Diamond Model vult aan met wie, wat en waarmee per fase.</p>
+          </div>
+          <div class="dm-card">
+            <h4>Diamond Model + STIX/TAXII</h4>
+            <p>STIX is het gestandaardiseerde formaat om Diamond Model-informatie te delen. TAXII is het transportprotocol. Samen maken ze threat intelligence uitwisselbaar.</p>
+          </div>
+          <div class="dm-card">
+            <h4>Diamond Model + NIST CSF</h4>
+            <p>NIST CSF structureert je <strong>verdediging</strong>. Het Diamond Model structureert je begrip van de <strong>dreiging</strong>. Samen: weet waartegen je je verdedigt en hoe je dat organiseert.</p>
+          </div>
+        </div>
+
+        <h3>Praktijkvoorbeelden</h3>
+
+        <div class="dm-example">
+          <h4>Voorbeeld 1 — Spear phishing op een overheidsorganisatie</h4>
+          <ul>
+            <li><strong>Adversary:</strong> Vermoedelijk statelijke actor (APT-groep)</li>
+            <li><strong>Capability:</strong> Spear phishing e-mail met macro-document, custom backdoor</li>
+            <li><strong>Infrastructure:</strong> Gecompromitteerde webserver als C2, bulletproof hosting voor payload delivery</li>
+            <li><strong>Victim:</strong> Beleidsmedewerker met toegang tot vertrouwelijke documenten</li>
+          </ul>
+          <p style="margin-top:8px"><strong>Pivot:</strong> De C2-server wordt ook gebruikt bij aanvallen op een andere organisatie → zelfde adversary, andere victim.</p>
+        </div>
+
+        <div class="dm-example">
+          <h4>Voorbeeld 2 — Ransomware bij een leverancier</h4>
+          <ul>
+            <li><strong>Adversary:</strong> Financieel gemotiveerde cybercriminelen (Ransomware-as-a-Service)</li>
+            <li><strong>Capability:</strong> Initiële toegang via gecompromitteerde VPN-credentials, laterale beweging via PsExec, LockBit ransomware</li>
+            <li><strong>Infrastructure:</strong> Tor-gebaseerde leak site, Bitcoin wallets, gehuurde VPS voor exfiltratie</li>
+            <li><strong>Victim:</strong> IT-dienstverlener die werkt voor de Rijksoverheid (ABRO-leverancier)</li>
+          </ul>
+          <p style="margin-top:8px"><strong>Impact:</strong> Via de leverancier is mogelijk toegang tot TBB-informatie gecompromitteerd → ABRO incident handling procedures van toepassing.</p>
+        </div>
+
+        <div class="dm-example">
+          <h4>Voorbeeld 3 — Supply chain aanval</h4>
+          <ul>
+            <li><strong>Adversary:</strong> Geavanceerde statelijke actor</li>
+            <li><strong>Capability:</strong> Backdoor in software-update van een vertrouwde leverancier</li>
+            <li><strong>Infrastructure:</strong> Gecompromitteerde build-server van de leverancier, legitiem update-mechanisme</li>
+            <li><strong>Victim:</strong> Alle organisaties die de software gebruiken, inclusief overheidsinstanties</li>
+          </ul>
+          <p style="margin-top:8px"><strong>Relevantie:</strong> ABRO H1 (onderaannemers/toeleveranciers) en H4 (cyber) stellen eisen aan supply chain beveiliging om dit type aanval te mitigeren.</p>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- CYBER KILL CHAIN -->
+      <!-- ============================================ -->
+      <div class="dm-section" id="killchain">
+        <h2>Cyber Kill Chain (Lockheed Martin)</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          De Cyber Kill Chain is een model ontwikkeld door Lockheed Martin in 2011 dat een cyberaanval beschrijft in
+          <strong>7 opeenvolgende fasen</strong>. Het idee: als je de keten in een vroege fase doorbreekt, voorkom je dat de aanvaller
+          zijn uiteindelijke doel bereikt. Het model is complementair aan het Diamond Model — de Kill Chain beschrijft de
+          <em>Phase</em> meta-feature: in welke stap van de aanval bevindt een event zich?
+        </p>
+
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--text-muted)"></span> 1. Reconnaissance (Verkenning)</h4>
+            <p>De aanvaller verzamelt informatie over het doelwit: e-mailadressen, organisatiestructuur, gebruikte technologieen, open poorten, publieke documenten.</p>
+            <ul>
+              <li><strong>Voorbeelden:</strong> OSINT, LinkedIn scraping, DNS enumeration, port scanning, Google dorking</li>
+              <li><strong>Detectie:</strong> Webserver logs monitoren op scanning-patronen, honeypots inzetten, social media awareness training</li>
+              <li><strong>Preventie:</strong> Minimaliseer publiek beschikbare informatie, verwijder metadata uit documenten</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--text-muted)"></span> 2. Weaponization (Bewapening)</h4>
+            <p>De aanvaller ontwikkelt of selecteert het aanvalsmiddel: malware, exploit, phishing-document. Dit combineert een exploit met een payload (bijv. een backdoor).</p>
+            <ul>
+              <li><strong>Voorbeelden:</strong> Macro-documenten maken, exploit kits configureren, custom RAT bouwen</li>
+              <li><strong>Detectie:</strong> Moeilijk — vindt plaats buiten het netwerk van het slachtoffer</li>
+              <li><strong>Preventie:</strong> Threat intelligence gebruiken om bekende tooling te identificeren</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> 3. Delivery (Aflevering)</h4>
+            <p>Het wapen wordt afgeleverd bij het slachtoffer. Dit is het eerste directe contact tussen aanvaller en doelwit.</p>
+            <ul>
+              <li><strong>Voorbeelden:</strong> Phishing e-mail met bijlage, watering hole website, USB-stick, gecompromitteerde software-update</li>
+              <li><strong>Detectie:</strong> E-mail filtering, web proxy logs, endpoint detectie, sandboxing van bijlagen</li>
+              <li><strong>Preventie:</strong> SPF/DKIM/DMARC, URL filtering, gebruikersbewustzijn, macro-beleid</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> 4. Exploitation (Uitbuiting)</h4>
+            <p>De kwetsbaarheid wordt uitgebuit om code uit te voeren op het systeem van het slachtoffer. De aanvaller krijgt initieel voet aan de grond.</p>
+            <ul>
+              <li><strong>Voorbeelden:</strong> Office macro-executie, browser exploit, OS-kwetsbaarheid, SQL injection</li>
+              <li><strong>Detectie:</strong> EDR/XDR, applicatie-whitelisting, exploit detectie, anomalie-detectie</li>
+              <li><strong>Preventie:</strong> Patching, hardening, least privilege, DEP/ASLR</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> 5. Installation (Installatie)</h4>
+            <p>De aanvaller installeert persistente toegang: backdoors, RATs, webshells of andere mechanismen om terug te kunnen keren.</p>
+            <ul>
+              <li><strong>Voorbeelden:</strong> Registry run keys, scheduled tasks, DLL hijacking, webshell plaatsen, rootkit</li>
+              <li><strong>Detectie:</strong> File integrity monitoring, registry monitoring, anomalie in scheduled tasks</li>
+              <li><strong>Preventie:</strong> Applicatie-whitelisting, file integrity monitoring, beperkte schrijfrechten</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> 6. Command &amp; Control (C2)</h4>
+            <p>Het gecompromitteerde systeem maakt verbinding met de aanvaller voor aansturing. De aanvaller kan nu commando's geven en data ontvangen.</p>
+            <ul>
+              <li><strong>Voorbeelden:</strong> HTTPS beaconing, DNS tunneling, social media C2, Cobalt Strike, steganografie</li>
+              <li><strong>Detectie:</strong> Netwerk monitoring, DNS anomalie-detectie, JA3/JA3S fingerprinting, beacon-detectie</li>
+              <li><strong>Preventie:</strong> Egress filtering, proxy-gebruik afdwingen, DNS sinkholing, netwerksegmentatie</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="dm-cards" style="grid-template-columns:1fr">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> 7. Actions on Objectives (Doelacties)</h4>
+            <p>De aanvaller voert zijn uiteindelijke doel uit: data exfiltratie, sabotage, ransomware deployment, spionage of verdere laterale beweging naar andere doelwitten.</p>
+            <ul>
+              <li><strong>Voorbeelden:</strong> Data stelen en exfiltreren, ransomware uitrollen, systemen saboteren, accounts aanmaken voor toekomstige toegang</li>
+              <li><strong>Detectie:</strong> DLP, gebruikersgedragsanalyse (UBA), grote data-transfers detecteren, privilege escalation monitoring</li>
+              <li><strong>Preventie:</strong> Dataclassificatie, encryptie, netwerksegmentatie, off-site backups</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Relatie met het Diamond Model</h3>
+        <div class="dm-relation">
+          <span style="color:var(--accent);font-weight:600">Kill Chain Phase</span>
+          <span class="arrow">=</span>
+          <span style="color:var(--purple);font-weight:600">Diamond Meta-feature "Phase"</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Elk Diamond Event kan worden geplaatst op de Kill Chain tijdlijn</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:8px">
+          De Kill Chain geeft de <em>volgorde</em> van events, het Diamond Model geeft per event de <em>details</em> (wie, wat, hoe, tegen wie).
+          Samen vormen ze een compleet beeld: je weet niet alleen wat er in elke fase gebeurt, maar ook welke tegenstander welk vermogen
+          via welke infrastructuur tegen welk slachtoffer inzet.
+        </p>
+
+        <h3>Praktijkvoorbeeld: APT-aanval op een ministerie</h3>
+        <div class="dm-example">
+          <h4>Alle 7 fasen in een campagne</h4>
+          <ul>
+            <li><strong>1. Reconnaissance:</strong> De aanvaller scant LinkedIn voor beleidsmedewerkers van het ministerie, vindt e-mailadressen via publieke documenten en identificeert de VPN-leverancier via Shodan.</li>
+            <li><strong>2. Weaponization:</strong> Er wordt een Word-document gemaakt met een macro die een custom backdoor downloadt. Het document imiteert een beleidsnota van een partner-ministerie.</li>
+            <li><strong>3. Delivery:</strong> Het document wordt per e-mail verstuurd naar 5 beleidsmedewerkers, afkomstig van een gespooft adres van het partner-ministerie.</li>
+            <li><strong>4. Exploitation:</strong> Een medewerker opent het document en schakelt macro's in. De macro misbruikt een bekende Office-kwetsbaarheid om PowerShell uit te voeren.</li>
+            <li><strong>5. Installation:</strong> De PowerShell-code downloadt een backdoor die zich registreert als Windows-service en bij elke reboot automatisch start.</li>
+            <li><strong>6. Command &amp; Control:</strong> De backdoor maakt elke 30 minuten verbinding met een gecompromitteerde WordPress-site die als C2-relay functioneert via HTTPS.</li>
+            <li><strong>7. Actions on Objectives:</strong> De aanvaller gebruikt de toegang om lateraal te bewegen naar de fileserver, vertrouwelijke beleidsdocumenten te kopiëren en via de C2-keten te exfiltreren.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- MITRE ATT&CK -->
+      <!-- ============================================ -->
+      <div class="dm-section" id="mitre">
+        <h2>MITRE ATT&CK Framework</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          MITRE ATT&CK (Adversarial Tactics, Techniques &amp; Common Knowledge) is een open kennisbank van tactieken en technieken
+          die aanvallers daadwerkelijk in de praktijk gebruiken. Het is de industriestandaard voor het classificeren van
+          <strong>wat aanvallers doen</strong> en wordt wereldwijd gebruikt door SOCs, threat intelligence teams en red teams.
+          Zie <a href="https://attack.mitre.org" target="_blank" style="color:var(--accent)">attack.mitre.org</a>.
+        </p>
+
+        <h3>Structuur</h3>
+        <div class="dm-meta-grid">
+          <div class="dm-meta">
+            <strong>Tactics (14)</strong>
+            <span>Het <em>doel</em> van de aanvaller — waarom een actie wordt uitgevoerd. Vergelijkbaar met fasen, maar niet strikt lineair.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Techniques (~200)</strong>
+            <span>Het <em>hoe</em> — de specifieke methode om een tactisch doel te bereiken. Bijv. "Phishing" onder Initial Access.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Sub-techniques (~400)</strong>
+            <span>Verfijning van een techniek. Bijv. onder Phishing: Spearphishing Attachment, Spearphishing Link, Spearphishing via Service.</span>
+          </div>
+        </div>
+
+        <h3>De 14 Tactieken</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4>1. Reconnaissance</h4>
+            <p>Informatie verzamelen over het doelwit om toekomstige operaties te plannen. Actieve en passieve verkenning.</p>
+          </div>
+          <div class="dm-card">
+            <h4>2. Resource Development</h4>
+            <p>Infrastructuur en middelen opzetten: domeinen registreren, accounts aanmaken, tools ontwikkelen, credentials verkrijgen.</p>
+          </div>
+          <div class="dm-card">
+            <h4>3. Initial Access</h4>
+            <p>Eerste voet aan de grond krijgen in het netwerk: phishing, exploits op publieke diensten, supply chain compromittering.</p>
+          </div>
+          <div class="dm-card">
+            <h4>4. Execution</h4>
+            <p>Kwaadaardige code uitvoeren: PowerShell, scripts, exploits, command-line interfaces, scheduled tasks.</p>
+          </div>
+          <div class="dm-card">
+            <h4>5. Persistence</h4>
+            <p>Toegang behouden na reboots of credential-wijzigingen: registry keys, scheduled tasks, implants, accounts aanmaken.</p>
+          </div>
+          <div class="dm-card">
+            <h4>6. Privilege Escalation</h4>
+            <p>Hogere rechten verkrijgen: exploits, token manipulatie, misbruik van misconfiguraties, DLL hijacking.</p>
+          </div>
+          <div class="dm-card">
+            <h4>7. Defense Evasion</h4>
+            <p>Detectie vermijden: obfuscatie, logbestanden wissen, security tools uitschakelen, timestomping, process injection.</p>
+          </div>
+          <div class="dm-card">
+            <h4>8. Credential Access</h4>
+            <p>Inloggegevens stelen: keylogging, credential dumping (Mimikatz), brute force, password spraying, MFA bypass.</p>
+          </div>
+          <div class="dm-card">
+            <h4>9. Discovery</h4>
+            <p>De omgeving verkennen: netwerk-scans, systeeminformatie, account-enumeratie, shares ontdekken, trust-relaties.</p>
+          </div>
+          <div class="dm-card">
+            <h4>10. Lateral Movement</h4>
+            <p>Naar andere systemen bewegen: RDP, SMB, PsExec, pass-the-hash, remote services, exploitation van interne diensten.</p>
+          </div>
+          <div class="dm-card">
+            <h4>11. Collection</h4>
+            <p>Doeldata verzamelen: screenshots, keylogging, e-mail harvesting, clipboard data, data van gedeelde schijven.</p>
+          </div>
+          <div class="dm-card">
+            <h4>12. Command and Control</h4>
+            <p>Communiceren met gecompromitteerde systemen: HTTPS, DNS tunneling, custom protocollen, proxy gebruik.</p>
+          </div>
+          <div class="dm-card">
+            <h4>13. Exfiltration</h4>
+            <p>Data naar buiten brengen: via C2-kanaal, alternatieve protocollen, cloud opslag, fysieke media, geautomatiseerd.</p>
+          </div>
+          <div class="dm-card">
+            <h4>14. Impact</h4>
+            <p>Systemen manipuleren, verstoren of vernietigen: ransomware, data destructie, defacement, denial of service.</p>
+          </div>
+        </div>
+
+        <h3>Relatie met Diamond Model en Kill Chain</h3>
+        <div class="dm-relation">
+          <span style="color:var(--yellow);font-weight:600">ATT&CK Technieken</span>
+          <span class="arrow">=</span>
+          <span style="color:var(--yellow);font-weight:600">Diamond "Capability"</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">ATT&CK detailleert WAT de aanvaller doet — de Capability in het Diamond Model</span>
+        </div>
+        <div class="dm-relation">
+          <span style="color:var(--yellow);font-weight:600">ATT&CK Tactieken</span>
+          <span class="arrow">≈</span>
+          <span style="color:var(--text-muted);font-weight:600">Kill Chain Fasen</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Tactieken zijn flexibeler dan Kill Chain — niet strikt lineair, kunnen herhalen</span>
+        </div>
+
+        <h3>Verband met JSCU Logging-eisen</h3>
+        <div class="dm-example">
+          <h4>Welke ATT&CK-technieken detecteert JSCU-logging?</h4>
+          <p style="margin-bottom:8px">De JSCU logging-eisen (zie <a href="jscu.html" style="color:var(--accent)">JSCU Logging pagina</a>) zijn specifiek ontworpen om de volgende ATT&CK-tactieken te kunnen detecteren:</p>
+          <ul>
+            <li><strong>Initial Access (T1078):</strong> Login-logging detecteert misbruik van geldige accounts</li>
+            <li><strong>Execution (T1059):</strong> Proceslogging detecteert command-line en script executie</li>
+            <li><strong>Persistence (T1053, T1543):</strong> Service- en scheduled task-logging detecteert persistentie-mechanismen</li>
+            <li><strong>Privilege Escalation (T1068):</strong> Authenticatie- en autorisatielogging detecteert ongeautoriseerde privilege-escalatie</li>
+            <li><strong>Defense Evasion (T1070):</strong> Audit-logging van logwijzigingen detecteert pogingen om sporen te wissen</li>
+            <li><strong>Credential Access (T1110):</strong> Authenticatielogging detecteert brute force en password spraying</li>
+            <li><strong>Lateral Movement (T1021):</strong> Netwerk- en authenticatielogging detecteert remote service gebruik</li>
+            <li><strong>Exfiltration (T1041):</strong> Netwerklogging detecteert ongebruikelijke uitgaande datastromen</li>
+          </ul>
+          <p style="margin-top:8px"><strong>Tip:</strong> Gebruik de ATT&CK Navigator (<a href="https://mitre-attack.github.io/attack-navigator/" target="_blank" style="color:var(--accent)">attack-navigator</a>) om visueel in kaart te brengen welke technieken jouw logging-configuratie afdekt.</p>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- SUPPLY CHAIN SECURITY -->
+      <!-- ============================================ -->
+      <div class="dm-section" id="supplychain">
+        <h2>Supply Chain Security</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          Supply chain aanvallen richten zich niet direct op het doelwit, maar op een <strong>vertrouwde leverancier, dienstverlener
+          of softwarecomponent</strong> in de keten. Omdat organisaties hun leveranciers vertrouwen, omzeilen deze aanvallen veel
+          traditionele beveiligingsmaatregelen. Voor ABRO-organisaties is dit bijzonder relevant: Hoofdstuk 1 (onderaannemers en
+          toeleveranciers) en Hoofdstuk 5 (cloud en uitbesteding) stellen specifieke eisen aan het beheersen van supply chain risico's.
+        </p>
+
+        <h3>Typen supply chain aanvallen</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> Software Supply Chain</h4>
+            <p>Aanval via gecompromitteerde software, updates, bibliotheken of development tools.</p>
+            <ul>
+              <li>Gecompromitteerde software-updates (bijv. SolarWinds Orion, 2020)</li>
+              <li>Kwaadaardige open-source pakketten (bijv. event-stream npm, 2018)</li>
+              <li>Gecompromitteerde build-pipelines (bijv. Codecov, 2021)</li>
+              <li>Trojanized development tools of IDE-plugins</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--purple)"></span> Hardware Supply Chain</h4>
+            <p>Aanval via gemanipuleerde hardware-componenten of firmware.</p>
+            <ul>
+              <li>Gemanipuleerde chips of implants op moederborden</li>
+              <li>Gecompromitteerde firmware in netwerkapparatuur</li>
+              <li>Nep-componenten met ingebouwde backdoors</li>
+              <li>Interceptie van hardware tijdens transport</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> Service Provider Supply Chain</h4>
+            <p>Aanval via een vertrouwde dienstverlener die toegang heeft tot jouw systemen of data.</p>
+            <ul>
+              <li>Gecompromitteerde MSP/MSSP (bijv. Kaseya VSA, 2021)</li>
+              <li>Cloud provider compromittering</li>
+              <li>Misbruik van vertrouwde API-koppelingen</li>
+              <li>Insider threat bij een leverancier</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--accent)"></span> Dependency Confusion</h4>
+            <p>Misbruik van hoe package managers afhankelijkheden oplossen.</p>
+            <ul>
+              <li>Publiek pakket met dezelfde naam als intern pakket</li>
+              <li>Typosquatting op populaire pakketnamen</li>
+              <li>Overname van verlaten pakketten (orphan packages)</li>
+              <li>Gecompromitteerde maintainer-accounts</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Bekende voorbeelden</h3>
+        <div class="dm-example">
+          <h4>SolarWinds Orion (december 2020)</h4>
+          <ul>
+            <li><strong>Aanvaller:</strong> APT29 / Cozy Bear (Russische SVR-gerelateerde groep)</li>
+            <li><strong>Methode:</strong> Backdoor (SUNBURST) geinjected in de build-pipeline van SolarWinds Orion software-updates</li>
+            <li><strong>Impact:</strong> ~18.000 organisaties installeerden de gecompromitteerde update, waaronder Amerikaanse overheidsinstanties (Treasury, DHS, DoE)</li>
+            <li><strong>Duur:</strong> 9+ maanden ongedetecteerd (maart-december 2020)</li>
+            <li><strong>Les:</strong> Zelfs vertrouwde, ondertekende software kan gecompromitteerd zijn als de build-pipeline niet beveiligd is</li>
+          </ul>
+        </div>
+        <div class="dm-example">
+          <h4>Kaseya VSA (juli 2021)</h4>
+          <ul>
+            <li><strong>Aanvaller:</strong> REvil ransomware-groep</li>
+            <li><strong>Methode:</strong> Zero-day kwetsbaarheid in Kaseya VSA (remote management tool voor MSPs) misbruikt om ransomware te pushen naar alle klanten van getroffen MSPs</li>
+            <li><strong>Impact:</strong> ~1.500 bedrijven getroffen via ~60 MSPs — cascade-effect door de toeleveringsketen</li>
+            <li><strong>Les:</strong> Een kwetsbaarheid in MSP-tooling vermenigvuldigt het bereik van een aanval exponentieel</li>
+          </ul>
+        </div>
+
+        <h3>ABRO-eisen voor supply chain beveiliging</h3>
+        <div class="dm-meta-grid">
+          <div class="dm-meta">
+            <strong>H1 — Onderaannemers</strong>
+            <span>Alle onderaannemers en toeleveranciers moeten voldoen aan dezelfde beveiligingseisen. Screening, contractuele afspraken, toezicht op naleving.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>H5 — Cloud &amp; Uitbesteding</strong>
+            <span>Specifieke eisen voor cloud-diensten en uitbesteding: risicoanalyse, contractuele waarborgen, exit-strategie, datalocatie, auditrecht.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>H4 — Cyber &amp; Incident</strong>
+            <span>Supply chain incidenten moeten worden meegenomen in het incident management proces. Meldplicht richting opdrachtgever bij compromittering.</span>
+          </div>
+        </div>
+
+        <h3>Best practices supply chain risicomanagement</h3>
+        <div class="dm-cards" style="grid-template-columns:1fr">
+          <div class="dm-card">
+            <ul>
+              <li><strong>Leveranciersbeoordeling:</strong> Voer security-assessments uit bij alle leveranciers met toegang tot gevoelige informatie of systemen</li>
+              <li><strong>Software Bill of Materials (SBOM):</strong> Eis een SBOM van leveranciers zodat je weet welke componenten in hun software zitten</li>
+              <li><strong>Integriteitscontrole:</strong> Verifieer checksums en digitale handtekeningen van alle software en updates</li>
+              <li><strong>Least privilege:</strong> Geef leveranciers alleen de minimaal noodzakelijke toegangsrechten</li>
+              <li><strong>Monitoring:</strong> Monitor het gedrag van systemen en diensten van leveranciers op anomalieen</li>
+              <li><strong>Contractuele afspraken:</strong> Leg beveiligingseisen, meldplicht bij incidenten en auditrecht contractueel vast</li>
+              <li><strong>Segmentatie:</strong> Isoleer systemen van leveranciers van kritieke interne systemen</li>
+              <li><strong>Incident response:</strong> Neem supply chain scenario's op in je incident response plannen en oefen deze</li>
+              <li><strong>Continue evaluatie:</strong> Herbeoordeel leveranciers periodiek — een eenmalige check volstaat niet</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- INCIDENT RESPONSE -->
+      <!-- ============================================ -->
+      <div class="dm-section" id="incidentresponse">
+        <h2>Incident Response Proces</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          Het incident response (IR) proces beschrijft hoe een organisatie reageert op beveiligingsincidenten. Het meest
+          gebruikte model is het <strong>NIST SP 800-61</strong> 4-fasenmodel. Voor ABRO-organisaties stelt Hoofdstuk 4
+          specifieke eisen aan incident management, waaronder meldplicht, escalatieprocedures en samenwerking met het NCSC.
+        </p>
+
+        <h3>NIST SP 800-61 — 4 fasen</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--accent)"></span> 1. Preparation (Voorbereiding)</h4>
+            <p>De basis leggen zodat je effectief kunt reageren op incidenten <em>voordat</em> ze plaatsvinden.</p>
+            <ul>
+              <li><strong>Activiteiten:</strong> IR-plan opstellen, team samenstellen (CSIRT), tools aanschaffen, logging inrichten, contactlijsten bijhouden</li>
+              <li><strong>Betrokkenen:</strong> CISO, IT-beheer, management, juridisch, communicatie</li>
+              <li><strong>Documentatie:</strong> IR-beleid, IR-procedures, escalatiematrix, communicatieplan, contactlijsten</li>
+              <li><strong>ABRO H4:</strong> Eist een formeel incident management proces met duidelijke rollen en verantwoordelijkheden</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> 2. Detection &amp; Analysis (Detectie &amp; Analyse)</h4>
+            <p>Het incident detecteren, de omvang en impact bepalen, en bewijsmateriaal veiligstellen.</p>
+            <ul>
+              <li><strong>Activiteiten:</strong> Alerting triageren, indicators of compromise (IoC) analyseren, scope bepalen, forensisch onderzoek starten</li>
+              <li><strong>Betrokkenen:</strong> SOC-analisten, incident responders, forensisch onderzoekers</li>
+              <li><strong>Documentatie:</strong> Incidentrapport, tijdlijn van events, IoC-lijst, forensische images</li>
+              <li><strong>ABRO H4:</strong> Logging-eisen (zie JSCU) zorgen dat detectie mogelijk is; classificatie bepaalt de meldplicht</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> 3. Containment, Eradication &amp; Recovery</h4>
+            <p>De aanval stoppen, de oorzaak verwijderen en systemen herstellen naar een betrouwbare staat.</p>
+            <ul>
+              <li><strong>Containment:</strong> Getroffen systemen isoleren, accounts blokkeren, netwerksegmenten afsluiten (korte en lange termijn)</li>
+              <li><strong>Eradication:</strong> Malware verwijderen, backdoors opschonen, kwetsbaarheden patchen, wachtwoorden resetten</li>
+              <li><strong>Recovery:</strong> Systemen herstellen vanuit schone backups, monitoring intensiveren, gefaseerd terugzetten in productie</li>
+              <li><strong>ABRO H4:</strong> Bij incidenten met TBB-informatie gelden aanvullende eisen voor containment en melding aan opdrachtgever</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--purple)"></span> 4. Post-Incident (Nazorg)</h4>
+            <p>Leren van het incident en de organisatie versterken om herhaling te voorkomen.</p>
+            <ul>
+              <li><strong>Activiteiten:</strong> Lessons learned sessie, IR-rapport afronden, procedures bijwerken, verbetermaatregelen implementeren</li>
+              <li><strong>Betrokkenen:</strong> Alle betrokkenen van het incident, plus management voor goedkeuring verbeterplannen</li>
+              <li><strong>Documentatie:</strong> Definitief incidentrapport, lessons learned, verbeterplan, aangepaste procedures</li>
+              <li><strong>ABRO H4:</strong> Eist een evaluatie na elk significant incident en implementatie van verbetermaatregelen</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Escalatieniveaus</h3>
+        <div class="dm-meta-grid">
+          <div class="dm-meta">
+            <strong>Niveau 1 — Operationeel</strong>
+            <span>SOC/IT-beheer handelt af. Lage impact, bekende patronen. Bijv. malware op een werkstation, phishing zonder klik.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Niveau 2 — Tactisch</strong>
+            <span>CSIRT/IR-team wordt ingeschakeld. Midden-impact, complexere aanval. Bijv. gecompromitteerd account, laterale beweging gedetecteerd.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Niveau 3 — Strategisch</strong>
+            <span>Management en externe partijen betrokken. Hoge impact, TBB-data mogelijk gecompromitteerd. Melding aan opdrachtgever en NCSC verplicht.</span>
+          </div>
+        </div>
+
+        <h3>Communicatieplan template</h3>
+        <div class="dm-example">
+          <h4>Wie wordt wanneer geinformeerd?</h4>
+          <ul>
+            <li><strong>Intern — direct:</strong> CISO, IT-manager, SOC-teamleider</li>
+            <li><strong>Intern — binnen 1 uur:</strong> Directie/bestuur (bij niveau 2+), juridische afdeling, communicatie-afdeling</li>
+            <li><strong>Extern — binnen 4 uur:</strong> Opdrachtgever (bij ABRO-incidenten), NCSC (bij significante incidenten)</li>
+            <li><strong>Extern — binnen 24 uur:</strong> Autoriteit Persoonsgegevens (bij datalek met persoonsgegevens), getroffen partners/leveranciers</li>
+            <li><strong>Extern — indien nodig:</strong> Politie (bij strafbare feiten), media (via communicatie-afdeling), betrokken medewerkers/klanten</li>
+          </ul>
+          <p style="margin-top:8px"><strong>Belangrijk:</strong> Communiceer via vooraf afgesproken <em>out-of-band</em> kanalen (telefoon, Signal) — de reguliere communicatiekanalen kunnen gecompromitteerd zijn.</p>
+        </div>
+
+        <h3>Lessons Learned proces</h3>
+        <div class="dm-example">
+          <h4>Na elk significant incident</h4>
+          <ul>
+            <li><strong>Tijdlijn:</strong> Binnen 2 weken na afsluiting van het incident een lessons learned sessie organiseren</li>
+            <li><strong>Deelnemers:</strong> Alle direct betrokkenen bij de respons, plus vertegenwoordigers van management en getroffen afdelingen</li>
+            <li><strong>Vragen:</strong> Wat ging goed? Wat ging fout? Wat was verrassend? Welke informatie ontbrak? Waar waren vertragingen?</li>
+            <li><strong>Output:</strong> Concrete verbeteracties met eigenaar en deadline, bijgewerkt IR-plan, gedeelde kennis met het team</li>
+            <li><strong>Cultuur:</strong> Blamefree — het doel is verbeteren, niet beschuldigen. Fouten zijn leermomenten.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- ZERO TRUST -->
+      <!-- ============================================ -->
+      <div class="dm-section" id="zerotrust">
+        <h2>Zero Trust Model</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          Zero Trust is een beveiligingsmodel gebaseerd op het principe <strong>"never trust, always verify"</strong> — vertrouw
+          geen enkel verzoek automatisch, ongeacht of het van binnen of buiten het netwerk komt. In tegenstelling tot
+          traditionele perimeterbeveiliging (de "kasteelgracht"-benadering) gaat Zero Trust ervan uit dat het netwerk al
+          gecompromitteerd kan zijn en verifieert elk verzoek alsof het van een onvertrouwd netwerk komt.
+        </p>
+
+        <h3>De 5 pijlers van Zero Trust</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--accent)"></span> 1. Identity (Identiteit)</h4>
+            <p>Verifieer altijd de identiteit van gebruikers en diensten voordat toegang wordt verleend.</p>
+            <ul>
+              <li>Multi-factor authenticatie (MFA) voor alle gebruikers</li>
+              <li>Risico-gebaseerde authenticatie (extra verificatie bij afwijkend gedrag)</li>
+              <li>Just-in-time en just-enough-access (JIT/JEA)</li>
+              <li>Continue validatie van de sessie, niet alleen bij het inloggen</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> 2. Devices (Apparaten)</h4>
+            <p>Controleer de gezondheid en compliance van apparaten voordat ze toegang krijgen.</p>
+            <ul>
+              <li>Device health checks (patch-niveau, antivirus, encryptie)</li>
+              <li>MDM/MAM voor beheerde en onbeheerde apparaten</li>
+              <li>Conditional access policies op basis van device-status</li>
+              <li>Endpoint Detection and Response (EDR) op alle endpoints</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--purple)"></span> 3. Network (Netwerk)</h4>
+            <p>Ga ervan uit dat het netwerk vijandig is — segmenteer en versleutel al het verkeer.</p>
+            <ul>
+              <li>Micro-segmentatie: elk systeem is een eigen beveiligingszone</li>
+              <li>Alle verkeer versleuteld, ook intern (TLS everywhere)</li>
+              <li>Software-defined perimeters (SDP) in plaats van VPN</li>
+              <li>Netwerk-monitoring en anomalie-detectie op alle segmenten</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> 4. Applications (Applicaties)</h4>
+            <p>Beveilig applicaties en APIs alsof ze direct aan het internet gekoppeld zijn.</p>
+            <ul>
+              <li>Applicatie-level authenticatie en autorisatie</li>
+              <li>API-beveiliging met tokens en rate limiting</li>
+              <li>Runtime application self-protection (RASP)</li>
+              <li>Secure software development lifecycle (SSDLC)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="dm-cards" style="grid-template-columns:1fr">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--green, var(--accent))"></span> 5. Data</h4>
+            <p>Bescherm data ongeacht waar het zich bevindt — in transit, at rest en in gebruik.</p>
+            <ul>
+              <li>Dataclassificatie: weet welke data gevoelig is (essentieel voor ABRO TBB-informatie)</li>
+              <li>Encryptie in rust en in transit</li>
+              <li>Data Loss Prevention (DLP) om ongeautoriseerde exfiltratie te voorkomen</li>
+              <li>Rechten-gebaseerde toegang tot data (RBAC/ABAC)</li>
+              <li>Audit logging van alle data-access</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Verschil met traditionele perimeterbeveiliging</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4>Traditioneel: "Kasteelgracht"</h4>
+            <ul>
+              <li>Vertrouw alles binnen het netwerk</li>
+              <li>Sterke firewall aan de rand</li>
+              <li>VPN = volledige netwerktoegang</li>
+              <li>Plat intern netwerk</li>
+              <li>Eenmalige authenticatie</li>
+              <li><strong>Probleem:</strong> Eenmaal binnen kan een aanvaller vrij bewegen</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4>Zero Trust: "Verifieer alles"</h4>
+            <ul>
+              <li>Vertrouw niets automatisch, intern of extern</li>
+              <li>Beveiliging op elk niveau en bij elke resource</li>
+              <li>Toegang per applicatie, niet per netwerk</li>
+              <li>Micro-segmentatie overal</li>
+              <li>Continue verificatie</li>
+              <li><strong>Voordeel:</strong> Blast radius van een compromittering is minimaal</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Relatie met ABRO</h3>
+        <div class="dm-relation">
+          <span style="color:var(--accent);font-weight:600">ABRO H4</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--purple);font-weight:600">Zero Trust principes</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Toegangscontrole, netwerksegmentatie en least privilege zijn ABRO-eisen die aansluiten bij Zero Trust</span>
+        </div>
+        <div class="dm-example">
+          <h4>ABRO-eisen die aansluiten bij Zero Trust</h4>
+          <ul>
+            <li><strong>H4 — Toegangscontrole:</strong> Need-to-know en least privilege principes, MFA-vereisten</li>
+            <li><strong>H4 — Netwerksegmentatie:</strong> Scheiding van netwerksegmenten met verschillende vertrouwensniveaus</li>
+            <li><strong>H4 — Logging &amp; Monitoring:</strong> Continue monitoring en audit trails (zie ook JSCU-eisen)</li>
+            <li><strong>H4 — Encryptie:</strong> Versleuteling van data in transit en at rest</li>
+            <li><strong>H1 — Personeel:</strong> Screening en autorisatie van medewerkers alvorens toegang (identity-pijler)</li>
+          </ul>
+        </div>
+
+        <h3>Implementatie-roadmap</h3>
+        <div class="dm-meta-grid">
+          <div class="dm-meta">
+            <strong>Crawl (Basis)</strong>
+            <span>MFA uitrollen voor alle gebruikers. Netwerk segmenteren op hoofdniveau. Inventaris van assets en data opstellen. Logging centraliseren. Conditional access voor cloud-diensten.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Walk (Gevorderd)</strong>
+            <span>Micro-segmentatie invoeren. Device compliance afdwingen. Risico-gebaseerde authenticatie. DLP-beleid implementeren. API-beveiliging standaardiseren. SIEM/SOAR integratie.</span>
+          </div>
+          <div class="dm-meta">
+            <strong>Run (Volwassen)</strong>
+            <span>Volledig geautomatiseerde policy enforcement. Continue verificatie van alle sessies. AI-gedreven anomaliedetectie. Software-defined perimeters. Volledige data-lifecycle bescherming.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- SHARED RESPONSIBILITY MODEL -->
+      <!-- ============================================ -->
+      <div class="dm-section" id="sharedresponsibility">
+        <h2>Shared Responsibility Model (Cloud)</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          Het Shared Responsibility Model beschrijft de <strong>verdeling van beveiligingsverantwoordelijkheden</strong> tussen
+          de cloud provider en de klant. Het model verschilt per type clouddienst (IaaS, PaaS, SaaS). Een veelgemaakte fout
+          is aannemen dat "de cloud provider alles beveiligt" — in werkelijkheid verschuift een deel van de verantwoordelijkheid,
+          maar verdwijnt deze nooit. ABRO Hoofdstuk 5 stelt specifieke eisen aan cloud-gebruik die hier direct op aansluiten.
+        </p>
+
+        <h3>Verantwoordelijkheidsverdeling per model</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--purple)"></span> IaaS (Infrastructure as a Service)</h4>
+            <p><strong>Voorbeelden:</strong> AWS EC2, Azure VM, Google Compute Engine</p>
+            <ul>
+              <li><strong>Cloud provider:</strong> Fysieke beveiliging, netwerk-infrastructuur, hypervisor, opslag-hardware</li>
+              <li><strong>Klant:</strong> OS, middleware, applicaties, data, identity &amp; access management, netwerkconfiguratie, firewalls, patching, encryptie</li>
+            </ul>
+            <p style="margin-top:8px"><em>De klant is verantwoordelijk voor bijna alles boven de hardware-laag.</em></p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> PaaS (Platform as a Service)</h4>
+            <p><strong>Voorbeelden:</strong> Azure App Service, AWS Elastic Beanstalk, Google App Engine</p>
+            <ul>
+              <li><strong>Cloud provider:</strong> Fysieke infra + OS, middleware, runtime, netwerk, patching van het platform</li>
+              <li><strong>Klant:</strong> Applicaties, data, identity &amp; access management, applicatie-configuratie, encryptie van data</li>
+            </ul>
+            <p style="margin-top:8px"><em>De klant hoeft zich niet druk te maken over het OS, maar is nog steeds verantwoordelijk voor applicatie en data.</em></p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--accent)"></span> SaaS (Software as a Service)</h4>
+            <p><strong>Voorbeelden:</strong> Microsoft 365, Salesforce, Google Workspace</p>
+            <ul>
+              <li><strong>Cloud provider:</strong> Alles: infra, platform, applicatie, beschikbaarheid, applicatie-beveiliging</li>
+              <li><strong>Klant:</strong> Data-classificatie, identity &amp; access management, gebruikersconfiguratie, data-delen instellingen, compliance</li>
+            </ul>
+            <p style="margin-top:8px"><em>Zelfs bij SaaS blijft de klant verantwoordelijk voor wie toegang heeft tot welke data.</em></p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> Altijd klantverantwoordelijkheid</h4>
+            <p>Ongeacht het cloud-model blijft de klant <strong>altijd</strong> verantwoordelijk voor:</p>
+            <ul>
+              <li>Data-classificatie en bescherming</li>
+              <li>Identity &amp; access management</li>
+              <li>Account- en credential-beheer</li>
+              <li>Compliance en regulatory-eisen</li>
+              <li>Bewustzijn en training van gebruikers</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Relatie met ABRO Hoofdstuk 5</h3>
+        <div class="dm-relation">
+          <span style="color:var(--accent);font-weight:600">ABRO H5</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--yellow);font-weight:600">Cloud &amp; Uitbesteding</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Specifieke eisen aan risicoanalyse, contractuele waarborgen en toezicht bij cloud-gebruik</span>
+        </div>
+        <div class="dm-example">
+          <h4>ABRO H5 cloud-eisen in de context van Shared Responsibility</h4>
+          <ul>
+            <li><strong>Risicoanalyse:</strong> Voor elke clouddienst moet worden vastgesteld welke verantwoordelijkheden bij de klant liggen — het Shared Responsibility Model is hiervoor het startpunt</li>
+            <li><strong>Contractuele afspraken:</strong> De verantwoordelijkheidsverdeling moet contractueel zijn vastgelegd, inclusief security SLAs, incident melding en audit-recht</li>
+            <li><strong>Datalocatie:</strong> TBB-informatie mag alleen worden verwerkt in goedgekeurde locaties — dit moet contractueel en technisch worden afgedwongen</li>
+            <li><strong>Exit-strategie:</strong> Een plan om data en diensten terug te halen of over te zetten naar een andere provider</li>
+            <li><strong>Toezicht:</strong> De organisatie blijft eindverantwoordelijk, ook voor de delen die de cloud provider uitvoert — toezicht is verplicht</li>
+          </ul>
+        </div>
+
+        <h3>Veelgemaakte fouten</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4>Misvatting</h4>
+            <ul>
+              <li>"De cloud provider regelt de beveiliging" — Nee, je bent altijd mede-verantwoordelijk</li>
+              <li>"Data in de cloud is automatisch encrypted" — Encryptie moet je vaak zelf configureren en sleutels beheren</li>
+              <li>"Backups zijn geregeld" — De provider biedt beschikbaarheid, maar backup-beleid is jouw verantwoordelijkheid</li>
+              <li>"MFA is standaard ingeschakeld" — Bij de meeste diensten moet je dit zelf activeren en afdwingen</li>
+            </ul>
+          </div>
+          <div class="dm-card">
+            <h4>Realiteit</h4>
+            <ul>
+              <li>Misconfiguratie van cloud-diensten is de #1 oorzaak van cloud-datalekken</li>
+              <li>De klant is verantwoordelijk voor IAM-instellingen, niet de provider</li>
+              <li>Publiek toegankelijke storage buckets (S3, Blob) zijn een klassieke fout</li>
+              <li>Shared Responsibility is geen gedeelde schuld — bij een breach draag jij de gevolgen voor jouw deel</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Praktische checklist cloud-beveiliging</h3>
+        <div class="dm-example">
+          <h4>Controleer bij elke clouddienst</h4>
+          <ul>
+            <li>&#x2610; Shared Responsibility Model van de provider gereviewed en begrepen?</li>
+            <li>&#x2610; Verantwoordelijkheidsverdeling gedocumenteerd en geaccordeerd?</li>
+            <li>&#x2610; MFA ingeschakeld voor alle beheeraccounts en gebruikers?</li>
+            <li>&#x2610; Least privilege toegepast op alle rollen en rechten?</li>
+            <li>&#x2610; Encryptie ingeschakeld voor data at rest en in transit?</li>
+            <li>&#x2610; Logging ingeschakeld en naar eigen SIEM doorgestuurd?</li>
+            <li>&#x2610; Backup-beleid geconfigureerd en getest (inclusief restore)?</li>
+            <li>&#x2610; Netwerktoegang beperkt (geen open 0.0.0.0/0 regels)?</li>
+            <li>&#x2610; Storage buckets/containers niet publiek toegankelijk?</li>
+            <li>&#x2610; Incident response procedure afgestemd met cloud provider?</li>
+            <li>&#x2610; Exit-strategie opgesteld en data-portabiliteit getest?</li>
+            <li>&#x2610; Compliance-eisen (ABRO H5) gemapt op provider-capabilities?</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

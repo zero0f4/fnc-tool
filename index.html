@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — ABRO 2026 Compliance Check voor Rijksoverheid & Politie</title>
+  <meta name="description" content="Gratis hulpmiddel om 445 ABRO 2026 eisen te mappen op leverancier-certificeringen (ISO 27001, NIST CSF, BIO, CSA CCM, ABDO). Inclusief JSCU Logging, TBB-stelsel en gap-analyse.">
+  <meta name="keywords" content="ABRO 2026, compliance, Rijksoverheid, BIO 2.0, ISO 27001, NIST CSF, ABDO, JSCU, TBB, staatsgeheim, beveiligingseisen, leveranciers">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="zero0f4">
+  <link rel="canonical" href="https://fnc-tool.nl/">
+  <meta property="og:title" content="FNC Tool — ABRO 2026 Compliance Check">
+  <meta property="og:description" content="445 ABRO-eisen mappen op leverancier-certificeringen. Offline PWA, gratis.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fnc-tool.nl/">
+  <meta property="og:locale" content="nl_NL">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="FNC Tool — ABRO 2026 Compliance Check">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay" ></div>
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="jscu" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">Framework & Norm Compliance</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <button class="nav-item active" data-view="dashboard">
+        <span class="nav-icon" data-icon="requirements"></span> Overzicht
+      </button>
+
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Hoofdstukken</div>
+
+      <button class="nav-item" data-view="requirements" data-chapter="1">
+        <span class="nav-icon ch-icon ch-1">1</span> Bestuur & Organisatie
+        <span class="nav-count" id="navCount1">63</span>
+      </button>
+      <button class="nav-item" data-view="requirements" data-chapter="2">
+        <span class="nav-icon ch-icon ch-2">2</span> Personeel
+        <span class="nav-count" id="navCount2">28</span>
+      </button>
+      <button class="nav-item" data-view="requirements" data-chapter="3">
+        <span class="nav-icon ch-icon ch-3">3</span> Fysiek
+        <span class="nav-count" id="navCount3">117</span>
+      </button>
+      <button class="nav-item" data-view="requirements" data-chapter="4">
+        <span class="nav-icon ch-icon ch-4">4</span> Cyber
+        <span class="nav-count" id="navCount4">217</span>
+      </button>
+      <button class="nav-item" data-view="requirements" data-chapter="5">
+        <span class="nav-icon ch-icon ch-5">5</span> Cloud
+        <span class="nav-count" id="navCount5">20</span>
+      </button>
+
+      <div class="nav-divider"></div>
+
+      <button class="nav-item" data-view="requirements" data-chapter="all">
+        <span class="nav-icon" data-icon="menu"></span> Alle Eisen
+        <span class="nav-count" id="navCountAll">445</span>
+      </button>
+      <button class="nav-item" data-view="gaps">
+        <span class="nav-icon" style="color:var(--red)" data-icon="gaps"></span> Gap Analyse
+      </button>
+      <button class="nav-item" data-view="reference">
+        <span class="nav-icon" data-icon="knowledge"></span> Referentie
+      </button>
+      <a class="nav-item" href="werkblad.html" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a class="nav-item" href="abdo.html" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a class="nav-item" href="jscu.html" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a class="nav-item" href="tbb.html" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a class="nav-item" href="tbb.html#toepassingen" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a class="nav-item" href="diamond.html" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a class="nav-item" href="bronnen.html" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a class="nav-item" href="handleiding.html" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+
+    <div class="sidebar-frameworks">
+      <div class="sidebar-section-title">Certificeringen leverancier</div>
+      <div class="fw-checkbox-group">
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="iso27001">
+          <span class="fw-dot" style="background:var(--fw-iso)"></span>
+          ISO 27001:2022
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="iso27002">
+          <span class="fw-dot" style="background:var(--fw-27002)"></span>
+          ISO 27002:2022
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="nist">
+          <span class="fw-dot" style="background:var(--fw-nist)"></span>
+          NIST CSF 2.0
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="bio">
+          <span class="fw-dot" style="background:var(--fw-bio)"></span>
+          BIO 2.0
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="ccm">
+          <span class="fw-dot" style="background:var(--fw-ccm)"></span>
+          CSA CCM v4
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="abdo">
+          <span class="fw-dot" style="background:var(--fw-abdo)"></span>
+          ABDO 2019
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="iso45001">
+          <span class="fw-dot" style="background:var(--fw-45001)"></span>
+          ISO 45001
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="jscu">
+          <span class="fw-dot" style="background:var(--fw-jscu)"></span>
+          JSCU Logging Essentials
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="fysiek">
+          <span class="fw-dot" style="background:var(--fw-fys)"></span>
+          EN 50131 / EN 50600
+        </label>
+        <label class="fw-checkbox-label">
+          <input type="checkbox" class="fw-check" data-fw="personeel">
+          <span class="fw-dot" style="background:var(--fw-pers)"></span>
+          Wpbr / Screening
+        </label>
+      </div>
+      <div class="sidebar-hint">
+        Selecteer de certificeringen die de leverancier heeft. De dekking wordt direct berekend.
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">ABRO 2026 Eisen</span>
+    </nav>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <!-- ======== DASHBOARD VIEW ======== -->
+    <div id="dashboard" class="view active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">FNC Tool — Framework & Norm Compliance</div>
+          <div class="page-subtitle">Algemene Beveiligingseisen voor Rijksoverheidsopdrachten 2026</div>
+        </div>
+        <div class="global-search">
+          <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+          <div id="globalSearchResults" class="global-search-results"></div>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <!-- Framework selector bovenaan -->
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow-sm)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <div>
+              <strong style="font-size:13px;color:var(--text-primary)">Welke certificeringen heeft uw organisatie?</strong>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Selecteer één of meerdere — de tool berekent direct de dekking en gaps</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" id="fwSelectAll" style="font-size:11px;padding:4px 10px">Alles</button>
+              <button class="btn" id="fwSelectNone" style="font-size:11px;padding:4px 10px">Geen</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px" id="fwQuickSelect">
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="iso27001"><span class="fw-dot" style="background:var(--fw-iso)"></span>ISO 27001:2022</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="iso27002"><span class="fw-dot" style="background:var(--fw-27002)"></span>ISO 27002:2022</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="nist"><span class="fw-dot" style="background:var(--fw-nist)"></span>NIST CSF 2.0</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="bio"><span class="fw-dot" style="background:var(--fw-bio)"></span>BIO 2.0</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="ccm"><span class="fw-dot" style="background:var(--fw-ccm)"></span>CSA CCM v4</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="abdo"><span class="fw-dot" style="background:var(--fw-abdo)"></span>ABDO 2019</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="iso45001"><span class="fw-dot" style="background:var(--fw-45001)"></span>ISO 45001</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="jscu"><span class="fw-dot" style="background:var(--fw-jscu)"></span>JSCU Logging</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="fysiek"><span class="fw-dot" style="background:var(--fw-fys)"></span>EN 50131 / 50600</label>
+            <label class="fw-checkbox-label" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer"><input type="checkbox" class="fw-check fw-check-top" data-fw="personeel"><span class="fw-dot" style="background:var(--fw-pers)"></span>Wpbr / Screening</label>
+          </div>
+        </div>
+
+        <!-- TBB Uitleg -->
+        <div class="tbb-info-bar">
+          <div class="tbb-info-title">Te Beschermen Belangen (TBB)</div>
+          <div class="tbb-info-items">
+            <div class="tbb-info-item tbb-4-bg">
+              <strong>TBB 4</strong>
+              <span>Dep. VERTROUWELIJK — Nadeel voor ministerie(s)</span>
+            </div>
+            <div class="tbb-info-item tbb-3-bg">
+              <strong>TBB 3</strong>
+              <span>Stg. CONFIDENTIEEL — Schade aan Staat/bondgenoten</span>
+            </div>
+            <div class="tbb-info-item tbb-2-bg">
+              <strong>TBB 2</strong>
+              <span>Stg. GEHEIM — Ernstige schade aan Staat/bondgenoten</span>
+            </div>
+            <div class="tbb-info-item tbb-1-bg">
+              <strong>TBB 1</strong>
+              <span>Stg. ZEER GEHEIM — Zeer ernstige schade aan Staat/bondgenoten</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="stats-grid">
+          <div class="stat-card" style="--accent-color: var(--accent)">
+            <div class="stat-value" id="statTotal">-</div>
+            <div class="stat-label">Totaal eisen</div>
+            <div class="stat-sub">ABRO 2026</div>
+          </div>
+          <div class="stat-card" style="--accent-color: var(--green)">
+            <div class="stat-value" id="statFull">-</div>
+            <div class="stat-label">Volledig gedekt</div>
+          </div>
+          <div class="stat-card" style="--accent-color: var(--yellow)">
+            <div class="stat-value" id="statPartial">-</div>
+            <div class="stat-label">Deels gedekt</div>
+          </div>
+          <div class="stat-card" style="--accent-color: var(--red)">
+            <div class="stat-value" id="statGaps">-</div>
+            <div class="stat-label">Gaps</div>
+          </div>
+          <div class="stat-card" style="--accent-color: var(--cyan)">
+            <div class="stat-value" id="statCoverage">-</div>
+            <div class="stat-label">Dekking</div>
+            <div class="stat-sub" id="statSelected">Selecteer certificeringen</div>
+          </div>
+        </div>
+
+        <!-- Chapter Cards -->
+        <div class="section-title">Hoofdstukken ABRO 2026</div>
+        <div class="chapter-cards-grid">
+
+          <div class="chapter-card" data-goto="1">
+            <div class="chapter-card-header ch-1-accent">
+              <span class="chapter-card-num">H1</span>
+              <span class="chapter-card-title">Bestuur & Organisatie</span>
+              <span class="chapter-card-count" id="chCard1">63 eisen</span>
+            </div>
+            <div class="chapter-card-body">
+              <div class="chapter-card-desc">Beveiligingsorganisatie, beveiligingsfunctionaris, zeggenschap, bedrijfsstructuur, rubricering, onderaannemers, incidenten</div>
+              <div class="chapter-card-bar-wrap">
+                <div class="chapter-card-bar" id="chBar1"></div>
+              </div>
+              <div class="chapter-card-stats" id="chStats1"></div>
+            </div>
+          </div>
+
+          <div class="chapter-card" data-goto="2">
+            <div class="chapter-card-header ch-2-accent">
+              <span class="chapter-card-num">H2</span>
+              <span class="chapter-card-title">Personeel</span>
+              <span class="chapter-card-count" id="chCard2">28 eisen</span>
+            </div>
+            <div class="chapter-card-body">
+              <div class="chapter-card-desc">VGB, VOG, veiligheidsonderzoek, geheimhoudingsverklaring, training, bewustzijn, buitenlandse reizen</div>
+              <div class="chapter-card-bar-wrap">
+                <div class="chapter-card-bar" id="chBar2"></div>
+              </div>
+              <div class="chapter-card-stats" id="chStats2"></div>
+            </div>
+          </div>
+
+          <div class="chapter-card" data-goto="3">
+            <div class="chapter-card-header ch-3-accent">
+              <span class="chapter-card-num">H3</span>
+              <span class="chapter-card-title">Fysiek</span>
+              <span class="chapter-card-count" id="chCard3">117 eisen</span>
+            </div>
+            <div class="chapter-card-body">
+              <div class="chapter-card-desc">Organisatorische, bouwkundige, elektronische en reactieve maatregelen, transport, opslag, vernietiging</div>
+              <div class="chapter-card-bar-wrap">
+                <div class="chapter-card-bar" id="chBar3"></div>
+              </div>
+              <div class="chapter-card-stats" id="chStats3"></div>
+            </div>
+          </div>
+
+          <div class="chapter-card ch-highlight" data-goto="4">
+            <div class="chapter-card-header ch-4-accent">
+              <span class="chapter-card-num">H4</span>
+              <span class="chapter-card-title">Cyber</span>
+              <span class="chapter-card-count" id="chCard4">217 eisen</span>
+            </div>
+            <div class="chapter-card-body">
+              <div class="chapter-card-desc">Informatiebeveiliging, netwerk, endpoints, cryptografie, logging, monitoring, mobiel, telewerken, incidentmanagement</div>
+              <div class="chapter-card-bar-wrap">
+                <div class="chapter-card-bar" id="chBar4"></div>
+              </div>
+              <div class="chapter-card-stats" id="chStats4"></div>
+            </div>
+          </div>
+
+          <div class="chapter-card ch-highlight" data-goto="5">
+            <div class="chapter-card-header ch-5-accent">
+              <span class="chapter-card-num">H5</span>
+              <span class="chapter-card-title">Cloud</span>
+              <span class="chapter-card-count" id="chCard5">20 eisen</span>
+            </div>
+            <div class="chapter-card-body">
+              <div class="chapter-card-desc">Cloudservices, datasoevereiniteit, leveranciersmanagement, classificatie, monitoring in cloud</div>
+              <div class="chapter-card-bar-wrap">
+                <div class="chapter-card-bar" id="chBar5"></div>
+              </div>
+              <div class="chapter-card-stats" id="chStats5"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Framework Comparison -->
+        <div class="section-title">Framework Vergelijking</div>
+        <div class="fw-compare-grid" id="fwComparison"></div>
+      </div>
+    </div>
+
+    <!-- ======== REQUIREMENTS VIEW ======== -->
+    <div id="requirements" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title" id="reqViewTitle">ABRO 2026 Eisen</div>
+          <div class="page-subtitle" id="reqViewSub">Alle eisen met framework-mapping</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" id="exportCsv"><span data-icon="export-csv" data-icon-size="14"></span> Export CSV</button>
+          <button class="btn" id="exportXlsx"><span data-icon="export-csv" data-icon-size="14"></span> Export Excel</button>
+          <button class="btn" id="exportPdfReq"><span data-icon="export-pdf" data-icon-size="14"></span> Export PDF</button>
+          <button class="btn" id="printView"><span data-icon="print" data-icon-size="14"></span> Print</button>
+          <button class="btn theme-toggle-btn in-header" onclick="toggleTheme()" title="Wissel licht/donker thema">
+            <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <select id="filterChapter" class="filter-select" style="display:none">
+          <option value="all">Alle</option>
+          <option value="1">H1</option>
+          <option value="2">H2</option>
+          <option value="3">H3</option>
+          <option value="4">H4</option>
+          <option value="5">H5</option>
+        </select>
+        <div class="filter-group">
+          <span class="filter-label">TBB</span>
+          <select id="filterTBB" class="filter-select">
+            <option value="all">Alle</option>
+            <option value="4">TBB 4 (DV)</option>
+            <option value="3">TBB 3 (Stg. C)</option>
+            <option value="2">TBB 2 (Stg. G)</option>
+            <option value="1">TBB 1 (Stg. ZG)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Dekking</span>
+          <select id="filterCoverage" class="filter-select">
+            <option value="all">Alle</option>
+            <option value="full">Volledig gedekt</option>
+            <option value="partial">Deels gedekt</option>
+            <option value="none">Gap / niet gedekt</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Framework</span>
+          <select id="filterFramework" class="filter-select">
+            <option value="all">Alle</option>
+            <option value="iso27001">ISO 27001</option>
+            <option value="iso27002">ISO 27002</option>
+            <option value="nist">NIST CSF</option>
+            <option value="bio">BIO 2.0</option>
+            <option value="ccm">CSA CCM v4</option>
+            <option value="abdo">ABDO 2019</option>
+            <option value="iso45001">ISO 45001</option>
+            <option value="jscu">JSCU Logging</option>
+            <option value="fysiek">EN 50131/50600</option>
+            <option value="personeel">Wpbr/Screening</option>
+          </select>
+        </div>
+        <div class="filter-group filter-search">
+          <span class="filter-label">Zoek</span>
+          <input type="text" id="searchBox" class="filter-input" placeholder="Zoek op eis, NATO SECRET, VGB B, ISO control...">
+        </div>
+        <div class="req-counter"><span id="reqCount">0</span> eisen</div>
+      </div>
+
+      <div class="req-table-wrap">
+        <table class="req-table">
+          <thead>
+            <tr>
+              <th style="width:90px">Nr.</th>
+              <th>Eis</th>
+              <th style="width:100px">TBB</th>
+              <th style="width:90px">Dekking</th>
+              <th style="width:160px">Frameworks</th>
+            </tr>
+          </thead>
+          <tbody id="reqTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ======== REFERENCE VIEW ======== -->
+    <div id="reference" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Framework Referentie</div>
+          <div class="page-subtitle">Kennisbank — alle controls en hun betekenis</div>
+        </div>
+      </div>
+
+      <div class="ref-controls-bar">
+        <div class="filter-group">
+          <span class="filter-label">Framework</span>
+          <select id="refFrameworkSelect" class="filter-select">
+            <option value="iso27002">ISO 27002:2022</option>
+            <option value="nist">NIST CSF 2.0</option>
+            <option value="ccm">CSA CCM v4</option>
+            <option value="bio">BIO 2.0</option>
+            <option value="iso45001">ISO 45001</option>
+            <option value="jscu">JSCU Logging Essentials</option>
+          </select>
+        </div>
+        <div class="filter-group filter-search">
+          <span class="filter-label">Zoek</span>
+          <input type="text" id="refSearchBox" class="filter-input" placeholder="Zoek in controls...">
+        </div>
+        <div class="req-counter"><span id="refCount">0</span> controls</div>
+      </div>
+
+      <div class="ref-content" id="refContent"></div>
+    </div>
+
+    <!-- ======== JSCU VIEW ======== -->
+    <div id="jscu" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">JSCU Logging Essentials</div>
+          <div class="page-subtitle">Joint Sigint Cyber Unit Nederland — Windows Event Logging Baseline</div>
+        </div>
+        <div class="page-actions">
+          <a class="btn" href="https://github.com/JSCU-NL/logging-essentials" target="_blank">GitHub <span data-icon="external" data-icon-size="14"></span></a>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="tbb-info-bar" style="margin-bottom:20px">
+          <div class="tbb-info-title">Over deze baseline</div>
+          <div style="font-size:12px; color:var(--text-secondary); line-height:1.6;">
+            De JSCU Logging Essentials biedt hands-on richtlijnen voor het configureren van Windows Event Logging
+            en het centraal verzamelen via Windows Event Forwarding (WEF/WEC). De baseline bevat <strong>194 event IDs</strong>
+            verdeeld over <strong>16 categorieën</strong> die detectie- en forensische waarde hebben met minimale ruis.
+            Complementair aan AV-, IDS- en EDR-oplossingen. Minimaal Windows 10 1709 / Server 1803.
+            Aanbevolen retentie: minimaal 6 maanden.
+          </div>
+        </div>
+
+        <div class="filters-bar" style="padding:14px 0; border:none; background:none;">
+          <div class="filter-group filter-search">
+            <span class="filter-label">Zoek</span>
+            <input type="text" id="jscuSearch" class="filter-input" placeholder="Zoek op categorie, event of beschrijving...">
+          </div>
+          <div class="req-counter"><span id="jscuCount">0</span> items</div>
+        </div>
+
+        <div id="jscuContent"></div>
+      </div>
+    </div>
+
+    <!-- ======== GAPS VIEW ======== -->
+    <div id="gaps" class="view">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Gap Analyse</div>
+          <div class="page-subtitle">ABRO-specifieke eisen zonder dekking door bestaande frameworks</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" id="exportPdfGaps"><span data-icon="export-pdf" data-icon-size="14"></span> Export PDF</button>
+          <button class="btn" id="printGaps"><span data-icon="print" data-icon-size="14"></span> Print</button>
+        </div>
+      </div>
+      <div class="gaps-content">
+        <div class="gaps-header">
+          <div class="section-title">Niet-gedekte eisen</div>
+          <div class="gap-counter"><span id="gapCount">0</span> gaps</div>
+        </div>
+        <div id="gapsList"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="xlsx.mini.min.js"></script>
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="app.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>
+// Sync top framework selector ↔ sidebar checkboxes
+window.addEventListener('load', function() {
+  // Mirror checked state between top and sidebar checkboxes
+  function mirror(e) {
+    const fw = e.target.dataset.fw;
+    document.querySelectorAll('.fw-check[data-fw="' + fw + '"]').forEach(cb => {
+      if (cb !== e.target && cb.checked !== e.target.checked) {
+        cb.checked = e.target.checked;
+      }
+    });
+  }
+  document.querySelectorAll('.fw-check').forEach(cb => cb.addEventListener('click', mirror));
+
+  // Initial: sync top from sidebar state
+  const sideCheckboxes = document.querySelectorAll('aside .fw-check');
+  sideCheckboxes.forEach(cb => {
+    document.querySelectorAll('.fw-check-top[data-fw="' + cb.dataset.fw + '"]').forEach(top => {
+      top.checked = cb.checked;
+    });
+  });
+
+  // Select All / None buttons
+  const btnAll = document.getElementById('fwSelectAll');
+  const btnNone = document.getElementById('fwSelectNone');
+  if (btnAll) btnAll.addEventListener('click', () => {
+    document.querySelectorAll('.fw-check-top').forEach(cb => {
+      if (!cb.checked) { cb.click(); }
+    });
+  });
+  if (btnNone) btnNone.addEventListener('click', () => {
+    document.querySelectorAll('.fw-check-top').forEach(cb => {
+      if (cb.checked) { cb.click(); }
+    });
+  });
+});
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

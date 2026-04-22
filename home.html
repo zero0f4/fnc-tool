@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — Framework & Norm Compliance · ABRO 2026</title>
+  <meta name="description" content="Gratis hulpmiddel voor compliance-officers, CISO's en leveranciers: 445 ABRO 2026 eisen mappen op ISO 27001, NIST CSF, BIO 2.0, ABDO, CSA CCM en meer.">
+  <meta name="keywords" content="ABRO 2026, compliance, BIO, ISO 27001, NIST CSF, ABDO, JSCU, TBB, Rijksoverheid">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="zero0f4">
+  <link rel="canonical" href="https://fnc-tool.nl/home.html">
+  <meta property="og:title" content="FNC Tool — Framework & Norm Compliance">
+  <meta property="og:description" content="445 ABRO 2026 eisen mappen op leverancier-certificeringen. Gratis, offline-capable.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fnc-tool.nl/home.html">
+  <meta property="og:locale" content="nl_NL">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+  <style>
+    .home-hero {
+      text-align: center;
+      padding: 48px 36px 36px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .home-hero .hero-icon {
+      font-size: 48px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .home-hero h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .home-hero .hero-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+    .home-intro {
+      max-width: 720px;
+      margin: 32px auto;
+      padding: 0 36px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    .home-intro p { margin-bottom: 16px; }
+    .home-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 36px 48px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .home-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .home-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--accent));
+    }
+    .home-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--card-accent, var(--accent));
+      transform: translateY(-2px);
+    }
+    .home-card-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .home-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .home-card-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .home-card-arrow {
+      display: block;
+      margin-top: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--card-accent, var(--accent));
+      font-family: var(--font-mono);
+    }
+    .home-footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay" ></div>
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="jscu" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">Framework & Norm Compliance</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <div class="sidebar-hint">
+        FNC Tool — alle data draait lokaal in uw browser.
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+      <button style="margin-top:8px;padding:8px 14px;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:8px;width:100%;justify-content:center" onclick="if('serviceWorker' in navigator){caches.keys().then(k=>Promise.all(k.map(c=>caches.delete(c)))).then(()=>{navigator.serviceWorker.getRegistrations().then(r=>r.forEach(sw=>sw.unregister())).then(()=>{alert('Cache gewist. Pagina wordt herladen.');location.reload(true)})});}else{location.reload(true);}">
+        <span data-icon="download" data-icon-size="14"></span>
+        Cache &amp; vernieuwen
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+
+    <div class="home-intro" style="max-width:900px;margin:24px auto;padding:20px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)">
+      <h3 style="font-size:14px;color:var(--text-primary);margin-bottom:10px">Over FNC Tool</h3>
+      <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:14px">
+        De <strong>Algemene Beveiligingseisen voor Rijksoverheidsopdrachten (ABRO) 2026</strong> vervangt de ABDO 2019
+        en geldt voor alle leveranciers die werken met <strong>Te Beschermen Belangen (TBB)</strong> van de Rijksoverheid en politie.
+        FNC Tool helpt u inzichtelijk te maken welke ABRO-eisen op uw organisatie van toepassing zijn en in hoeverre u er al aan voldoet.
+      </p>
+
+      <h3 style="font-size:13px;color:var(--text-primary);margin:18px 0 10px">De menu-onderdelen</h3>
+      <div style="display:grid;gap:10px">
+
+        <a href="werkblad.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="manual" data-icon-size="20" style="color:var(--green);align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">ABRO Werkblad</strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Uw eigen werkomgeving. Bepaal per eis of die van toepassing is, voeg notities toe en houd de voortgang bij. Met invulhulp voor TBB en type toepassing. Ideaal als basis voor uw compliance-rapportage.</div>
+          </div>
+        </a>
+
+        <a href="index.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="requirements" data-icon-size="20" style="color:var(--accent);align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">ABRO 2026 Eisen <span style="font-size:10px;color:var(--text-muted);font-weight:400">· incl. Gap Analyse</span></strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Alle 445 eisen verdeeld over 5 hoofdstukken. Selecteer welke certificeringen uw organisatie heeft (ISO 27001, NIST, BIO, CCM, etc.) en zie direct welke eisen al gedekt zijn. Met ingebouwde <strong>gap analyse</strong>: onderscheid tussen "deels gedekt" en "gap" (ABRO-specifiek zonder equivalent). Plus framework-referentie.</div>
+          </div>
+        </a>
+
+        <a href="abdo.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="abdo" data-icon-size="20" style="color:var(--fw-abdo);align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">ABDO 2019 Vergelijking</strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Vergelijking tussen ABRO 2026 en zijn voorganger ABDO 2019. Per hoofdstuk de wijzigingen, wat nieuw is (zoals Cloud) en wat dit betekent voor leveranciers met bestaande ABDO-contracten.</div>
+          </div>
+        </a>
+
+        <a href="jscu.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="jscu" data-icon-size="20" style="color:var(--fw-jscu);align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">JSCU Logging</strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">194 Windows Event IDs als baseline voor logging en monitoring (van JSCU-NL, Apache 2.0). Gegroepeerd in 16 categorieën: account activity, process monitoring, Sysmon, Windows Defender, etc.</div>
+          </div>
+        </a>
+
+        <a href="tbb.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="tbb" data-icon-size="20" style="align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">TBB Stelsel</strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Uitleg over Te Beschermen Belangen: 4 niveaus (TBB-1 t/m TBB-4), rubriceringen (Stg.ZG t/m Dep.V), VGB-niveaus (A/B/C), NAVO/EU-equivalenten. Inclusief 4 typen toepassingen, NCSC-methode en het UVO-proces voor VGB-aanvragen.</div>
+          </div>
+        </a>
+
+        <a href="diamond.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="knowledge" data-icon-size="20" style="color:var(--purple);align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">Kennisbank</strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Achtergrondkennis: Diamond Model, Cyber Kill Chain, MITRE ATT&CK, Supply Chain Security, Incident Response, Zero Trust en Shared Responsibility Model. Compleet naslagwerk per onderwerp.</div>
+          </div>
+        </a>
+
+        <a href="bronnen.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="sources" data-icon-size="20" style="align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">Bronnen</strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Overzicht van alle gebruikte bronnen, normen en frameworks met klikbare links: wetgeving, ISO-normen, NIST, CCM, NAVO/EU-beleid, NCSC, AIVD/MIVD en meer.</div>
+          </div>
+        </a>
+
+        <a href="handleiding.html" style="display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;background:var(--bg-elevated)">
+          <span data-icon="manual" data-icon-size="20" style="align-self:start;margin-top:2px"></span>
+          <div>
+            <strong style="font-size:12px;color:var(--text-primary)">Handleiding</strong>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Gebruikershandleiding met uitleg per functie, installatie als iPad-app (PWA), filters, exports, FAQ. Lees dit als u voor het eerst met de tool werkt.</div>
+          </div>
+        </a>
+
+      </div>
+
+      <p style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:16px">
+        Er wordt geen data verstuurd. Notities worden lokaal opgeslagen op uw apparaat.
+      </p>
+    </div>
+
+    <div class="home-disclaimer">
+      <strong>Disclaimer</strong><br>
+      Deze tool is een hulpmiddel voor het inzichtelijk maken van de relatie tussen ABRO 2026-eisen en bestaande
+      certificeringen en normenkaders. De informatie is met zorg samengesteld maar is geen vervanging voor
+      professioneel advies. Framework-beschrijvingen zijn in eigen woorden opgesteld en betreffen geen
+      officiële normteksten. Voor de officiële teksten wordt verwezen naar de respectievelijke uitgevende
+      instanties (NEN, ISO, NIST, CSA). De ABRO 2026 en ABDO 2019 zijn openbare overheidsdocumenten.
+      JSCU Logging Essentials is beschikbaar onder Apache 2.0 licentie.
+      Aan de inhoud van deze tool kunnen geen rechten worden ontleend. Dit is geen formele tool van de Rijksoverheid en wordt niet onderhouden of gevalideerd door enige overheidsinstantie.
+      <br><br>
+      <strong>Privacy</strong><br>
+      Deze tool draait volledig in je browser. Ingevulde werkblad-data wordt alleen lokaal opgeslagen (localStorage) en gaat niet naar een server. Er wordt geen tracking, geen analytics en geen cookies gebruikt.
+    </div>
+
+    <div class="home-footer">
+      FNC Tool v1.2 · by zero0f4 &middot; Build 2026-04-14
+    </div>
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

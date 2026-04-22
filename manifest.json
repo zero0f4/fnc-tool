@@ -1,0 +1,10 @@
+{
+  "name": "FNC Tool",
+  "short_name": "FNC Tool",
+  "description": "Framework & Norm Compliance — ABRO 2026",
+  "start_url": "home.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#2563eb",
+  "icons": []
+}

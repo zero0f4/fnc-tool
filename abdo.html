@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — ABDO 2019 vs ABRO 2026</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+  <style>
+    .abdo-content { padding: 24px 36px 48px; max-width: 1000px; }
+    .abdo-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .abdo-section h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+    .abdo-section h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 16px 0 8px;
+    }
+    .abdo-section p, .abdo-section li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .abdo-section ul {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    .abdo-section li { margin-bottom: 4px; }
+
+    .change-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .change-card {
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-surface);
+    }
+    .change-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .change-card.new::before { background: var(--green); }
+    .change-card.changed::before { background: var(--yellow); }
+    .change-card.expanded::before { background: var(--accent); }
+    .change-card .change-type {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .change-card.new .change-type { background: var(--green-bg); color: var(--green); }
+    .change-card.changed .change-type { background: var(--yellow-bg); color: var(--yellow); }
+    .change-card.expanded .change-type { background: var(--accent-dim); color: var(--accent); }
+    .change-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .change-card p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 12px;
+    }
+    .compare-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      font-weight: 600;
+      background: var(--bg-elevated);
+    }
+    .compare-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .compare-table tr:hover { background: var(--bg-hover); }
+    .compare-table .new-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      background: var(--green-bg);
+      color: var(--green);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .compare-table .changed-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      background: var(--yellow-bg);
+      color: var(--yellow);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .compare-table .same-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .timeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 20px 0;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--border);
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+    .tl-node {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      flex: 1;
+    }
+    .tl-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin: 0 auto 6px;
+      border: 3px solid var(--bg-surface);
+    }
+    .tl-dot.past { background: var(--fw-abdo); }
+    .tl-dot.transition { background: var(--yellow); }
+    .tl-dot.current { background: var(--green); }
+    .tl-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .tl-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .impact-card {
+      background: var(--accent-dim);
+      border: 1px solid rgba(37,99,235,0.15);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 12px 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .impact-card strong { color: var(--accent); }
+
+    .note-box {
+      background: var(--yellow-bg);
+      border: 1px solid rgba(217,119,6,0.2);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .note-box strong { color: var(--yellow); }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay" ></div>
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="abdo" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">ABDO 2019 vs ABRO 2026</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <div class="sidebar-hint">
+        ABRO 2026 vervangt ABDO 2019 als beveiligingsstandaard voor leveranciers van de Rijksoverheid.
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">ABDO 2019 Vergelijking</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">ABDO 2019 <span data-icon="arrow-right" data-icon-size="16"></span> ABRO 2026</div>
+        <div class="page-subtitle">Wat is er veranderd? Vergelijking en impact voor leveranciers</div>
+      </div>
+      <div class="global-search">
+        <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+        <div id="globalSearchResults" class="global-search-results"></div>
+      </div>
+      <div class="page-actions">
+        <a href="home.html" class="back-link"><span data-icon="arrow-left" data-icon-size="14"></span> Terug naar home</a>
+      </div>
+    </div>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <div class="abdo-content">
+
+      <!-- Samenvatting -->
+      <div class="abdo-section" id="samenvatting">
+        <h2>Samenvatting belangrijkste wijzigingen</h2>
+        <p>De ABRO 2026 is de opvolger van de ABDO 2019. Hieronder de zes belangrijkste veranderingen:</p>
+
+        <div class="change-summary">
+          <div class="change-card expanded">
+            <span class="change-type">Verbreed</span>
+            <h4>Van Defensie naar hele Rijksoverheid</h4>
+            <p>ABDO gold alleen voor opdrachten van het Ministerie van Defensie. ABRO geldt voor de gehele Rijksoverheid en politie.</p>
+          </div>
+
+          <div class="change-card new">
+            <span class="change-type">Nieuw</span>
+            <h4>Hoofdstuk 5: Cloud</h4>
+            <p>ABDO kende geen apart hoofdstuk voor cloud. ABRO heeft een volledig nieuw hoofdstuk met 20 eisen voor cloudcomputing.</p>
+          </div>
+
+          <div class="change-card changed">
+            <span class="change-type">Gewijzigd</span>
+            <h4>NBIV vervangt BIV/MIVD</h4>
+            <p>Het NBIV is nu het centrale aanspreekpunt voor beveiligingsvraagstukken, niet meer per dienst verdeeld.</p>
+          </div>
+
+          <div class="change-card changed">
+            <span class="change-type">Gewijzigd</span>
+            <h4>Supply chain & onderaannemers</h4>
+            <p>Strengere eisen rond de inzet van onderaannemers en ketenbeheer. Verplichte doorgifte van beveiligingseisen.</p>
+          </div>
+
+          <div class="change-card expanded">
+            <span class="change-type">Uitgebreid</span>
+            <h4>Cyber-eisen gemoderniseerd</h4>
+            <p>Hoofdstuk 4 is sterk uitgebreid met moderne eisen rond zero trust, EDR, SIEM, en threat intelligence.</p>
+          </div>
+
+          <div class="change-card new">
+            <span class="change-type">Nieuw</span>
+            <h4>Datasoevereiniteit</h4>
+            <p>Expliciete eisen over waar data mag worden opgeslagen en verwerkt, en door wie — met focus op EU-jurisdictie.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vergelijkingstabel -->
+      <div class="abdo-section" id="vergelijking">
+        <h2>Hoofdstukstructuur vergelijking</h2>
+        <p>De onderstaande tabel vergelijkt de hoofdstukindeling van ABDO 2019 met ABRO 2026.</p>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>ABDO 2019</th>
+              <th>ABRO 2026</th>
+              <th>Status</th>
+              <th>Toelichting</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>H1 — Bestuur</strong><br><span style="font-size:11px;color:var(--text-muted)">Organisatie, BVA, incidenten</span></td>
+              <td><strong>H1 — Bestuur & Organisatie</strong><br><span style="font-size:11px;color:var(--text-muted)">63 eisen</span></td>
+              <td><span class="changed-badge">UITGEBREID</span></td>
+              <td>Uitgebreid met eisen rond onderaannemers, supply chain, zeggenschap bij buitenlandse aandeelhouders</td>
+            </tr>
+            <tr>
+              <td><strong>H2 — Personeel</strong><br><span style="font-size:11px;color:var(--text-muted)">Screening, VGB, training</span></td>
+              <td><strong>H2 — Personeel</strong><br><span style="font-size:11px;color:var(--text-muted)">28 eisen</span></td>
+              <td><span class="same-badge">GROTENDEELS GELIJK</span></td>
+              <td>Kernstructuur behouden. Kleine aanpassingen in screeningseisen en bewustzijnstraining</td>
+            </tr>
+            <tr>
+              <td><strong>H3 — Fysiek</strong><br><span style="font-size:11px;color:var(--text-muted)">Bouwkundig, elektronisch, opslag</span></td>
+              <td><strong>H3 — Fysiek</strong><br><span style="font-size:11px;color:var(--text-muted)">117 eisen</span></td>
+              <td><span class="changed-badge">UITGEBREID</span></td>
+              <td>Meer gedetailleerde eisen per TBB-niveau. Nieuwe eisen rond vernietiging en transport</td>
+            </tr>
+            <tr>
+              <td><strong>H4 — Cyber</strong><br><span style="font-size:11px;color:var(--text-muted)">IT, netwerk, crypto</span></td>
+              <td><strong>H4 — Cyber</strong><br><span style="font-size:11px;color:var(--text-muted)">217 eisen</span></td>
+              <td><span class="changed-badge">STERK UITGEBREID</span></td>
+              <td>Van ~80 eisen naar 217. Nieuwe secties voor zero trust, EDR/XDR, SIEM, threat intelligence, secure development</td>
+            </tr>
+            <tr>
+              <td><em style="color:var(--text-muted)">Geen equivalent</em></td>
+              <td><strong>H5 — Cloud</strong><br><span style="font-size:11px;color:var(--text-muted)">20 eisen</span></td>
+              <td><span class="new-badge">NIEUW</span></td>
+              <td>Volledig nieuw hoofdstuk. Datasoevereiniteit, leveranciersmanagement, classificatie in cloud</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Per hoofdstuk -->
+      <div class="abdo-section" id="per-hoofdstuk">
+        <h2>Wijzigingen per hoofdstuk</h2>
+
+        <h3>H1 — Bestuur & Organisatie</h3>
+        <ul>
+          <li><strong>Nieuw:</strong> Explicite eisen rond zeggenschap en invloed van buitenlandse entiteiten op de leverancier</li>
+          <li><strong>Nieuw:</strong> Verplichte doorgifte van beveiligingseisen naar onderaannemers in de gehele keten</li>
+          <li><strong>Nieuw:</strong> Eisen rond bedrijfscontinuiteit specifiek voor gerubriceerde opdrachten</li>
+          <li><strong>Uitgebreid:</strong> Rol beveiligingsfunctionaris verduidelijkt en verzwaard</li>
+          <li><strong>Uitgebreid:</strong> Incidentmanagement met verplichte meldtermijnen</li>
+          <li><strong>Gelijk:</strong> Basisstructuur beveiligingsorganisatie</li>
+        </ul>
+
+        <h3>H2 — Personeel</h3>
+        <ul>
+          <li><strong>Gelijk:</strong> VGB-structuur en screeningsniveaus grotendeels ongewijzigd</li>
+          <li><strong>Gelijk:</strong> Geheimhoudingsverklaring en gedragscode</li>
+          <li><strong>Uitgebreid:</strong> Bewustzijnstraining nu met specifieke frequentie- en inhoudseisen</li>
+          <li><strong>Uitgebreid:</strong> Eisen rond buitenlandse reizen van gescreend personeel</li>
+          <li><strong>Nieuw:</strong> Explicite eisen voor remote werkend personeel</li>
+        </ul>
+
+        <h3>H3 — Fysieke beveiliging</h3>
+        <ul>
+          <li><strong>Uitgebreid:</strong> Meer gedetailleerde eisen per TBB-niveau (was meer generiek in ABDO)</li>
+          <li><strong>Uitgebreid:</strong> Elektronische beveiliging (IDS, CCTV) met specifiekere technische eisen</li>
+          <li><strong>Nieuw:</strong> Eisen rond vernietiging van informatiedragers per TBB-niveau</li>
+          <li><strong>Nieuw:</strong> Transport van gerubriceerd materiaal gedetailleerder beschreven</li>
+          <li><strong>Gelijk:</strong> Basisprincipes bouwkundige beveiliging en zonering</li>
+        </ul>
+
+        <h3>H4 — Cyber (grootste wijzigingen)</h3>
+        <ul>
+          <li><strong>Nieuw:</strong> Zero trust architectuurprincipes als uitgangspunt</li>
+          <li><strong>Nieuw:</strong> Eisen voor Endpoint Detection & Response (EDR/XDR)</li>
+          <li><strong>Nieuw:</strong> Verplicht Security Information & Event Management (SIEM)</li>
+          <li><strong>Nieuw:</strong> Threat intelligence als input voor beveiligingsmaatregelen</li>
+          <li><strong>Nieuw:</strong> Secure software development lifecycle (SSDLC) eisen</li>
+          <li><strong>Nieuw:</strong> Vulnerability management met specifieke patchtermijnen</li>
+          <li><strong>Uitgebreid:</strong> Cryptografie-eisen gemoderniseerd (aandacht post-quantum)</li>
+          <li><strong>Uitgebreid:</strong> Logging-eisen nu met verwijzing naar JSCU Logging Essentials</li>
+          <li><strong>Uitgebreid:</strong> Netwerksegmentatie en -monitoring veel gedetailleerder</li>
+          <li><strong>Gelijk:</strong> Basisprincipes toegangsbeheer en authenticatie</li>
+        </ul>
+
+        <h3>H5 — Cloud (volledig nieuw)</h3>
+        <ul>
+          <li><strong>Nieuw:</strong> Datasoevereiniteit — waar data mag worden opgeslagen en verwerkt</li>
+          <li><strong>Nieuw:</strong> Classificatie van cloudservices per TBB-niveau</li>
+          <li><strong>Nieuw:</strong> Leveranciersmanagement specifiek voor cloudproviders</li>
+          <li><strong>Nieuw:</strong> Eisen rond exit-strategie en data-portabiliteit</li>
+          <li><strong>Nieuw:</strong> Monitoring en logging in cloudomgevingen</li>
+          <li><strong>Nieuw:</strong> Beperkingen per TBB-niveau (TBB-1: geen cloud; TBB-2: onder voorwaarden)</li>
+        </ul>
+      </div>
+
+      <!-- Impact leveranciers -->
+      <div class="abdo-section" id="impact">
+        <h2>Praktische impact voor leveranciers</h2>
+        <p>Wat betekenen deze wijzigingen concreet voor uw organisatie?</p>
+
+        <div class="impact-card">
+          <strong>Als u al ABDO-gecertificeerd bent:</strong><br>
+          Uw bestaande maatregelen voor H1-H3 vormen een goede basis, maar u moet deze toetsen aan de nieuwe ABRO-eisen.
+          De grootste inspanning zit in H4 (Cyber) dat sterk is uitgebreid, en H5 (Cloud) dat volledig nieuw is.
+          Plan een gap-analyse met de <a href="index.html" style="color:var(--accent)">FNC Tool Eisen tool</a>.
+        </div>
+
+        <div class="impact-card">
+          <strong>Als u nieuw bent met gerubriceerde opdrachten:</strong><br>
+          Dit bepaalt welke eisen op u van toepassing zijn. Wijs direct een beveiligingsfunctionaris aan en neem contact
+          op met het NBIV voor het VGB-traject. De doorlooptijd voor veiligheidsonderzoeken is 3-6 maanden.
+        </div>
+
+        <div class="impact-card">
+          <strong>Concrete stappen:</strong><br>
+          1. Voer een gap-analyse uit tegen de ABRO 2026 eisen<br>
+          2. Prioriteer H4 (Cyber) — hier zijn de meeste nieuwe eisen<br>
+          3. Beoordeel of u cloudservices gebruikt en toets deze tegen H5<br>
+          4. Controleer uw supply chain — onderaannemers moeten ook voldoen<br>
+          5. Update uw beveiligingsplan en leg dit voor aan het NBIV/MIVD
+        </div>
+      </div>
+
+      <!-- Tijdlijn -->
+      <div class="abdo-section" id="tijdlijn">
+        <h2>Tijdlijn</h2>
+
+        <div class="timeline">
+          <div class="tl-node">
+            <div class="tl-dot past"></div>
+            <div class="tl-label">ABDO 2019</div>
+            <div class="tl-sub">Publicatie & inwerkingtreding</div>
+          </div>
+          <div class="tl-node">
+            <div class="tl-dot past"></div>
+            <div class="tl-label">2019 — 2025</div>
+            <div class="tl-sub">ABDO van kracht</div>
+          </div>
+          <div class="tl-node">
+            <div class="tl-dot transition"></div>
+            <div class="tl-label">2025 — 2026</div>
+            <div class="tl-sub">Overgangsperiode</div>
+          </div>
+          <div class="tl-node">
+            <div class="tl-dot current"></div>
+            <div class="tl-label">ABRO 2026</div>
+            <div class="tl-sub">Inwerkingtreding</div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <strong>Let op:</strong> Bestaande contracten die onder ABDO 2019 zijn afgesloten, blijven onder ABDO vallen
+          tot het contract afloopt of wordt verlengd. Bij verlenging of nieuwe contracten geldt ABRO 2026.
+          Het is aan te raden om alvast te anticiperen op de ABRO-eisen, ook als uw huidige contract nog onder ABDO valt.
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

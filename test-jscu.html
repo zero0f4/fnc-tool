@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html><head><title>JSCU Test</title></head>
+<body>
+<h1>JSCU Test</h1>
+<div id="result">Loading...</div>
+<script src="abro-data.js"></script>
+<script>
+document.getElementById('result').innerHTML =
+  'JSCU_EVENTS: ' + (typeof JSCU_EVENTS !== 'undefined' ? JSCU_EVENTS.length + ' events geladen' : 'NIET GELADEN') +
+  '<br>ABRO_REQUIREMENTS: ' + (typeof ABRO_REQUIREMENTS !== 'undefined' ? ABRO_REQUIREMENTS.length + ' eisen geladen' : 'NIET GELADEN') +
+  '<br><br><table border=1>' +
+  (typeof JSCU_EVENTS !== 'undefined' ? JSCU_EVENTS.slice(0,10).map(e =>
+    '<tr><td>' + e.event_id + '</td><td>' + e.category + '</td><td>' + e.notes + '</td></tr>'
+  ).join('') : 'geen data') +
+  '</table>';
+</script>
+<script src="easter.js"></script>
+</body></html>

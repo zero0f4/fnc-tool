@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — JSCU Logging Essentials</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+  <style>
+    .jscu-header-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+    .jscu-stat { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; text-align: center; border-top: 3px solid var(--fw-jscu); }
+    .jscu-stat strong { font-family: var(--font-mono); font-size: 22px; color: var(--fw-jscu); display: block; }
+    .jscu-stat span { font-size: 11px; color: var(--text-muted); }
+    .jscu-search { margin-bottom: 20px; display: flex; gap: 12px; align-items: center; }
+    .jscu-search input { flex: 1; max-width: 400px; padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--font-sans); font-size: 13px; background: var(--bg-surface); color: var(--text-primary); }
+    .jscu-search input:focus { outline: none; border-color: var(--fw-jscu); box-shadow: 0 0 0 2px rgba(16,185,129,0.1); }
+    .jscu-search .count { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--bg-elevated); padding: 4px 10px; border-radius: 20px; }
+    .jscu-table { width: 100%; border-collapse: collapse; }
+    .jscu-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 10px 8px; text-align: left; border-bottom: 2px solid var(--border); font-weight: 600; position: sticky; top: 0; background: var(--bg-base); z-index: 1; }
+    .jscu-table td { padding: 8px; border-bottom: 1px solid var(--border-light); font-size: 12px; vertical-align: top; }
+    .jscu-cat-row td { font-size: 12px; font-weight: 600; color: var(--fw-jscu); background: rgba(16,185,129,0.06); padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .jscu-row:nth-child(even) { background: var(--bg-elevated); }
+    .jscu-row:hover { background: var(--bg-hover); }
+    .eid { font-family: var(--font-mono); font-weight: 600; color: var(--fw-jscu); font-size: 13px; }
+    .subcat { font-weight: 600; color: var(--text-primary); }
+    .notes { color: var(--text-secondary); font-size: 11px; margin-top: 2px; }
+    .gpo { color: var(--text-muted); font-size: 10px; font-family: var(--font-mono); margin-top: 3px; word-break: break-all; }
+    .channel-badge { font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; border-radius: 3px; background: rgba(16,185,129,0.08); color: var(--fw-jscu); border: 1px solid rgba(16,185,129,0.2); }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--accent); text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay" ></div>
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="jscu" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">JSCU Logging Essentials</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <div class="sidebar-hint">
+        Bron: <a href="https://github.com/JSCU-NL/logging-essentials" target="_blank" style="color:var(--accent)">github.com/JSCU-NL/logging-essentials</a><br>
+        Licentie: Apache 2.0<br>
+        Min. OS: Windows 10 1709 / Server 1803<br>
+        Retentie: minimaal 6 maanden
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">JSCU Logging</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">JSCU Logging Essentials</div>
+        <div class="page-subtitle">Joint Sigint Cyber Unit Nederland — Windows Event Logging Baseline — 194 Event IDs</div>
+      </div>
+      <div class="global-search">
+        <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+        <div id="globalSearchResults" class="global-search-results"></div>
+      </div>
+      <div class="page-actions">
+        <a class="btn" href="https://github.com/JSCU-NL/logging-essentials" target="_blank">GitHub <span data-icon="external" data-icon-size="14"></span></a>
+      </div>
+    </div>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <div class="content-area">
+      <div class="jscu-header-bar">
+        <div class="jscu-stat"><strong id="totalEvents">194</strong><span>Event IDs</span></div>
+        <div class="jscu-stat"><strong id="totalCats">16</strong><span>Categorieën</span></div>
+        <div class="jscu-stat"><strong>Win 10+</strong><span>Minimaal OS</span></div>
+        <div class="jscu-stat"><strong>6 mnd</strong><span>Aanbevolen retentie</span></div>
+      </div>
+
+      <div class="jscu-search">
+        <input type="text" id="searchInput" placeholder="Zoek op Event ID, categorie, beschrijving, channel...">
+        <span class="count"><span id="resultCount">194</span> events</span>
+      </div>
+
+      <table class="jscu-table">
+        <thead>
+          <tr>
+            <th style="width:80px">Event ID</th>
+            <th>Beschrijving</th>
+            <th style="width:80px">Channel</th>
+            <th style="width:70px">Level</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script>
+(function() {
+  const searchInput = document.getElementById('searchInput');
+  const tableBody = document.getElementById('tableBody');
+  const resultCount = document.getElementById('resultCount');
+  const catNav = document.getElementById('catNav');
+
+  // Build category nav
+  const cats = {};
+  JSCU_EVENTS.forEach(ev => {
+    if (!cats[ev.category]) cats[ev.category] = 0;
+    cats[ev.category]++;
+  });
+
+  let catNavHtml = '';
+  Object.entries(cats).forEach(([cat, count]) => {
+    catNavHtml += '<button class="nav-item cat-btn" data-cat="' + cat + '">' +
+      '<span class="nav-icon ch-icon ch-4" style="font-size:8px;width:18px;height:18px;background:var(--fw-jscu)">' + count + '</span> ' +
+      cat + '</button>';
+  });
+  catNav.innerHTML = catNavHtml;
+
+  // Cat nav click — filter to that category
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      searchInput.value = btn.dataset.cat;
+      renderTable();
+    });
+  });
+
+  function renderTable() {
+    const search = searchInput.value.toLowerCase();
+    const filtered = JSCU_EVENTS.filter(ev => {
+      if (!search) return true;
+      return ev.event_id.toLowerCase().includes(search) ||
+        ev.category.toLowerCase().includes(search) ||
+        ev.subcategory.toLowerCase().includes(search) ||
+        ev.notes.toLowerCase().includes(search) ||
+        ev.channel.toLowerCase().includes(search) ||
+        ev.provider.toLowerCase().includes(search) ||
+        (ev.gpo && ev.gpo.toLowerCase().includes(search));
+    });
+
+    resultCount.textContent = filtered.length;
+
+    let html = '';
+    let currentCat = '';
+
+    filtered.forEach(ev => {
+      if (ev.category !== currentCat) {
+        currentCat = ev.category;
+        const catCount = filtered.filter(e => e.category === currentCat).length;
+        html += '<tr class="jscu-cat-row"><td colspan="4">' + currentCat + ' (' + catCount + ')</td></tr>';
+      }
+
+      html += '<tr class="jscu-row">' +
+        '<td><span class="eid">' + ev.event_id + '</span></td>' +
+        '<td>' +
+          '<div class="subcat">' + ev.subcategory + '</div>' +
+          '<div class="notes">' + ev.notes + '</div>' +
+          (ev.gpo ? '<div class="gpo">GPO: ' + ev.gpo + '</div>' : '') +
+          '<div class="notes" style="margin-top:4px;color:var(--text-muted)">Provider: ' + ev.provider + '</div>' +
+        '</td>' +
+        '<td><span class="channel-badge">' + ev.channel + '</span></td>' +
+        '<td style="font-size:11px;color:var(--text-secondary)">' + ev.level + '</td>' +
+      '</tr>';
+    });
+
+    if (filtered.length === 0) {
+      html = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">Geen events gevonden</td></tr>';
+    }
+
+    tableBody.innerHTML = html;
+  }
+
+  searchInput.addEventListener('input', renderTable);
+  renderTable();
+})();
+</script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

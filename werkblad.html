@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — ABRO Werkblad</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+  <style>
+    .wb-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
+    .wb-stat { background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:14px; text-align:center; border-top:3px solid var(--accent-color, var(--accent)); box-shadow:var(--shadow-sm); }
+    .wb-stat strong { font-family:var(--font-mono); font-size:22px; color:var(--accent-color, var(--accent)); display:block; }
+    .wb-stat span { font-size:11px; color:var(--text-muted); }
+
+    .wb-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .wb-table th { padding:10px 8px; text-align:left; border-bottom:2px solid var(--border); font-size:10px; text-transform:uppercase; color:var(--text-muted); position:sticky; top:0; background:var(--bg-base); z-index:1; font-weight:600; }
+    .wb-table td { padding:8px; border-bottom:1px solid var(--border-light); vertical-align:top; }
+    .wb-row { transition:background 0.15s; }
+    .wb-row:hover { background:var(--bg-hover); }
+    .wb-row.status-yes { border-left:3px solid var(--green); }
+    .wb-row.status-no { border-left:3px solid var(--text-muted); opacity:0.6; }
+    .wb-row.status-tbd { border-left:3px solid var(--yellow); }
+    .wb-row.status-none { border-left:3px solid var(--border); }
+    .wb-section-header td { font-size:12px; font-weight:600; color:var(--accent); background:var(--accent-dim); padding:8px 12px; }
+
+    .wb-status-select { padding:4px 8px; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-surface); color:var(--text-primary); font-family:var(--font-sans); font-size:11px; cursor:pointer; width:100%; min-width:120px; }
+    .wb-status-select:focus { outline:none; border-color:var(--accent); }
+
+    .wb-note-field { width:100%; min-height:32px; padding:6px 8px; border:1px solid var(--border); border-radius:var(--radius); font-family:var(--font-sans); font-size:11px; color:var(--text-primary); background:var(--bg-surface); resize:vertical; line-height:1.4; }
+    .wb-note-field:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 2px rgba(37,99,235,0.1); }
+
+    .wb-id { font-family:var(--font-mono); font-size:11px; font-weight:600; color:var(--text-primary); white-space:nowrap; }
+    .wb-desc { color:var(--text-secondary); line-height:1.5; max-width:400px; }
+    .wb-tbb { white-space:nowrap; }
+
+    .wb-progress-bar { height:8px; background:var(--bg-base); border-radius:4px; overflow:hidden; display:flex; }
+    .wb-progress-yes { background:var(--green); }
+    .wb-progress-tbd { background:var(--yellow); }
+    .wb-progress-no { background:var(--text-muted); opacity:0.4; }
+
+    .wb-toolbar { background:var(--bg-surface); border-bottom:1px solid var(--border); padding:14px 36px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .wb-info-banner { background:var(--accent-dim); border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px; margin-bottom:20px; font-size:12px; color:var(--text-secondary); line-height:1.6; }
+
+    @media (max-width:768px) {
+      .wb-table th:nth-child(3), .wb-table td:nth-child(3) { display:none; }
+      .wb-toolbar { padding:12px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn"><span data-icon="menu"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay"></div>
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="home"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">ABRO Werkblad</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <div class="sidebar-hint">
+        Werkblad voor uw organisatie. Bepaal per ABRO-eis of deze van toepassing is en voeg notities toe. Wijzigingen worden lokaal opgeslagen.
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">ABRO Werkblad</div>
+        <div class="page-subtitle">Werkblad voor uw organisatie — bepaal van toepassing zijn en voeg notities toe</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn" id="exportCsvWb"><span data-icon="export-csv"></span> Export CSV</button>
+        <button class="btn" id="exportXlsxWb"><span data-icon="export-csv"></span> Export Excel</button>
+        <div style="position:relative;display:inline-block" id="printMenuWrap">
+          <button class="btn" id="printWb"><span data-icon="print"></span> Print / PDF ▾</button>
+          <div id="printMenu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:100;min-width:240px">
+            <button class="print-opt" data-mode="current" style="display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:12px;border-bottom:1px solid var(--border-light)">Print huidige selectie</button>
+            <button class="print-opt" data-mode="notes" style="display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:12px;border-bottom:1px solid var(--border-light)">Print alleen eisen met notitie</button>
+            <button class="print-opt" data-mode="yes" style="display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:12px;border-bottom:1px solid var(--border-light)">Print alleen 'van toepassing'</button>
+            <button class="print-opt" data-mode="tbd" style="display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:12px;border-bottom:1px solid var(--border-light)">Print 'nader te bepalen'</button>
+            <button class="print-opt" data-mode="yestbd" style="display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:12px;border-bottom:1px solid var(--border-light)">Print van toepassing + nader</button>
+            <button class="print-opt" data-mode="all" style="display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:12px">Print alles (zonder filters)</button>
+          </div>
+        </div>
+        <button class="btn" id="resetWb" style="color:var(--red);border-color:var(--red)"><span data-icon="close"></span> Reset alles</button>
+      </div>
+    </div>
+
+    <div class="wb-toolbar">
+      <div class="filter-group">
+        <span class="filter-label">Hoofdstuk</span>
+        <select id="wbChapter" class="filter-select">
+          <option value="all">Alle</option>
+          <option value="1">H1: Bestuur & Organisatie</option>
+          <option value="2">H2: Personeel</option>
+          <option value="3">H3: Fysiek</option>
+          <option value="4">H4: Cyber</option>
+          <option value="5">H5: Cloud</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">TBB</span>
+        <select id="wbTBB" class="filter-select">
+          <option value="all">Alle</option>
+          <option value="4">TBB 4</option>
+          <option value="3">TBB 3</option>
+          <option value="2">TBB 2</option>
+          <option value="1">TBB 1</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Status</span>
+        <select id="wbStatus" class="filter-select">
+          <option value="all">Alle</option>
+          <option value="yes">Van toepassing</option>
+          <option value="tbd">Nader te bepalen</option>
+          <option value="no">Niet van toepassing</option>
+          <option value="none">Nog niet beoordeeld</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Extra</span>
+        <select id="wbNotes" class="filter-select">
+          <option value="all">Alle</option>
+          <option value="with">Alleen met notitie</option>
+          <option value="without">Alleen zonder notitie</option>
+        </select>
+      </div>
+      <div class="filter-group filter-search">
+        <span class="filter-label">Zoek</span>
+        <input type="text" id="wbSearch" class="filter-input" placeholder="Zoek in eisen of notities...">
+      </div>
+      <div class="req-counter"><span id="wbCount">0</span> eisen</div>
+    </div>
+
+    <div class="content-area">
+      <!-- Invulhulp -->
+      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div>
+            <strong style="font-size:13px;color:var(--text-primary)">Invulhulp — Profiel van uw organisatie</strong>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Bepaal uw TBB-niveau en type toepassing. Alleen relevante ABRO-eisen worden daarna getoond.</div>
+          </div>
+          <button class="btn" id="applyProfile" style="background:var(--accent);color:white;border-color:var(--accent)">Toepassen op werkblad</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px">Uw hoogste TBB-niveau</label>
+            <select id="profileTBB" class="filter-select" style="width:100%">
+              <option value="">— Selecteer TBB —</option>
+              <option value="4">TBB-4 — Dep. VERTROUWELIJK</option>
+              <option value="3">TBB-3 — Stg. CONFIDENTIEEL</option>
+              <option value="2">TBB-2 — Stg. GEHEIM</option>
+              <option value="1">TBB-1 — Stg. ZEER GEHEIM</option>
+            </select>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:4px">Eisen worden getoond voor dit niveau en alle lagere niveaus.</div>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px">Type toepassing</label>
+            <select id="profileType" class="filter-select" style="width:100%">
+              <option value="">— Selecteer type —</option>
+              <option value="access">Access-to-site (werk op locatie opdrachtgever)</option>
+              <option value="fysiek">Fysieke opslag (TBB bij u op locatie)</option>
+              <option value="digitaal">Digitale opslag (digitaal in uw omgeving)</option>
+              <option value="cloud">Clouddienst (publieke cloud)</option>
+            </select>
+            <div id="profileTypeHelp" style="font-size:10px;color:var(--text-muted);margin-top:4px">Bepaalt welke hoofdstukken van toepassing zijn.</div>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px">Actieve hoofdstukken</label>
+            <div id="profileChapters" style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding:6px 10px;background:var(--bg-elevated);border-radius:var(--radius);min-height:36px">
+              Selecteer TBB en type toepassing hierboven
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wb-info-banner">
+        <strong>Hoe gebruikt u dit werkblad?</strong><br>
+        Bepaal per ABRO-eis of deze <strong>van toepassing</strong> is op uw organisatie en voeg eventueel een notitie toe.
+        Gebruik de filters om bijvoorbeeld alleen eisen voor TBB-3 of alleen "nog niet beoordeelde" eisen te tonen.
+        Alle wijzigingen worden lokaal in uw browser opgeslagen. Exporteer naar CSV om te delen met collega's.
+      </div>
+
+      <!-- Voortgang -->
+      <div class="wb-stats">
+        <div class="wb-stat" style="--accent-color:var(--accent)">
+          <strong id="wbTotal">0</strong>
+          <span>Totaal eisen</span>
+        </div>
+        <div class="wb-stat" style="--accent-color:var(--green)">
+          <strong id="wbYes">0</strong>
+          <span>Van toepassing</span>
+        </div>
+        <div class="wb-stat" style="--accent-color:var(--yellow)">
+          <strong id="wbTbd">0</strong>
+          <span>Nader te bepalen</span>
+        </div>
+        <div class="wb-stat" style="--accent-color:var(--text-muted)">
+          <strong id="wbNo">0</strong>
+          <span>Niet van toepassing</span>
+        </div>
+        <div class="wb-stat" style="--accent-color:var(--cyan)">
+          <strong id="wbProgress">0%</strong>
+          <span>Beoordeeld</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Voortgangsoverzicht</div>
+        <div class="wb-progress-bar" id="wbProgressBar"></div>
+      </div>
+
+      <table class="wb-table">
+        <thead>
+          <tr>
+            <th style="width:80px">Nr.</th>
+            <th>Eis</th>
+            <th style="width:90px">TBB</th>
+            <th style="width:160px">Status</th>
+            <th style="width:300px">Notitie</th>
+          </tr>
+        </thead>
+        <tbody id="wbBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="xlsx.mini.min.js"></script>
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>
+(function() {
+  const STORAGE_KEY = 'fnc_werkblad_v1';
+
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch(e) { return {}; }
+  }
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  const filters = { chapter:'all', tbb:'all', status:'all', notes:'all', search:'' };
+
+  function getStatus(id) {
+    return (state[id] && state[id].status) || 'none';
+  }
+  function getNote(id) {
+    return (state[id] && state[id].note) || '';
+  }
+  function setStatus(id, status) {
+    if (!state[id]) state[id] = {};
+    state[id].status = status;
+    if (status === 'none' && !state[id].note) delete state[id];
+    saveState(state);
+  }
+  function setTBB(id, tbb) {
+    if (!state[id]) state[id] = {};
+    if (tbb) state[id].tbb = parseInt(tbb);
+    else delete state[id].tbb;
+    saveState(state);
+  }
+
+  window.fncEditTBB = function(id) {
+    const current = (state[id] && state[id].tbb) || '';
+    const input = prompt('TBB-niveau voor eis ' + id + ' (1, 2, 3, 4 of leeg voor standaard):', current);
+    if (input === null) return;
+    if (input === '') { setTBB(id, null); render(); return; }
+    const val = parseInt(input);
+    if (val >= 1 && val <= 4) { setTBB(id, val); render(); }
+    else alert('Ongeldige waarde. Gebruik 1, 2, 3, 4 of laat leeg.');
+  };
+
+  function setNote(id, note) {
+    if (!state[id]) state[id] = {};
+    if (note.trim()) state[id].note = note;
+    else delete state[id].note;
+    if ((!state[id].status || state[id].status === 'none') && !state[id].note) delete state[id];
+    saveState(state);
+  }
+
+  function filterReqs() {
+    return ABRO_REQUIREMENTS.filter(r => {
+      if (filters.chapter === 'profile' && Array.isArray(filters.profileChapters)) {
+        if (!filters.profileChapters.includes(r.chapter)) return false;
+      } else if (filters.chapter !== 'all' && r.chapter !== parseInt(filters.chapter)) return false;
+      // Use custom TBB if set, else original
+      const effTbb = (state[r.id] && state[r.id].tbb) ? [state[r.id].tbb] : r.tbb;
+      if (filters.tbb !== 'all' && !effTbb.includes(parseInt(filters.tbb))) return false;
+      if (filters.status !== 'all') {
+        const s = getStatus(r.id);
+        if (filters.status === '__yestbd__') {
+          if (s !== 'yes' && s !== 'tbd') return false;
+        } else if (s !== filters.status) return false;
+      }
+      if (filters.notes === 'with' && !getNote(r.id).trim()) return false;
+      if (filters.notes === 'without' && getNote(r.id).trim()) return false;
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        const note = getNote(r.id).toLowerCase();
+        if (!r.id.toLowerCase().includes(q) && !r.description.toLowerCase().includes(q) && !note.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function calcStats() {
+    const stats = { total: ABRO_REQUIREMENTS.length, yes:0, no:0, tbd:0, none:0 };
+    for (const r of ABRO_REQUIREMENTS) {
+      const s = getStatus(r.id);
+      if (s === 'yes') stats.yes++;
+      else if (s === 'no') stats.no++;
+      else if (s === 'tbd') stats.tbd++;
+      else stats.none++;
+    }
+    return stats;
+  }
+
+  function render() {
+    const stats = calcStats();
+    document.getElementById('wbTotal').textContent = stats.total;
+    document.getElementById('wbYes').textContent = stats.yes;
+    document.getElementById('wbTbd').textContent = stats.tbd;
+    document.getElementById('wbNo').textContent = stats.no;
+    const beoordeeld = stats.yes + stats.no + stats.tbd;
+    document.getElementById('wbProgress').textContent = Math.round(beoordeeld / stats.total * 100) + '%';
+
+    const bar = document.getElementById('wbProgressBar');
+    const yesPct = (stats.yes / stats.total * 100).toFixed(1);
+    const tbdPct = (stats.tbd / stats.total * 100).toFixed(1);
+    const noPct = (stats.no / stats.total * 100).toFixed(1);
+    bar.innerHTML = `<div class="wb-progress-yes" style="width:${yesPct}%"></div><div class="wb-progress-tbd" style="width:${tbdPct}%"></div><div class="wb-progress-no" style="width:${noPct}%"></div>`;
+
+    const filtered = filterReqs();
+    document.getElementById('wbCount').textContent = filtered.length;
+
+    let html = '';
+    let currentSection = '';
+    for (const req of filtered) {
+      if (req.section !== currentSection) {
+        currentSection = req.section;
+        const sectionName = (typeof ABRO_SECTIONS !== 'undefined' && ABRO_SECTIONS[currentSection]) || '';
+        html += `<tr class="wb-section-header"><td colspan="5">${currentSection} — ${sectionName}</td></tr>`;
+      }
+      const status = getStatus(req.id);
+      const note = getNote(req.id);
+      const tbbBadges = req.tbb.map(t => `<span class="tbb-badge tbb-${t}">TBB${t}</span>`).join('');
+
+      const customTBB = (state[req.id] && state[req.id].tbb) || null;
+      const displayTBB = customTBB ? `<span class="tbb-badge tbb-${customTBB}" title="Aangepast">TBB${customTBB}*</span>` : tbbBadges;
+      html += `<tr class="wb-row status-${status}" data-id="${req.id}">
+        <td><span class="wb-id">${req.id}</span></td>
+        <td class="wb-desc">${req.description}</td>
+        <td class="wb-tbb" title="Klik om TBB aan te passen" style="cursor:pointer" onclick="window.fncEditTBB && fncEditTBB('${req.id}')">${displayTBB}</td>
+        <td>
+          <select class="wb-status-select" data-id="${req.id}">
+            <option value="none" ${status==='none'?'selected':''}>— Nog niet beoordeeld —</option>
+            <option value="yes" ${status==='yes'?'selected':''}>✓ Van toepassing</option>
+            <option value="tbd" ${status==='tbd'?'selected':''}>? Nader te bepalen</option>
+            <option value="no" ${status==='no'?'selected':''}>✗ Niet van toepassing</option>
+          </select>
+        </td>
+        <td>
+          <textarea class="wb-note-field" data-id="${req.id}" placeholder="Notitie...">${note}</textarea>
+        </td>
+      </tr>`;
+    }
+    if (filtered.length === 0) html = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">Geen eisen gevonden met de huidige filters</td></tr>';
+
+    document.getElementById('wbBody').innerHTML = html;
+
+    // Bind events
+    document.querySelectorAll('.wb-status-select').forEach(sel => {
+      sel.addEventListener('change', e => {
+        setStatus(e.target.dataset.id, e.target.value);
+        const row = e.target.closest('.wb-row');
+        row.className = 'wb-row status-' + e.target.value;
+        // Update stats
+        const s = calcStats();
+        document.getElementById('wbYes').textContent = s.yes;
+        document.getElementById('wbTbd').textContent = s.tbd;
+        document.getElementById('wbNo').textContent = s.no;
+        document.getElementById('wbProgress').textContent = Math.round((s.yes+s.no+s.tbd) / s.total * 100) + '%';
+      });
+    });
+    document.querySelectorAll('.wb-note-field').forEach(ta => {
+      ta.addEventListener('input', e => setNote(e.target.dataset.id, e.target.value));
+    });
+  }
+
+  // Filter listeners
+  document.getElementById('wbChapter').addEventListener('change', e => { filters.chapter = e.target.value; render(); });
+  document.getElementById('wbTBB').addEventListener('change', e => { filters.tbb = e.target.value; render(); });
+  document.getElementById('wbStatus').addEventListener('change', e => { filters.status = e.target.value; render(); });
+  document.getElementById('wbNotes').addEventListener('change', e => { filters.notes = e.target.value; render(); });
+  document.getElementById('wbSearch').addEventListener('input', e => { filters.search = e.target.value; render(); });
+
+  // Print menu dropdown
+  const printBtn = document.getElementById('printWb');
+  const printMenu = document.getElementById('printMenu');
+  printBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    printMenu.style.display = printMenu.style.display === 'block' ? 'none' : 'block';
+  });
+  document.addEventListener('click', () => { printMenu.style.display = 'none'; });
+
+  document.querySelectorAll('.print-opt').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      printMenu.style.display = 'none';
+      const mode = btn.dataset.mode;
+
+      // Save current filters
+      const savedFilters = {...filters};
+
+      // Apply print-mode filters
+      if (mode === 'all') {
+        filters.chapter = 'all'; filters.tbb = 'all'; filters.status = 'all'; filters.notes = 'all'; filters.search = '';
+        document.getElementById('wbChapter').value = 'all';
+        document.getElementById('wbTBB').value = 'all';
+        document.getElementById('wbStatus').value = 'all';
+        document.getElementById('wbNotes').value = 'all';
+        document.getElementById('wbSearch').value = '';
+      } else if (mode === 'notes') {
+        filters.notes = 'with';
+        document.getElementById('wbNotes').value = 'with';
+      } else if (mode === 'yes') {
+        filters.status = 'yes';
+        document.getElementById('wbStatus').value = 'yes';
+      } else if (mode === 'tbd') {
+        filters.status = 'tbd';
+        document.getElementById('wbStatus').value = 'tbd';
+      } else if (mode === 'yestbd') {
+        // custom: show yes AND tbd
+        filters.status = '__yestbd__';
+      }
+      // 'current' mode: use filters as-is
+      render();
+      document.body.setAttribute('data-print-label', 'ABRO Werkblad');
+      document.body.setAttribute('data-print-date', new Date().toLocaleDateString('nl-NL'));
+      setTimeout(() => {
+        window.print();
+        // Restore filters
+        Object.assign(filters, savedFilters);
+        render();
+      }, 100);
+    });
+  });
+
+  // Export CSV
+  document.getElementById('exportCsvWb').addEventListener('click', () => {
+    const rows = [['ID','Sectie','Hoofdstuk','Eis','TBB','Status','Notitie']];
+    for (const req of filterReqs()) {
+      const status = getStatus(req.id);
+      const statusLabel = {yes:'Van toepassing', no:'Niet van toepassing', tbd:'Nader te bepalen', none:'Nog niet beoordeeld'}[status];
+      rows.push([
+        req.id, req.section, req.chapter,
+        '"'+req.description.replace(/"/g,'""')+'"',
+        req.tbb.join('/'),
+        statusLabel,
+        '"'+getNote(req.id).replace(/"/g,'""')+'"'
+      ]);
+    }
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'fnc-werkblad-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+  });
+
+  // Export Excel (xlsx)
+  document.getElementById('exportXlsxWb').addEventListener('click', () => {
+    if (typeof XLSX === 'undefined') { alert('Excel library niet geladen.'); return; }
+    const data = [['ID','Sectie','Hoofdstuk','Eis','TBB','Status','Notitie']];
+    for (const req of filterReqs()) {
+      const status = getStatus(req.id);
+      const statusLabel = {yes:'Van toepassing', no:'Niet van toepassing', tbd:'Nader te bepalen', none:'Nog niet beoordeeld'}[status];
+      data.push([req.id, req.section, req.chapter, req.description, req.tbb.join('/'), statusLabel, getNote(req.id)]);
+    }
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    // Kolom breedtes
+    ws['!cols'] = [{wch:10},{wch:10},{wch:8},{wch:60},{wch:14},{wch:22},{wch:40}];
+    XLSX.utils.book_append_sheet(wb, ws, 'ABRO Werkblad');
+    XLSX.writeFile(wb, 'fnc-werkblad-' + new Date().toISOString().slice(0,10) + '.xlsx');
+  });
+
+  // Print
+  document.getElementById('printWb').addEventListener('click', () => {
+    document.body.setAttribute('data-print-label', 'ABRO Werkblad');
+    document.body.setAttribute('data-print-date', new Date().toLocaleDateString('nl-NL'));
+    window.print();
+  });
+
+  // Reset
+  document.getElementById('resetWb').addEventListener('click', () => {
+    if (confirm('Weet u zeker dat u alle status- en notitiewijzigingen wilt verwijderen? Dit kan niet ongedaan worden gemaakt.')) {
+      state = {};
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+  });
+
+  // Invulhulp — Profielkeuze
+  const profileTypeMap = {
+    access:   { chapters:[1,2],       label:'H1 Bestuur + H2 Personeel' },
+    fysiek:   { chapters:[1,2,3],     label:'H1 + H2 + H3 Fysiek' },
+    digitaal: { chapters:[1,2,3,4],   label:'H1 + H2 + H3 + H4 Cyber' },
+    cloud:    { chapters:[1,2,4,5],   label:'H1 + H2 + H4 + H5 Cloud' }
+  };
+
+  const savedProfile = JSON.parse(localStorage.getItem('fnc_werkblad_profile') || '{}');
+  if (savedProfile.tbb) document.getElementById('profileTBB').value = savedProfile.tbb;
+  if (savedProfile.type) document.getElementById('profileType').value = savedProfile.type;
+
+  function updateProfileDisplay() {
+    const type = document.getElementById('profileType').value;
+    const el = document.getElementById('profileChapters');
+    if (!type) { el.textContent = 'Selecteer TBB en type toepassing hierboven'; return; }
+    const info = profileTypeMap[type];
+    el.innerHTML = info.chapters.map(c => `<span class="tbb-badge tbb-4" style="font-size:10px;margin-right:4px">H${c}</span>`).join('') + ' <span style="font-size:11px;color:var(--text-muted)">' + info.label + '</span>';
+  }
+  updateProfileDisplay();
+
+  document.getElementById('profileTBB').addEventListener('change', () => {
+    savedProfile.tbb = document.getElementById('profileTBB').value;
+    localStorage.setItem('fnc_werkblad_profile', JSON.stringify(savedProfile));
+  });
+  document.getElementById('profileType').addEventListener('change', () => {
+    savedProfile.type = document.getElementById('profileType').value;
+    localStorage.setItem('fnc_werkblad_profile', JSON.stringify(savedProfile));
+    updateProfileDisplay();
+  });
+
+  document.getElementById('applyProfile').addEventListener('click', () => {
+    const tbb = document.getElementById('profileTBB').value;
+    const type = document.getElementById('profileType').value;
+    if (!tbb || !type) { alert('Selecteer eerst TBB en type toepassing.'); return; }
+
+    const chapters = profileTypeMap[type].chapters;
+    // Apply filters: TBB + chapter filter (we can only set one chapter in the dropdown, but we'll filter in logic)
+    filters.tbb = tbb;
+    document.getElementById('wbTBB').value = tbb;
+    // For multi-chapter we need custom logic
+    filters.profileChapters = chapters;
+    filters.chapter = 'profile';
+    render();
+    alert('Profiel toegepast: TBB-' + tbb + ' · ' + profileTypeMap[type].label + '\nAlleen relevante eisen worden getoond.');
+  });
+
+  render();
+})();
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

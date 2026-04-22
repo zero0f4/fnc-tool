@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — Gebruikershandleiding</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay"></div>
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="manual" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">Gebruikershandleiding</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <div class="sidebar-hint">
+        Deze handleiding legt uit hoe u de FNC Tool gebruikt. Alles werkt lokaal — geen data wordt verstuurd.
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">Gebruikershandleiding</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Gebruikershandleiding</div>
+        <div class="page-subtitle">Alles wat u moet weten om de FNC Tool effectief te gebruiken</div>
+      </div>
+      <div class="global-search">
+        <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+        <div id="globalSearchResults" class="global-search-results"></div>
+      </div>
+    </div>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <div class="manual-content">
+
+      <div class="manual-toc">
+        <h3>Inhoud</h3>
+        <ol>
+          <li><a href="#welkom">Welkom</a></li>
+          <li><a href="#homepagina">De homepagina</a></li>
+          <li><a href="#abro-eisen">ABRO Eisen bekijken</a></li>
+          <li><a href="#framework-mapping">Framework mapping begrijpen</a></li>
+          <li><a href="#gap-analyse">Gap Analyse uitvoeren</a></li>
+          <li><a href="#werkblad">ABRO Werkblad</a></li>
+          <li><a href="#notities">Notities toevoegen</a></li>
+          <li><a href="#export">CSV en PDF export</a></li>
+          <li><a href="#kennisbank">Kennisbank gebruiken</a></li>
+          <li><a href="#jscu-logging">JSCU Logging lookup</a></li>
+          <li><a href="#tbb-stelsel">TBB Stelsel</a></li>
+          <li><a href="#vgb">VGB-aanvraag</a></li>
+          <li><a href="#darkmode">Dark mode</a></li>
+          <li><a href="#zoeken">Globale zoekfunctie</a></li>
+          <li><a href="#pwa">Instellen als iPad app (PWA)</a></li>
+          <li><a href="#offline">Lokaal gebruik</a></li>
+          <li><a href="#cache">Cache wissen</a></li>
+          <li><a href="#privacy">Privacy &amp; data</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </div>
+
+      <section class="manual-section" id="welkom">
+        <h2><span class="sec-num">01</span> Welkom</h2>
+        <p>
+          De <strong>FNC Tool</strong> (Framework &amp; Norm Compliance) is een hulpmiddel dat leveranciers, compliance-officers en
+          auditors helpt om de <strong>ABRO 2026</strong> — Algemene Beveiligingseisen voor Rijksoverheidsopdrachten — in
+          kaart te brengen en te koppelen aan bestaande certificeringen en normenkaders.
+        </p>
+        <h3>Voor wie is deze tool?</h3>
+        <ul>
+          <li>Leveranciers die willen weten welke ABRO-eisen voor hen gelden</li>
+          <li>Compliance-officers die de dekking van bestaande certificeringen willen beoordelen</li>
+          <li>Auditors en inkopers die een snelle mapping nodig hebben</li>
+          <li>Beveiligingsfunctionarissen die de gap-analyse willen uitvoeren</li>
+        </ul>
+        <h3>Hoe werkt het?</h3>
+        <p>
+          U selecteert in de zijbalk welke certificeringen uw organisatie heeft. De tool berekent direct welke
+          ABRO-eisen volledig gedekt zijn, welke deels, en waar de gaps zitten. U kunt filteren op hoofdstuk,
+          TBB-niveau, framework of zoekterm, en de resultaten exporteren naar CSV of PDF.
+        </p>
+        <div class="manual-callout">
+          <strong>Belangrijk:</strong> alle berekeningen en data blijven lokaal in uw browser. Er wordt niets verstuurd naar een server.
+        </div>
+      </section>
+
+      <section class="manual-section" id="homepagina">
+        <h2><span class="sec-num">02</span> De homepagina</h2>
+        <p>De homepagina (<code>home.html</code>) is het startpunt. U vindt hier:</p>
+        <ul>
+          <li><strong>Globale zoekbalk</strong> — zoek door alle eisen, events, controls en pagina's</li>
+          <li><strong>Tegels</strong> — snelle toegang tot ABRO Eisen, Typen toepassingen, ABDO Vergelijking, JSCU Logging, Gap Analyse en Kennisbank</li>
+          <li><strong>Over FNC Tool</strong> — samenvatting van wat de tool biedt</li>
+          <li><strong>Cache-knop</strong> — onderaan kunt u de cache wissen en de tool opnieuw laden</li>
+        </ul>
+        <h3>Navigeren</h3>
+        <p>
+          Gebruik de <strong>zijbalk links</strong> om tussen pagina's te wisselen. Op mobiel opent u de zijbalk
+          met de <span data-icon="menu" class="icon-inline"></span> hamburger-knop linksboven. De actieve
+          pagina is gemarkeerd met een blauwe balk.
+        </p>
+      </section>
+
+      <section class="manual-section" id="abro-eisen">
+        <h2><span class="sec-num">03</span> ABRO Eisen bekijken</h2>
+        <p>
+          De pagina <strong>ABRO 2026 Eisen</strong> (<code>index.html</code>) bevat alle 445 eisen, verdeeld over
+          5 hoofdstukken: Bestuur, Personeel, Fysiek, Cyber en Cloud.
+        </p>
+        <h3>Filters gebruiken</h3>
+        <ul>
+          <li><strong>TBB</strong> — toon alleen eisen voor een specifiek TBB-niveau (1 t/m 4)</li>
+          <li><strong>Dekking</strong> — filter op volledig gedekt, deels gedekt of niet gedekt (gap)</li>
+          <li><strong>Framework</strong> — toon alleen eisen die mappen naar een specifiek framework (bijv. ISO 27001)</li>
+          <li><strong>Zoek</strong> — zoek op trefwoord, eis-nummer of controle (bijv. <code>NATO SECRET</code>, <code>VGB B</code>, <code>A.5.1</code>)</li>
+        </ul>
+        <h3>Hoofdstukken</h3>
+        <p>
+          Klik op een hoofdstuk-kaart op het dashboard of in de zijbalk om direct naar dat hoofdstuk te springen.
+          Per hoofdstuk ziet u hoeveel eisen er zijn en hoe de dekking verdeeld is.
+        </p>
+        <h3>TBB-niveaus</h3>
+        <p>
+          Elke eis toont de relevante TBB-niveaus (1 t/m 4) als gekleurde badges. Dat helpt u snel zien welke
+          eisen gelden voor welk soort gerubriceerde informatie.
+        </p>
+        <h3>Eis-details</h3>
+        <p>
+          Klik op een rij om de details open te klappen: volledige tekst, framework-mappings, en een veld
+          om een <strong>eigen notitie</strong> toe te voegen.
+        </p>
+      </section>
+
+      <section class="manual-section" id="framework-mapping">
+        <h2><span class="sec-num">04</span> Framework mapping begrijpen</h2>
+        <p>Per eis zien we in welke mate bestaande frameworks dezelfde of vergelijkbare control dekken:</p>
+        <ul>
+          <li><span style="color:var(--green);font-weight:600">Volledig gedekt</span> — de eis is één-op-één gedekt door tenminste één geselecteerd framework</li>
+          <li><span style="color:var(--yellow);font-weight:600">Deels gedekt</span> — er is een gedeeltelijke mapping; aanvullende maatregelen nodig</li>
+          <li><span style="color:var(--red);font-weight:600">Gap</span> — geen van de geselecteerde frameworks dekt deze eis</li>
+        </ul>
+        <h3>Certificeringen selecteren</h3>
+        <p>In de zijbalk links staat een blok "Certificeringen leverancier" met checkboxes:</p>
+        <ul>
+          <li>ISO 27001:2022 / ISO 27002:2022</li>
+          <li>NIST CSF 2.0</li>
+          <li>BIO 2.0</li>
+          <li>CSA CCM v4</li>
+          <li>ABDO 2019</li>
+          <li>ISO 45001</li>
+          <li>JSCU Logging Essentials</li>
+          <li>EN 50131 / EN 50600</li>
+          <li>Wpbr / Screening</li>
+        </ul>
+        <p>Vink aan wat uw organisatie heeft. De dekkingsberekening gebeurt direct.</p>
+      </section>
+
+      <section class="manual-section" id="gap-analyse">
+        <h2><span class="sec-num">05</span> Gap Analyse uitvoeren</h2>
+        <ol class="manual-step-list">
+          <li>Open de pagina <strong>ABRO 2026 Eisen</strong> of klik op de tegel <strong>Gap Analyse</strong> op de homepagina.</li>
+          <li>Selecteer in de zijbalk de certificeringen die uw organisatie bezit (meerdere tegelijk is mogelijk).</li>
+          <li>Bekijk het <strong>dashboard</strong>: totaal aantal eisen, volledig gedekt, deels, en gaps.</li>
+          <li>Klik op het tabblad <strong>Gap Analyse</strong> om alleen de niet-gedekte eisen te zien.</li>
+          <li>Filter eventueel op TBB-niveau om alleen gaps voor uw toepassingsgebied te zien.</li>
+          <li>Exporteer de gap-lijst naar PDF of print hem direct.</li>
+        </ol>
+        <div class="manual-callout">
+          <strong>Tip:</strong> begin breed (alle eisen, meerdere frameworks) en spits toe op het relevante TBB-niveau. Zo
+          vermijdt u dat u werk doet voor eisen die niet van toepassing zijn.
+        </div>
+      </section>
+
+      <section class="manual-section" id="werkblad">
+        <h2><span class="sec-num">05a</span> ABRO Werkblad</h2>
+        <p>
+          Het <strong>ABRO Werkblad</strong> is een aparte werkomgeving om per eis aan te geven of deze van toepassing is op uw organisatie. Anders dan de ABRO Eisen pagina (die frameworks vergelijkt), focust het Werkblad op uw eigen beoordeling.
+        </p>
+        <h3>Invulhulp — Profiel</h3>
+        <ol class="manual-step-list">
+          <li>Selecteer bovenaan uw hoogste TBB-niveau (1, 2, 3 of 4).</li>
+          <li>Kies het type toepassing: access-to-site, fysieke opslag, digitale opslag of clouddienst.</li>
+          <li>De tool toont welke ABRO-hoofdstukken dan van toepassing zijn.</li>
+          <li>Klik op <strong>Toepassen op werkblad</strong> om automatisch te filteren.</li>
+        </ol>
+        <h3>Per eis beoordelen</h3>
+        <ol class="manual-step-list">
+          <li>Per eis kiest u een status: <strong>Van toepassing</strong>, <strong>Nader te bepalen</strong>, <strong>Niet van toepassing</strong>, of laat open.</li>
+          <li>Voeg een notitie toe per eis (bv. welke maatregel al genomen is, wie verantwoordelijk is).</li>
+          <li>Klik op de TBB-kolom om een aangepast TBB-niveau voor die specifieke eis in te stellen.</li>
+          <li>Voortgangsstatistieken bovenaan tonen hoeveel u al beoordeeld heeft.</li>
+        </ol>
+        <h3>Selectief printen</h3>
+        <p>Via de knop <strong>Print / PDF ▾</strong> kunt u printen op basis van uw keuze:</p>
+        <ul>
+          <li>Huidige selectie (gebruikt actieve filters)</li>
+          <li>Alleen eisen met notitie</li>
+          <li>Alleen van toepassing</li>
+          <li>Nader te bepalen</li>
+          <li>Van toepassing + nader</li>
+          <li>Alles zonder filters</li>
+        </ul>
+      </section>
+
+      <section class="manual-section" id="notities">
+        <h2><span class="sec-num">06</span> Notities toevoegen</h2>
+        <p>
+          Bij elke eis kunt u een <strong>eigen notitie</strong> plaatsen — bijvoorbeeld uw interpretatie, de implementatiestatus
+          of een verwijzing naar een intern document.
+        </p>
+        <ol class="manual-step-list">
+          <li>Ga naar de pagina ABRO 2026 Eisen.</li>
+          <li>Klik op een eis om de details te openen.</li>
+          <li>Scroll naar het veld <strong>Notitie</strong> onderaan.</li>
+          <li>Typ uw tekst en klik op <strong>Opslaan</strong>.</li>
+        </ol>
+        <p>
+          Notities worden opgeslagen in de <code>localStorage</code> van uw browser op dit apparaat. Ze worden
+          meegenomen in de CSV-export.
+        </p>
+        <div class="manual-callout callout-warn">
+          <strong>Let op:</strong> notities zijn apparaat-gebonden. Wist u de browsercache of gebruikt u een andere
+          browser/apparaat, dan zijn de notities daar niet beschikbaar. Maak periodiek een CSV-export als backup.
+        </div>
+      </section>
+
+      <section class="manual-section" id="export">
+        <h2><span class="sec-num">07</span> Export — CSV, Excel en PDF</h2>
+        <h3>CSV export</h3>
+        <ol class="manual-step-list">
+          <li>Stel eerst uw filters in (hoofdstuk, TBB, framework, zoek).</li>
+          <li>Klik rechtsboven op <span data-icon="export-csv" class="icon-inline"></span> <strong>Export CSV</strong>.</li>
+          <li>Er wordt een <code>.csv</code>-bestand gedownload met alle gefilterde eisen, dekking, frameworks en uw notities.</li>
+          <li>Open het bestand in Excel, Numbers of Google Sheets.</li>
+        </ol>
+        <h3>Excel export (.xlsx)</h3>
+        <ol class="manual-step-list">
+          <li>Klik rechtsboven op <strong>Export Excel</strong>.</li>
+          <li>Er wordt een echt <code>.xlsx</code>-bestand gedownload met geformatteerde kolommen en geoptimaliseerde breedtes.</li>
+          <li>Direct te openen in Microsoft Excel, Numbers of Google Sheets zonder importwizard.</li>
+          <li>Werkt ook op zowel ABRO Eisen als ABRO Werkblad.</li>
+        </ol>
+        <h3>PDF export</h3>
+        <ol class="manual-step-list">
+          <li>Stel filters naar wens in.</li>
+          <li>Klik op <span data-icon="export-pdf" class="icon-inline"></span> <strong>Export PDF</strong>.</li>
+          <li>Het printdialoog opent. Kies <strong>Opslaan als PDF</strong> als doel.</li>
+          <li>Klik op Opslaan en kies een locatie.</li>
+        </ol>
+        <div class="manual-callout">
+          <strong>Tip:</strong> op iPad kunt u via Safari &rarr; Delen &rarr; Afdrukken &rarr; "pinch open" op de preview direct een PDF maken en delen.
+        </div>
+      </section>
+
+      <section class="manual-section" id="kennisbank">
+        <h2><span class="sec-num">08</span> Kennisbank gebruiken</h2>
+        <p>De pagina <strong>Kennisbank</strong> (<code>diamond.html</code>) geeft achtergrond bij de modellen en methodieken die in de ABRO voorkomen:</p>
+        <ul>
+          <li><strong>Diamond Model</strong> — dreigingsanalyse met 4 componenten: Adversary, Capability, Infrastructure, Victim</li>
+          <li><strong>Cyber Kill Chain</strong> — de 7 fasen van een gerichte aanval (Lockheed Martin)</li>
+          <li><strong>MITRE ATT&amp;CK</strong> — kennisbank met tactieken, technieken en procedures van aanvallers</li>
+          <li><strong>Supply Chain Security</strong> — risico's en maatregelen in de toeleveringsketen</li>
+          <li><strong>Incident Response</strong> — aanpak volgens NIST SP 800-61 Rev. 3 en CSF 2.0</li>
+          <li><strong>Zero Trust</strong> — "never trust, always verify"-principe</li>
+          <li><strong>Shared Responsibility</strong> — verdeling van verantwoordelijkheden in de cloud</li>
+        </ul>
+        <p>Gebruik deze pagina als referentie bij het schrijven van uw beveiligingsplan of als training voor uw team.</p>
+      </section>
+
+      <section class="manual-section" id="jscu-logging">
+        <h2><span class="sec-num">09</span> JSCU Logging — Event ID lookup</h2>
+        <p>
+          De pagina <strong>JSCU Logging</strong> bevat <strong>194 Windows Event IDs</strong> in 16 categorieën, die door
+          de Joint Sigint Cyber Unit Nederland zijn aangewezen als baseline voor detectie en forensisch onderzoek.
+        </p>
+        <h3>Event ID opzoeken</h3>
+        <ol class="manual-step-list">
+          <li>Open de pagina JSCU Logging.</li>
+          <li>Typ in de zoekbalk het Event ID (bijv. <code>4624</code>) of trefwoord (bijv. <code>logon</code>).</li>
+          <li>De tabel filtert direct op uw invoer.</li>
+          <li>Per event ziet u: channel, subcategorie, beschrijving en het GPO-pad om het in te schakelen.</li>
+        </ol>
+        <h3>Gebruik in SIEM</h3>
+        <p>
+          Deze baseline is bedoeld als vertrekpunt voor uw SIEM/SOAR-configuratie. Aanbevolen retentie is minimaal
+          6 maanden. Complementair aan AV, IDS en EDR.
+        </p>
+      </section>
+
+      <section class="manual-section" id="tbb-stelsel">
+        <h2><span class="sec-num">10</span> TBB Stelsel</h2>
+        <p>
+          Het <strong>TBB-stelsel</strong> (Te Beschermen Belangen) bepaalt welke ABRO-eisen op uw opdracht van toepassing
+          zijn. Er zijn 4 niveaus:
+        </p>
+        <ul>
+          <li><strong>TBB 4</strong> — Dep. VERTROUWELIJK — nadeel voor ministerie(s)</li>
+          <li><strong>TBB 3</strong> — Stg. CONFIDENTIEEL — schade aan Staat / bondgenoten</li>
+          <li><strong>TBB 2</strong> — Stg. GEHEIM — ernstige schade</li>
+          <li><strong>TBB 1</strong> — Stg. ZEER GEHEIM — zeer ernstige schade</li>
+        </ul>
+        <h3>TBB-bepaling</h3>
+        <p>
+          Het TBB-niveau wordt bepaald door de <strong>opdrachtgever</strong> (Rijksoverheid). U ontvangt dit als onderdeel van de
+          aanbesteding of opdrachtverlening. Als leverancier kunt u het niet zelf bepalen.
+        </p>
+        <h3>Typen toepassingen</h3>
+        <p>
+          Op de pagina <strong>TBB Stelsel</strong> vindt u een sectie <em>Typen toepassingen</em>. Per type (access-to-site,
+          fysieke opslag, digitale opslag, clouddienst) ziet u welke ABRO-hoofdstukken gelden.
+        </p>
+      </section>
+
+      <section class="manual-section" id="vgb">
+        <h2><span class="sec-num">11</span> VGB-aanvraag (UVO proces)</h2>
+        <p>
+          Medewerkers die toegang nodig hebben tot gerubriceerde informatie moeten een <strong>Verklaring van Geen Bezwaar
+          (VGB)</strong> hebben. Deze wordt aangevraagd via de <strong>UVO</strong> (Unit Veiligheidsonderzoeken).
+        </p>
+        <ol class="manual-step-list">
+          <li><strong>Functieprofiel opstellen</strong> — welke functies bij uw organisatie toegang nodig hebben en op welk TBB-niveau.</li>
+          <li><strong>Aanwijzing vertrouwensfunctie</strong> — schriftelijk vastleggen dat de functie vertrouwelijk is.</li>
+          <li><strong>VGB-aanvraag indienen</strong> via de UVO met onderliggende stukken van de medewerker.</li>
+          <li><strong>Veiligheidsonderzoek</strong> door AIVD of MIVD (afhankelijk van context en TBB-niveau).</li>
+          <li><strong>VGB afgegeven</strong> — medewerker mag worden ingezet op de vertrouwensfunctie.</li>
+          <li><strong>Herhaalonderzoek</strong> elke 5 jaar (TBB 2/1 vaker) of bij verandering functie of omstandigheden.</li>
+        </ol>
+        <div class="manual-callout">
+          <strong>Verwijzing:</strong> zie de pagina <a href="tbb.html#uvo-vgb">TBB Stelsel &raquo; VGB-aanvraag</a> voor het volledige proces.
+        </div>
+      </section>
+
+      <section class="manual-section" id="darkmode">
+        <h2><span class="sec-num">12</span> Dark mode</h2>
+        <p>U kunt wisselen tussen licht en donker thema:</p>
+        <ol class="manual-step-list">
+          <li>Klik onderaan de zijbalk op <span data-icon="theme-dark" class="icon-inline"></span> <strong>Donker thema</strong>.</li>
+          <li>Het thema wisselt direct en wordt onthouden voor uw volgende bezoek.</li>
+          <li>Om terug te gaan: klik op <span data-icon="theme-light" class="icon-inline"></span> <strong>Licht thema</strong>.</li>
+        </ol>
+        <p>De voorkeur wordt opgeslagen in uw browser en geldt voor alle pagina's van de tool.</p>
+      </section>
+
+      <section class="manual-section" id="zoeken">
+        <h2><span class="sec-num">13</span> Globale zoekfunctie</h2>
+        <p>
+          Bovenaan elke pagina (of op de homepagina) staat een <strong>globale zoekbalk</strong>. Deze doorzoekt <em>alles</em>
+          tegelijk:
+        </p>
+        <ul>
+          <li>Alle 445 ABRO-eisen</li>
+          <li>Alle 194 JSCU Event IDs</li>
+          <li>Framework-controls (ISO, NIST, BIO, CCM, etc.)</li>
+          <li>Namen van pagina's</li>
+        </ul>
+        <h3>Gebruik</h3>
+        <ol class="manual-step-list">
+          <li>Klik in de zoekbalk of druk op <code>/</code> (waar ondersteund).</li>
+          <li>Typ minimaal 2 tekens.</li>
+          <li>Resultaten verschijnen gegroepeerd per categorie (ABRO, JSCU, ISO, etc.).</li>
+          <li>Klik op een resultaat om direct naar die eis, event of pagina te springen.</li>
+        </ol>
+      </section>
+
+      <section class="manual-section" id="pwa">
+        <h2><span class="sec-num">14</span> Instellen als iPad app (PWA)</h2>
+        <p>
+          De FNC Tool kan als app op uw iPad worden geïnstalleerd — compleet met icoon op het beginscherm en
+          lokale werking. Dit heet een <strong>Progressive Web App (PWA)</strong>.
+        </p>
+        <h3>Installatie op iPad / iPhone</h3>
+        <ol class="manual-step-list">
+          <li>Open <strong>Safari</strong> op uw iPad of iPhone. (Werkt niet in Chrome of Firefox op iOS.)</li>
+          <li>Ga naar de URL van de FNC Tool, bijvoorbeeld <code>https://uwdomein.nl/fnc/home.html</code>.</li>
+          <li>Tik bovenaan of onderaan het scherm op het <strong>deel-icoon</strong> — een vierkantje met een pijl omhoog.</li>
+          <li>Scroll in het deel-menu omlaag tot u de optie <strong>"Zet op beginscherm"</strong> (of <em>Add to Home Screen</em>) ziet. Tik erop.</li>
+          <li>Stel de naam in (voorgesteld: <strong>FNC Tool</strong>) en pas eventueel aan.</li>
+          <li>Tik rechtsboven op <strong>Voeg toe</strong>.</li>
+          <li>Het app-icoon staat nu op uw beginscherm.</li>
+          <li>Na de eerste keer openen werkt de tool <strong>lokaal</strong> dankzij de service worker.</li>
+        </ol>
+        <h3>Installatie op Android</h3>
+        <ol class="manual-step-list">
+          <li>Open Chrome op Android.</li>
+          <li>Ga naar de URL van de tool.</li>
+          <li>Tik op het menu (drie puntjes) &rarr; <strong>App installeren</strong> of <em>Toevoegen aan startscherm</em>.</li>
+          <li>Bevestig. Het icoon verschijnt op uw homescreen.</li>
+        </ol>
+        <h3>Installatie op desktop (Chrome / Edge)</h3>
+        <ol class="manual-step-list">
+          <li>Open de URL in Chrome of Edge.</li>
+          <li>Klik rechts in de adresbalk op het installatie-icoontje (een scherm met pijl omlaag).</li>
+          <li>Bevestig. De tool opent vanaf dat moment in een eigen venster.</li>
+        </ol>
+      </section>
+
+      <section class="manual-section" id="offline">
+        <h2><span class="sec-num">15</span> Lokaal gebruik</h2>
+        <p>
+          Na uw eerste bezoek is de volledige tool opgeslagen in uw browser via een <strong>service worker</strong>. U heeft
+          daarna geen internet meer nodig. Ideaal voor beveiligde werkplekken of onderweg.
+        </p>
+        <h3>Wanneer moet u vernieuwen?</h3>
+        <ul>
+          <li>Als de tool wordt bijgewerkt (nieuwe versie) — open de tool dan één keer met internet om de update te ontvangen.</li>
+          <li>Als u nieuwe functies mist of foutmeldingen krijgt.</li>
+        </ul>
+        <p>Gebruik de knop <strong>Cache wissen &amp; vernieuwen</strong> onderaan de homepagina om handmatig te verversen.</p>
+      </section>
+
+      <section class="manual-section" id="cache">
+        <h2><span class="sec-num">16</span> Cache wissen</h2>
+        <p>In sommige gevallen is het nodig de cache handmatig te wissen:</p>
+        <ul>
+          <li>Na een update die niet automatisch wordt geladen</li>
+          <li>Bij vreemde weergavefouten</li>
+          <li>Wanneer u een schone start wilt</li>
+        </ul>
+        <h3>Via de tool</h3>
+        <ol class="manual-step-list">
+          <li>Ga naar de homepagina.</li>
+          <li>Scroll naar onder.</li>
+          <li>Klik op <strong>Cache wissen &amp; vernieuwen</strong>.</li>
+          <li>De pagina herlaadt zichzelf met een schone cache.</li>
+        </ol>
+        <div class="manual-callout callout-warn">
+          <strong>Let op:</strong> uw <em>notities</em> (opgeslagen in localStorage) blijven behouden bij het wissen van de service-worker-cache. Wist u zelf de browsergegevens via uw systeem, dan gaan notities wel verloren.
+        </div>
+      </section>
+
+      <section class="manual-section" id="privacy">
+        <h2><span class="sec-num">17</span> Privacy &amp; data</h2>
+        <ul>
+          <li><strong>Niets wordt verstuurd.</strong> De tool heeft geen backend, geen analytics, geen trackers.</li>
+          <li><strong>Alles draait lokaal</strong> in uw browser.</li>
+          <li><strong>Notities</strong> worden opgeslagen in <code>localStorage</code> op uw apparaat.</li>
+          <li><strong>Themavoorkeur</strong> (licht/donker) wordt ook lokaal opgeslagen.</li>
+          <li>Er is <strong>geen inlog</strong>, <strong>geen account</strong>, <strong>geen cookiebanner</strong> nodig.</li>
+        </ul>
+        <p>
+          Het is veilig om de tool te gebruiken in een gerubriceerde of afgeschermde omgeving — er zijn geen
+          externe verbindingen (behalve het laden van fonts, dat met fallback werkt).
+        </p>
+      </section>
+
+      <section class="manual-section" id="faq">
+        <h2><span class="sec-num">18</span> FAQ — Veelgestelde vragen</h2>
+        <dl class="manual-faq">
+          <dt>Kan ik de tool gebruiken zonder internet?</dt>
+          <dd>Na uw eerste bezoek cached de service worker alle bestanden, zodat de tool ook zonder netwerk bruikbaar blijft.</dd>
+
+          <dt>Worden mijn notities gesynchroniseerd tussen apparaten?</dt>
+          <dd>Nee. Notities worden lokaal per apparaat opgeslagen. Exporteer ze via CSV als u ze wilt delen of overzetten.</dd>
+
+          <dt>Welke browser kan ik het beste gebruiken?</dt>
+          <dd>Chrome, Edge, Safari en Firefox werken allemaal. Voor installatie als iPad-app heeft u Safari nodig.</dd>
+
+          <dt>Kan ik de tool zelf uitbreiden met eigen frameworks?</dt>
+          <dd>Ja, de tool is open — de mapping staat in <code>frameworks-ref.js</code> en <code>abro-data.js</code>. Geavanceerd gebruik; vraag uw beheerder.</dd>
+
+          <dt>Ik zie een fout bij het opslaan van een notitie — wat nu?</dt>
+          <dd>Mogelijk is de localStorage vol of geblokkeerd (bijvoorbeeld in privé-modus). Probeer het in een normaal venster en controleer browserinstellingen.</dd>
+
+          <dt>Hoe vraag ik een VGB aan?</dt>
+          <dd>Via de UVO (Unit Veiligheidsonderzoeken). Zie de <a href="tbb.html#uvo-vgb">TBB-pagina</a> voor het proces of hoofdstuk 11 in deze handleiding.</dd>
+
+          <dt>De cijfers kloppen niet met wat ik verwacht — wat gaat er mis?</dt>
+          <dd>Controleer of de juiste certificeringen zijn aangevinkt, en of u per ongeluk een filter actief heeft laten staan (bijv. TBB-niveau of framework).</dd>
+
+          <dt>Kan ik de export-PDF branden met mijn eigen logo?</dt>
+          <dd>Dat zit niet standaard in de tool. U kunt wel na het exporteren de PDF bewerken in een PDF-editor om een logo of kopregel toe te voegen.</dd>
+
+          <dt>Is de tool gecertificeerd of officieel goedgekeurd?</dt>
+          <dd>Nee. De tool is een hulpmiddel en pretendeert geen officiële interpretatie. Zie de disclaimer op de homepagina.</dd>
+
+          <dt>Hoe vaak wordt de tool bijgewerkt?</dt>
+          <dd>Bij wijzigingen in de ABRO, frameworks of aanvullende feedback. Open de tool af en toe met internet-verbinding om nieuwe versies te ontvangen.</dd>
+        </dl>
+      </section>
+
+      <div class="home-footer" style="margin-top:20px">
+        FNC Tool · Gebruikershandleiding · Privacyvriendelijk
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

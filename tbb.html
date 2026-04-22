@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — Te Beschermen Belangen (TBB)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+  <style>
+    .tbb-content { padding: 24px 36px 48px; max-width: 960px; }
+    .tbb-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .tbb-section h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+    .tbb-section h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 16px 0 8px;
+    }
+    .tbb-section p, .tbb-section li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .tbb-section ul {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    .tbb-section li { margin-bottom: 4px; }
+    .tbb-level-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .tbb-level-card {
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .tbb-level-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .tbb-level-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .tbb-level-card .tbb-rubr {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .tbb-level-card p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+    .tbb-level-card ul { padding-left: 16px; margin-top: 8px; }
+    .tbb-level-card li { font-size: 11px; color: var(--text-secondary); margin-bottom: 2px; }
+
+    .lvl-4 { background: rgba(37,99,235,0.04); }
+    .lvl-4::before { background: var(--accent); }
+    .lvl-4 h4 { color: var(--accent); }
+    .lvl-4 .tbb-rubr { background: var(--accent-dim); color: var(--accent); }
+
+    .lvl-3 { background: rgba(217,119,6,0.04); }
+    .lvl-3::before { background: var(--yellow); }
+    .lvl-3 h4 { color: var(--yellow); }
+    .lvl-3 .tbb-rubr { background: var(--yellow-bg); color: var(--yellow); }
+
+    .lvl-2 { background: rgba(234,88,12,0.04); }
+    .lvl-2::before { background: var(--orange); }
+    .lvl-2 h4 { color: var(--orange); }
+    .lvl-2 .tbb-rubr { background: rgba(234,88,12,0.08); color: var(--orange); }
+
+    .lvl-1 { background: rgba(220,38,38,0.04); }
+    .lvl-1::before { background: var(--red); }
+    .lvl-1 h4 { color: var(--red); }
+    .lvl-1 .tbb-rubr { background: var(--red-bg); color: var(--red); }
+
+    .tbb-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 12px;
+    }
+    .tbb-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      font-weight: 600;
+      background: var(--bg-elevated);
+    }
+    .tbb-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .tbb-table tr:hover { background: var(--bg-hover); }
+    .tbb-table .check { color: var(--green); font-weight: 700; text-align: center; }
+    .tbb-table .opt { color: var(--yellow); font-weight: 600; text-align: center; }
+    .tbb-table .na { color: var(--text-muted); text-align: center; }
+
+    .tbb-example {
+      background: var(--accent-dim);
+      border: 1px solid rgba(37,99,235,0.15);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 12px 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .tbb-example strong { color: var(--accent); }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay" ></div>
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="tbb" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">TBB Stelsel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <div class="sidebar-hint">
+        Het TBB-stelsel bepaalt welke beveiligingseisen van toepassing zijn op uw opdracht.
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">TBB Stelsel</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Te Beschermen Belangen (TBB)</div>
+        <div class="page-subtitle">Het rubriceringsstelsel voor gerubriceerde overheidsinformatie</div>
+      </div>
+      <div class="global-search">
+        <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+        <div id="globalSearchResults" class="global-search-results"></div>
+      </div>
+      <div class="page-actions">
+        <a href="home.html" class="back-link"><span data-icon="arrow-left" data-icon-size="14"></span> Terug naar home</a>
+      </div>
+    </div>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <div class="tbb-content">
+
+      <!-- Wat is TBB -->
+      <div class="tbb-section" id="wat-is-tbb">
+        <h2>Wat is TBB?</h2>
+        <p>
+          <strong>Te Beschermen Belangen (TBB)</strong> is het stelsel waarmee de Rijksoverheid bepaalt welke informatie,
+          systemen en processen extra bescherming nodig hebben. Het gaat om belangen waarvan compromittering (onbevoegde
+          kennisneming, wijziging of verstoring) schade kan toebrengen aan de Staat, bondgenoten of individuele ministeries.
+        </p>
+        <p style="margin-top:12px">
+          Als leverancier die werkt met TBB-informatie of -systemen bent u gebonden aan de
+          <strong>Algemene Beveiligingseisen voor Rijksoverheidsopdrachten (ABRO) 2026</strong>. Het TBB-niveau van uw opdracht
+          bepaalt welke beveiligingseisen precies op u van toepassing zijn.
+        </p>
+      </div>
+
+      <!-- De 4 niveaus -->
+      <div class="tbb-section" id="niveaus">
+        <h2>De 4 TBB-niveaus</h2>
+        <p>Het TBB-stelsel kent vier niveaus, oplopend in zwaarte. Elk niveau correspondeert met een rubricering
+           en bepaalt de minimale beveiligingsmaatregelen.</p>
+
+        <div class="tbb-level-cards">
+          <div class="tbb-level-card lvl-4">
+            <h4>TBB-4</h4>
+            <span class="tbb-rubr">Dep. VERTROUWELIJK</span>
+            <p>Kennisname door niet-gerechtigden kan nadeel toebrengen aan het belang van één of meer ministeries.</p>
+            <ul>
+              <li>Beleidsvoorbereiding, interne analyses, gevoelige maar niet-staatsgeheime informatie</li>
+              <li>Verklaring Omtrent het Gedrag (VOG) vereist — geen VGB</li>
+              <li>Standaard fysieke en cyber maatregelen conform ABRO</li>
+              <li>NAVO equivalent: NAVO RESTRICTED / EU RESTRICTED</li>
+            </ul>
+          </div>
+
+          <div class="tbb-level-card lvl-3">
+            <h4>TBB-3</h4>
+            <span class="tbb-rubr">Stg. CONFIDENTIEEL</span>
+            <p>Kennisname door niet-gerechtigden kan schade toebrengen aan de belangen van de Staat of zijn bondgenoten.</p>
+            <ul>
+              <li>Vertrouwelijke operationele informatie, diplomatieke berichten</li>
+              <li>Verklaring van Geen Bezwaar (VGB) niveau C vereist</li>
+              <li>Verscherpte fysieke beveiliging, versleutelde opslag en communicatie</li>
+              <li>NAVO equivalent: NATO CONFIDENTIAL / EU CONFIDENTIAL</li>
+            </ul>
+          </div>
+
+          <div class="tbb-level-card lvl-2">
+            <h4>TBB-2</h4>
+            <span class="tbb-rubr">Stg. GEHEIM</span>
+            <p>Kennisname door niet-gerechtigden kan ernstige schade toebrengen aan de belangen van de Staat of zijn bondgenoten.</p>
+            <ul>
+              <li>Inlichtingenrapporten, militaire operatieplannen, gevoelige technische informatie</li>
+              <li>Verklaring van Geen Bezwaar (VGB) niveau B vereist</li>
+              <li>Beveiligde ruimtes, gescheiden netwerken, goedgekeurde crypto</li>
+              <li>NAVO equivalent: NATO SECRET / EU SECRET</li>
+            </ul>
+          </div>
+
+          <div class="tbb-level-card lvl-1">
+            <h4>TBB-1</h4>
+            <span class="tbb-rubr">Stg. ZEER GEHEIM</span>
+            <p>Kennisname door niet-gerechtigden kan zeer ernstige schade toebrengen aan de belangen van de Staat of zijn bondgenoten.</p>
+            <ul>
+              <li>Bronbescherming inlichtingendiensten, vitale staatsbelangen</li>
+              <li>Verklaring van Geen Bezwaar (VGB) niveau A vereist — zwaarste onderzoek</li>
+              <li>Geaccrediteerde beveiligde ruimtes, need-to-know strikt gehandhaafd</li>
+              <li>NAVO equivalent: COSMIC TOP SECRET / EU TOP SECRET</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rubriceringen -->
+      <div class="tbb-section" id="rubriceringen">
+        <h2>Rubriceringen</h2>
+        <p>Rubriceringen zijn de formele aanduidingen die op documenten en informatiedragers worden aangebracht.
+           Ze geven aan welk beschermingsniveau van toepassing is.</p>
+
+        <table class="tbb-table">
+          <thead>
+            <tr>
+              <th>Rubricering</th>
+              <th>Afkorting</th>
+              <th>TBB</th>
+              <th>VGB</th>
+              <th>NAVO equivalent</th>
+              <th>EU equivalent</th>
+              <th>Schadeniveau</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Departementaal VERTROUWELIJK</strong></td>
+              <td style="font-family:var(--font-mono)">Dep.V</td>
+              <td>TBB-4</td>
+              <td>Geen VGB — VOG</td>
+              <td>NATO RESTRICTED</td>
+              <td>EU RESTRICTED</td>
+              <td>Nadeel voor ministerie(s)</td>
+            </tr>
+            <tr>
+              <td><strong>Stg. CONFIDENTIEEL</strong></td>
+              <td style="font-family:var(--font-mono)">Stg.C</td>
+              <td>TBB-3</td>
+              <td>VGB niveau C</td>
+              <td>NATO CONFIDENTIAL</td>
+              <td>EU CONFIDENTIAL</td>
+              <td>Schade aan Staat/bondgenoten</td>
+            </tr>
+            <tr>
+              <td><strong>Stg. GEHEIM</strong></td>
+              <td style="font-family:var(--font-mono)">Stg.G</td>
+              <td>TBB-2</td>
+              <td>VGB niveau B</td>
+              <td>NATO SECRET</td>
+              <td>EU SECRET</td>
+              <td>Ernstige schade aan Staat/bondgenoten</td>
+            </tr>
+            <tr>
+              <td><strong>Stg. ZEER GEHEIM</strong></td>
+              <td style="font-family:var(--font-mono)">Stg.ZG</td>
+              <td>TBB-1</td>
+              <td>VGB niveau A</td>
+              <td>COSMIC TOP SECRET</td>
+              <td>EU TOP SECRET</td>
+              <td>Zeer ernstige schade aan Staat/bondgenoten</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:12px">
+          <strong>Let op:</strong> rubricering is geen automatisch proces. De opsteller van informatie bepaalt de rubricering op basis
+          van het potentiele schadeniveau. Onjuiste rubricering (te hoog of te laag) leidt tot inefficientie of onvoldoende bescherming.
+        </p>
+      </div>
+
+      <!-- Merkingen -->
+      <div class="tbb-section" id="merkingen">
+        <h2>Merkingen</h2>
+        <p>Naast rubriceringen kunnen aanvullende <strong>merkingen</strong> worden aangebracht die de verspreiding
+           verder beperken of specifieke behandelingsvoorschriften geven.</p>
+
+        <table class="tbb-table">
+          <thead>
+            <tr>
+              <th>Merking</th>
+              <th>Betekenis</th>
+              <th>Voorbeeld</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Persoonlijk</strong></td>
+              <td>Alleen bestemd voor de geadresseerde(n)</td>
+              <td>Brieven aan individuele bewindspersonen</td>
+            </tr>
+            <tr>
+              <td><strong>Exclusief</strong></td>
+              <td>Beperkte verspreiding binnen aangegeven kring</td>
+              <td>Stg. GEHEIM Exclusief — alleen voor projectteam X</td>
+            </tr>
+            <tr>
+              <td><strong>Atomal</strong></td>
+              <td>Informatie over kernwapens (NAVO-merking)</td>
+              <td>Nucleaire procedures bondgenoten</td>
+            </tr>
+            <tr>
+              <td><strong>Cosmic</strong></td>
+              <td>Hoogste NAVO-rubricering</td>
+              <td>NAVO Top Secret informatie</td>
+            </tr>
+            <tr>
+              <td><strong>Releasable to (REL TO)</strong></td>
+              <td>Vrijgave aan specifieke landen/organisaties</td>
+              <td>Stg. GEHEIM REL TO NLD, USA, GBR</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ABRO per TBB-niveau -->
+      <div class="tbb-section" id="abro-mapping">
+        <h2>ABRO-hoofdstukken per TBB-niveau</h2>
+        <p>Niet alle ABRO-hoofdstukken zijn bij elk TBB-niveau even relevant. De onderstaande tabel toont welke
+           hoofdstukken verplicht zijn per niveau.</p>
+
+        <table class="tbb-table">
+          <thead>
+            <tr>
+              <th>ABRO Hoofdstuk</th>
+              <th style="text-align:center">TBB-4<br><span style="font-size:9px;font-weight:400">Dep.V</span></th>
+              <th style="text-align:center">TBB-3<br><span style="font-size:9px;font-weight:400">Stg.C</span></th>
+              <th style="text-align:center">TBB-2<br><span style="font-size:9px;font-weight:400">Stg.G</span></th>
+              <th style="text-align:center">TBB-1<br><span style="font-size:9px;font-weight:400">Stg.ZG</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>H1 — Bestuur & Organisatie</strong><br><span style="font-size:11px;color:var(--text-muted)">Beveiligingsorganisatie, functionaris, incidenten</span></td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+            </tr>
+            <tr>
+              <td><strong>H2 — Personeel</strong><br><span style="font-size:11px;color:var(--text-muted)">Screening, VGB, geheimhouding, bewustzijn</span></td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+            </tr>
+            <tr>
+              <td><strong>H3 — Fysieke beveiliging</strong><br><span style="font-size:11px;color:var(--text-muted)">Bouwkundig, elektronisch, transport, opslag</span></td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+            </tr>
+            <tr>
+              <td><strong>H4 — Cyber</strong><br><span style="font-size:11px;color:var(--text-muted)">IT-beveiliging, netwerk, crypto, logging, monitoring</span></td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+            </tr>
+            <tr>
+              <td><strong>H5 — Cloud</strong><br><span style="font-size:11px;color:var(--text-muted)">Cloudservices, datasoevereiniteit, leveranciersbeheer</span></td>
+              <td class="check">&#x2713;</td>
+              <td class="check">&#x2713;</td>
+              <td class="opt" title="Onder voorwaarden">&#x25CF;</td>
+              <td class="na" title="Niet toegestaan">&#x2717;</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:12px;font-size:12px;color:var(--text-muted)">
+          &#x2713; = Verplicht &nbsp;&nbsp; &#x25CF; = Onder strikte voorwaarden &nbsp;&nbsp; &#x2717; = Cloud niet toegestaan<br>
+          <em>Bij TBB-1 is cloudgebruik in principe niet toegestaan. Bij TBB-2 alleen met expliciete goedkeuring en aanvullende maatregelen.</em>
+        </p>
+
+        <p style="margin-top:12px">
+          <strong>Belangrijk:</strong> Hoewel alle hoofdstukken bij elk niveau relevant zijn, worden de eisen binnen elk hoofdstuk
+          strenger naarmate het TBB-niveau hoger is. Zo vereist TBB-1 bijvoorbeeld gecertificeerde crypto-apparatuur,
+          terwijl TBB-4 met softwarematige encryptie kan volstaan.
+        </p>
+      </div>
+
+      <!-- Rollen & instanties -->
+      <div class="tbb-section" id="rollen">
+        <h2>Rollen & Instanties</h2>
+
+        <h3>Nationaal Bureau voor Verbindingsbeveiliging (NBV/NBIV)</h3>
+        <p>
+          Het <strong>NBIV</strong> (voorheen NBV, onderdeel van de AIVD) is het centrale aanspreekpunt voor
+          beveiligingsvraagstukken bij gerubriceerde opdrachten. Het NBIV:
+        </p>
+        <ul>
+          <li>Verstrekt en beheert Verklaringen van Geen Bezwaar (VGB)</li>
+          <li>Accrediteert beveiligde ruimtes en IT-systemen</li>
+          <li>Adviseert over beveiligingsmaatregelen en crypto-middelen</li>
+          <li>Voert inspecties uit bij leveranciers</li>
+        </ul>
+
+        <h3>Militaire Inlichtingen- en Veiligheidsdienst (MIVD)</h3>
+        <p>
+          Bij opdrachten voor het Ministerie van Defensie is de <strong>MIVD</strong> het aanspreekpunt voor
+          veiligheidsonderzoeken en beveiligingsaccreditatie. De MIVD werkt nauw samen met het NBIV.
+        </p>
+
+        <h3>Beveiligingsfunctionaris (BVA)</h3>
+        <p>
+          Elke organisatie die werkt met TBB-informatie moet een <strong>Beveiligingsfunctionaris</strong> aanwijzen.
+          Deze persoon:
+        </p>
+        <ul>
+          <li>Is het interne aanspreekpunt voor alle beveiligingszaken</li>
+          <li>Zorgt voor naleving van de ABRO-eisen binnen de organisatie</li>
+          <li>Onderhoudt contact met het NBIV/MIVD</li>
+          <li>Meldt beveiligingsincidenten</li>
+          <li>Organiseert beveiligingsbewustzijntrainingen</li>
+          <li>Moet zelf een VGB hebben op het vereiste niveau</li>
+        </ul>
+      </div>
+
+      <!-- Bijzondere Opdracht -->
+      <div class="tbb-section" id="bijzondere-opdracht">
+        <h2>Bijzondere Opdracht</h2>
+        <p>
+          Een <strong>Bijzondere Opdracht</strong> is een opdracht van de Rijksoverheid waarbij de leverancier toegang krijgt
+          tot Te Beschermen Belangen. Het proces verloopt als volgt:
+        </p>
+        <ul>
+          <li><strong>1. Vaststelling TBB-niveau:</strong> De opdrachtgever bepaalt het TBB-niveau van de opdracht op basis van de informatie en systemen waarmee gewerkt wordt.</li>
+          <li><strong>2. Beveiligingsovereenkomst:</strong> Er wordt een beveiligingsovereenkomst gesloten tussen opdrachtgever en leverancier, gebaseerd op de ABRO-eisen voor het vastgestelde TBB-niveau.</li>
+          <li><strong>3. VGB-aanvraag:</strong> Het NBIV/MIVD voert veiligheidsonderzoeken uit voor betrokken personeel. De zwaarte van het onderzoek hangt af van het TBB-niveau.</li>
+          <li><strong>4. Beveiligingsplan:</strong> De leverancier stelt een beveiligingsplan op dat beschrijft hoe aan de ABRO-eisen wordt voldaan.</li>
+          <li><strong>5. Accreditatie:</strong> Ruimtes en systemen worden geaccrediteerd door het NBIV/MIVD.</li>
+          <li><strong>6. Uitvoering & controle:</strong> Tijdens de opdracht vinden periodieke inspecties plaats. De beveiligingsfunctionaris rapporteert over naleving.</li>
+          <li><strong>7. Afsluiting:</strong> Na afloop worden gerubriceerde materialen geretourneerd of vernietigd, en wordt de overeenkomst formeel afgesloten.</li>
+        </ul>
+      </div>
+
+      <!-- Typen toepassingen -->
+      <div class="tbb-section" id="toepassingen">
+        <h2>Typen toepassingen — Welke eisen gelden voor uw situatie?</h2>
+        <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          De ABRO kent 4 typen toepassingen. Afhankelijk van hoe uw organisatie in aanraking komt met het TBB zijn verschillende hoofdstukken van toepassing. Het NBIV stelt vooraf vast welk type van toepassing is.
+        </p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px">
+
+          <!-- Access-to-site -->
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)">
+            <div style="padding:14px 16px;background:rgba(37,99,235,0.06);border-bottom:1px solid var(--border)">
+              <strong style="font-size:14px;color:var(--accent)">Access-to-site</strong>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Werkzaamheden op locatie opdrachtgever</div>
+            </div>
+            <div style="padding:16px">
+              <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px">
+                Werkzaamheden vinden <strong>uitsluitend</strong> plaats op de locatie van de opdrachtgever. De opdrachtnemer hoeft geen eigen beveiligde ruimte in te richten.
+              </p>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Denk aan:</strong> onderhoudsmonteurs, schoonmakers, bouwvakkers op beveiligd terrein, consultants die ter plaatse werken</div>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Van toepassing:</strong></div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(37,99,235,0.08);color:var(--accent);font-weight:600">H1 Bestuur</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(8,145,178,0.08);color:var(--cyan);font-weight:600">H2 Personeel</span>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5">
+                <strong>Waar moet u aan denken:</strong>
+                <ul style="padding-left:14px;margin-top:4px">
+                  <li>VGB/VOG voor betrokken personeel</li>
+                  <li>Geheimhoudingsverklaring</li>
+                  <li>Beveiligingsfunctionaris aanwijzen</li>
+                  <li>Beveiligingsbewustzijn training</li>
+                  <li>Geen eigen fysieke of digitale opslag nodig</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fysieke opslag -->
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)">
+            <div style="padding:14px 16px;background:rgba(124,58,237,0.06);border-bottom:1px solid var(--border)">
+              <strong style="font-size:14px;color:var(--purple)">Fysieke opslag</strong>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Opslag en verwerking op eigen locatie</div>
+            </div>
+            <div style="padding:16px">
+              <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px">
+                Fysieke opslag en verwerking van TBB vindt plaats op de <strong>locatie van de opdrachtnemer</strong>. Dit vereist beveiligde ruimtes, kluizen en fysieke toegangscontrole.
+              </p>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Denk aan:</strong> archiefopslag, productie van gerubriceerd materieel, drukwerk, opslag van documenten</div>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Van toepassing:</strong></div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(37,99,235,0.08);color:var(--accent);font-weight:600">H1 Bestuur</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(8,145,178,0.08);color:var(--cyan);font-weight:600">H2 Personeel</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(124,58,237,0.08);color:var(--purple);font-weight:600">H3 Fysiek</span>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5">
+                <strong>Waar moet u aan denken:</strong>
+                <ul style="padding-left:14px;margin-top:4px">
+                  <li>Alles van access-to-site, plus:</li>
+                  <li>Beveiligde ruimte inrichten (schillenstructuur)</li>
+                  <li>Bouwkundige maatregelen (braakwering conform TBB-niveau)</li>
+                  <li>Elektronische maatregelen (alarm, detectie, CCTV)</li>
+                  <li>Reactieve maatregelen (alarmopvolging, interventietijd)</li>
+                  <li>Kluizen/safes voor opslag gerubriceerde documenten</li>
+                  <li>Bezoekersregistratie en -begeleiding</li>
+                  <li>Vernietigingsprocedures voor gerubriceerd materiaal</li>
+                  <li>Transportprocedures voor fysiek TBB</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Digitale opslag -->
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)">
+            <div style="padding:14px 16px;background:rgba(5,150,105,0.06);border-bottom:1px solid var(--border)">
+              <strong style="font-size:14px;color:var(--green)">Digitale opslag</strong>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Digitale verwerking in eigen omgeving</div>
+            </div>
+            <div style="padding:16px">
+              <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px">
+                Digitale opslag en verwerking van Bijzondere Informatie in de <strong>digitale omgeving van de opdrachtnemer</strong>. Dit is de zwaarste on-premise variant.
+              </p>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Denk aan:</strong> softwareontwikkeling, data-analyse, systeembeheer, hosting van gerubriceerde systemen</div>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Van toepassing:</strong></div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(37,99,235,0.08);color:var(--accent);font-weight:600">H1 Bestuur</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(8,145,178,0.08);color:var(--cyan);font-weight:600">H2 Personeel</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(124,58,237,0.08);color:var(--purple);font-weight:600">H3 Fysiek</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(5,150,105,0.08);color:var(--green);font-weight:600">H4 Cyber</span>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5">
+                <strong>Waar moet u aan denken:</strong>
+                <ul style="padding-left:14px;margin-top:4px">
+                  <li>Alles van fysieke opslag, plus:</li>
+                  <li>Cyber-Beveiligingsfunctionaris aanstellen</li>
+                  <li>Gescheiden netwerken (geen koppeling met internet bij hoge TBB)</li>
+                  <li>Goedgekeurde encryptie/crypto-middelen</li>
+                  <li>Logging en monitoring van alle activiteiten</li>
+                  <li>Toegangsbeheer: RBAC, scheiding van taken</li>
+                  <li>Patchmanagement en endpoint beveiliging</li>
+                  <li>Incident management procedure</li>
+                  <li>Systeemdocumentatie en registratie bedrijfsmiddelen</li>
+                  <li>TEMPEST-maatregelen bij TBB-1/2</li>
+                  <li>Jaarlijkse cyber security awareness training</li>
+                  <li>Geen BYOD/telewerken (tenzij goedgekeurd door NBIV)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clouddienst -->
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)">
+            <div style="padding:14px 16px;background:rgba(217,119,6,0.06);border-bottom:1px solid var(--border)">
+              <strong style="font-size:14px;color:var(--yellow)">Clouddienst</strong>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Gebruik van publieke cloudoplossingen</div>
+            </div>
+            <div style="padding:16px">
+              <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px">
+                Gebruik van <strong>publieke cloudoplossingen</strong> voor opslag of verwerking van TBB. Dit is nieuw in ABRO 2026 (bestond niet in ABDO 2019). Zware restricties bij hogere TBB-niveaus.
+              </p>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Denk aan:</strong> SaaS-diensten, cloud hosting, cloud-gebaseerde ontwikkelomgevingen</div>
+              <div style="font-size:11px;margin-bottom:8px"><strong>Van toepassing:</strong></div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(37,99,235,0.08);color:var(--accent);font-weight:600">H1 Bestuur</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(8,145,178,0.08);color:var(--cyan);font-weight:600">H2 Personeel</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(5,150,105,0.08);color:var(--green);font-weight:600">H4 Cyber</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(217,119,6,0.08);color:var(--yellow);font-weight:600">H5 Cloud</span>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5">
+                <strong>Waar moet u aan denken:</strong>
+                <ul style="padding-left:14px;margin-top:4px">
+                  <li>Alles van digitale opslag, plus:</li>
+                  <li><strong style="color:var(--red)">TBB-1: cloudgebruik NIET toegestaan</strong></li>
+                  <li><strong style="color:var(--orange)">TBB-2: alleen met expliciete goedkeuring NBIV + aanvullende maatregelen</strong></li>
+                  <li>Datasoevereiniteit: data moet binnen Nederland of EER blijven</li>
+                  <li>Leveranciersmanagement: inzicht in de volledige keten</li>
+                  <li>Classificatie van data in de cloud</li>
+                  <li>Monitoring en logging in de cloudomgeving</li>
+                  <li>Exit-strategie: hoe haalt u data eruit als het contract eindigt</li>
+                  <li>Shared responsibility: wie is waarvoor verantwoordelijk (zie Kennisbank)</li>
+                  <li>Contractuele waarborgen met cloudprovider</li>
+                  <li>Subprocessors in kaart brengen</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Samenvattingstabel -->
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;overflow-x:auto">
+          <strong style="font-size:12px">Overzicht: welke hoofdstukken per type toepassing</strong>
+          <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:11px">
+            <thead><tr style="border-bottom:2px solid var(--border)">
+              <th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">HOOFDSTUK</th>
+              <th style="text-align:center;padding:8px;color:var(--accent);font-size:10px">ACCESS-TO-SITE</th>
+              <th style="text-align:center;padding:8px;color:var(--purple);font-size:10px">FYSIEKE OPSLAG</th>
+              <th style="text-align:center;padding:8px;color:var(--green);font-size:10px">DIGITALE OPSLAG</th>
+              <th style="text-align:center;padding:8px;color:var(--yellow);font-size:10px">CLOUDDIENST</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border-light)"><td style="padding:8px"><strong>H1</strong> Bestuur & Organisatie</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td></tr>
+              <tr style="border-bottom:1px solid var(--border-light);background:var(--bg-elevated)"><td style="padding:8px"><strong>H2</strong> Personeel</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td></tr>
+              <tr style="border-bottom:1px solid var(--border-light)"><td style="padding:8px"><strong>H3</strong> Fysiek</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td></tr>
+              <tr style="border-bottom:1px solid var(--border-light);background:var(--bg-elevated)"><td style="padding:8px"><strong>H4</strong> Cyber</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td></tr>
+              <tr><td style="padding:8px"><strong>H5</strong> Cloud</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:10px;color:var(--text-muted);margin-top:8px">&#x2713; = van toepassing · — = niet standaard van toepassing. Het NBIV bepaalt uiteindelijk welke eisen gelden voor uw specifieke situatie.</p>
+        </div>
+      </div>
+
+      <!-- UVO VGB Proces -->
+      <div class="tbb-section" id="uvo-vgb">
+        <h2>VGB-aanvraag via UVO — Het veiligheidsonderzoek</h2>
+        <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          De <strong>Unit Veiligheidsonderzoeken (UVO)</strong> is de gezamenlijke uitvoeringseenheid van AIVD en MIVD die veiligheidsonderzoeken uitvoert voor de Verklaring van Geen Bezwaar (VGB). Een VGB is verplicht voor vertrouwensfuncties waarbij toegang tot gerubriceerde informatie (TBB-1 t/m TBB-3) vereist is.
+        </p>
+
+        <h3 style="font-size:14px;color:var(--text-primary);margin:16px 0 10px">De 5 stappen</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px">
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;border-top:3px solid var(--accent)">
+            <strong style="font-size:12px;color:var(--accent)">Stap 1 — Aanvraag</strong>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px">
+              De werkgever (via de Beveiligingsfunctionaris) dient de aanvraag in via <strong>eOPG</strong> (digitaal) of <strong>AV-formulier</strong> (papier). Alleen werkgevers kunnen een aanvraag doen — niet de kandidaat zelf.
+            </div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;border-top:3px solid var(--accent)">
+            <strong style="font-size:12px;color:var(--accent)">Stap 2 — Formulier invullen</strong>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px">
+              De kandidaat vult persoonlijke gegevens in: opleiding, werk, financiën, buitenlandse contacten, reizen, partner, familie. Volledigheid is cruciaal — onvolledige informatie leidt tot vertraging.
+            </div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;border-top:3px solid var(--accent)">
+            <strong style="font-size:12px;color:var(--accent)">Stap 3 — Onderzoek door UVO</strong>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px">
+              De UVO verifieert de opgegeven informatie via justitiële gegevens, open bronnen, inlichtingendiensten en eventuele gesprekken. Bij hoge VGB-niveaus ook uitgebreider onderzoek en mogelijk een persoonlijk gesprek.
+            </div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;border-top:3px solid var(--accent)">
+            <strong style="font-size:12px;color:var(--accent)">Stap 4 — Beoordeling</strong>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px">
+              Op basis van het onderzoek geeft de UVO een oordeel. Bij twijfel kan een aanvullend gesprek plaatsvinden. De werkgever ontvangt het besluit — de VGB wordt wel/niet afgegeven.
+            </div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;border-top:3px solid var(--accent)">
+            <strong style="font-size:12px;color:var(--accent)">Stap 5 — VGB afgifte</strong>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px">
+              Bij positieve beoordeling ontvangt de werkgever de VGB. De kandidaat kan aan de vertrouwensfunctie beginnen. VGB-niveau moet passen bij het TBB-niveau van de werkzaamheden.
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size:14px;color:var(--text-primary);margin:16px 0 10px">Doorlooptijden</h3>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:11px">
+            <thead><tr style="border-bottom:2px solid var(--border)">
+              <th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">VGB NIVEAU</th>
+              <th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">TBB</th>
+              <th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">GEMIDDELDE DOORLOOPTIJD</th>
+              <th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">WETTELIJKE TERMIJN</th>
+              <th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">BIJZONDERHEDEN</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border-light)"><td style="padding:8px"><strong>VGB-C</strong></td><td style="padding:8px">TBB-3</td><td style="padding:8px;color:var(--green)">6-8 weken</td><td style="padding:8px;color:var(--text-secondary)">8 weken</td><td style="padding:8px;color:var(--text-secondary)">Standaard onderzoek</td></tr>
+              <tr style="border-bottom:1px solid var(--border-light);background:var(--bg-elevated)"><td style="padding:8px"><strong>VGB-B</strong></td><td style="padding:8px">TBB-2</td><td style="padding:8px;color:var(--yellow)">3-6 maanden</td><td style="padding:8px;color:var(--text-secondary)">Geen harde termijn</td><td style="padding:8px;color:var(--text-secondary)">Uitgebreider onderzoek, soms gesprek</td></tr>
+              <tr><td style="padding:8px"><strong>VGB-A</strong></td><td style="padding:8px">TBB-1</td><td style="padding:8px;color:var(--red)">6-12 maanden</td><td style="padding:8px;color:var(--text-secondary)">Geen harde termijn</td><td style="padding:8px;color:var(--text-secondary)">Zwaarste onderzoek, persoonlijk gesprek, partner wordt ook onderzocht</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:10px;color:var(--text-muted);margin-top:8px">Verblijf in het buitenland (kandidaat of partner) verlengt het onderzoek met 4-12 weken per land.</p>
+        </div>
+
+        <h3 style="font-size:14px;color:var(--text-primary);margin:16px 0 10px">Waar moet u aan denken</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:16px">
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:14px">
+            <strong style="font-size:12px;color:var(--green)">Werkgever / Beveiligingsfunctionaris</strong>
+            <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:6px">
+              <li>Start de VGB-aanvraag <strong>minstens 3-6 maanden</strong> voor de beoogde functiedatum</li>
+              <li>Controleer of de functie daadwerkelijk een vertrouwensfunctie is</li>
+              <li>Zorg dat het VGB-niveau past bij het TBB-niveau van de werkzaamheden</li>
+              <li>Vul het AV-formulier volledig en correct in</li>
+              <li>Houd de kandidaat op de hoogte van de voortgang</li>
+              <li>Na 6 weken mag u navragen bij de UVO</li>
+              <li>Meld wijzigingen in persoonlijke omstandigheden (huwelijk, verhuizing naar buitenland, etc.)</li>
+              <li>Na afgifte: hernieuwing tijdig aanvragen (VGB-A: 5 jaar, VGB-B/C: 10 jaar)</li>
+            </ul>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:14px">
+            <strong style="font-size:12px;color:var(--accent)">Kandidaat</strong>
+            <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:6px">
+              <li>Vul het formulier <strong>volledig en eerlijk</strong> in — leugens leiden tot weigering</li>
+              <li>Verzamel documenten die buitenlandse verblijven onderbouwen (verblijfsverklaringen, uittreksels)</li>
+              <li>Vraag buitenlandse verklaringen direct bij aanvang op — dit spaart 4+ weken</li>
+              <li>Wees voorbereid op vragen over financiën, relaties, buitenlandse contacten</li>
+              <li>Schulden, verslavingen of chantabelheid zijn risicofactoren</li>
+              <li>Werk mee aan eventuele gesprekken of aanvullende verzoeken</li>
+              <li>Meld tussentijdse wijzigingen aan de werkgever (bv. nieuwe partner, verhuizing)</li>
+              <li>Een negatieve beoordeling is bezwaar/beroep mogelijk</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="font-size:14px;color:var(--text-primary);margin:16px 0 10px">Hernieuwing en wijzigingen</h3>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px">
+          <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:10px">
+            Een VGB is niet permanent. Er gelden termijnen en meldplichten:
+          </p>
+          <ul style="font-size:12px;color:var(--text-secondary);line-height:1.7;padding-left:20px">
+            <li><strong>VGB-A:</strong> geldig voor 5 jaar, daarna hernieuwingsonderzoek</li>
+            <li><strong>VGB-B en VGB-C:</strong> geldig voor 10 jaar</li>
+            <li><strong>Meldplicht:</strong> significante wijzigingen in persoonlijke omstandigheden moeten direct worden gemeld (huwelijk, scheiding, verhuizing naar buitenland, nieuwe werkgever, strafrechtelijke zaken)</li>
+            <li><strong>Ontheffing:</strong> bij einde dienstverband of bij twijfel aan geschiktheid kan een VGB worden ingetrokken</li>
+            <li><strong>Crypto-functies:</strong> aanvullende eisen en aparte verklaring vereist</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:var(--radius);padding:14px;margin-bottom:16px">
+          <strong style="font-size:12px;color:var(--yellow)">Praktijktip</strong>
+          <p style="font-size:11px;color:var(--text-secondary);line-height:1.6;margin-top:6px">
+            Plan het VGB-onderzoek ruim voor de beoogde startdatum. Voor een TBB-2 opdracht met VGB-B-medewerkers betekent dit dat u <strong>minstens 6 maanden voor projectstart</strong> moet beginnen met aanvragen. Voor TBB-1 opdrachten met VGB-A rekent u op <strong>12 maanden</strong>. Houd hier rekening mee in uw projectplanning en offertetrajecten — dit is een veelvoorkomende vertragingsfactor bij Bijzondere Opdrachten.
+          </p>
+        </div>
+
+        <p style="font-size:11px;color:var(--text-muted)">
+          <strong>Bronnen:</strong>
+          <a href="https://www.aivd.nl/onderwerpen/veiligheidsonderzoek" target="_blank" style="color:var(--accent)">AIVD Veiligheidsonderzoek</a> ·
+          <a href="https://www.defensie.nl/onderwerpen/militaire-inlichtingen-en-veiligheid/veiligheidsonderzoek" target="_blank" style="color:var(--accent)">MIVD Veiligheidsonderzoek</a>
+        </p>
+      </div>
+
+      <!-- Praktijkvoorbeelden -->
+      <div class="tbb-section" id="voorbeelden">
+        <h2>Praktijkvoorbeelden</h2>
+
+        <div class="tbb-example">
+          <strong>Voorbeeld 1 — Softwareontwikkeling voor Defensie (TBB-2)</strong><br>
+          Als uw bedrijf software ontwikkelt voor Defensie en toegang krijgt tot Stg. GEHEIM informatie, dan geldt TBB-2.
+          Uw ontwikkelaars hebben een VGB niveau B nodig. De ontwikkelomgeving moet in een geaccrediteerde ruimte staan,
+          op een gescheiden netwerk. Broncode die gerubriceerde logica bevat is zelf ook gerubriceerd.
+          Cloud-hosting is alleen mogelijk met expliciete goedkeuring en aanvullende maatregelen (zie ABRO H5).
+          Alle 5 ABRO-hoofdstukken zijn van toepassing.
+        </div>
+
+        <div class="tbb-example">
+          <strong>Voorbeeld 2 — IT-beheer voor een ministerie (TBB-4)</strong><br>
+          Uw organisatie verzorgt het IT-beheer voor een ministerie en heeft daarbij toegang tot Dep. VERTROUWELIJK informatie.
+          Dit valt onder TBB-4. Medewerkers hebben een VOG nodig en ondertekenen een geheimhoudingsverklaring.
+          Standaard fysieke beveiliging en cyberhygiene zijn vereist. Cloud mag gebruikt worden mits aan de eisen uit
+          ABRO H5 wordt voldaan. Een beveiligingsfunctionaris moet worden aangewezen.
+        </div>
+
+        <div class="tbb-example">
+          <strong>Voorbeeld 3 — Bouwproject op defensieterrein (TBB-3)</strong><br>
+          Een bouwbedrijf voert werkzaamheden uit op een defensieterrein waar Stg. CONFIDENTIEEL informatie aanwezig is.
+          Alle bouwvakkers worden gescreend (VGB niveau C). Er gelden strikte toegangsregels en begeleiding op het terrein.
+          Het bouwbedrijf moet een beveiligingsplan opstellen en een beveiligingsfunctionaris aanwijzen.
+          ABRO H1, H2 en H3 zijn primair van toepassing.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="content-area" id="ncsc">
+      <h2 style="font-size:16px;color:var(--text-primary);margin-bottom:12px;border-bottom:2px solid var(--border);padding-bottom:8px">TBB's in kaart brengen — NCSC methode</h2>
+      <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:8px">
+        Het NCSC beschrijft een praktische methode om te beschermen belangen ("kroonjuwelen") te inventariseren.
+        De aanpak werkt op <strong>3 abstractieniveaus</strong>:
+      </p>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:150px;padding:10px 14px;background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.15);border-radius:var(--radius)">
+          <strong style="font-size:11px;color:var(--accent)">Niveau 1</strong>
+          <div style="font-size:11px;color:var(--text-secondary)">Organisatiedoelstellingen — wat wil de organisatie bereiken?</div>
+        </div>
+        <div style="font-size:18px;color:var(--text-muted);display:flex;align-items:center">→</div>
+        <div style="flex:1;min-width:150px;padding:10px 14px;background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.15);border-radius:var(--radius)">
+          <strong style="font-size:11px;color:var(--accent)">Niveau 2</strong>
+          <div style="font-size:11px;color:var(--text-secondary)">Processen — welke processen ondersteunen die doelen?</div>
+        </div>
+        <div style="font-size:18px;color:var(--text-muted);display:flex;align-items:center">→</div>
+        <div style="flex:1;min-width:150px;padding:10px 14px;background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.15);border-radius:var(--radius)">
+          <strong style="font-size:11px;color:var(--accent)">Niveau 3</strong>
+          <div style="font-size:11px;color:var(--text-secondary)">Systemen & informatie — welke netwerken, systemen en data ondersteunen die processen?</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:14px;color:var(--text-primary);margin:20px 0 12px">De 4 stappen</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px">
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;border-top:3px solid var(--accent)">
+          <strong style="font-size:13px;color:var(--accent)">Stap 1 — Randvoorwaarden</strong>
+          <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:8px">
+            <li>Definieer wat TBB betekent voor uw organisatie</li>
+            <li>Concretiseer organisatiedoelen</li>
+            <li>Identificeer essentiële processen</li>
+            <li>Bepaal waarderingsmethode (5-puntsschaal: zeer groot → geen belang)</li>
+            <li>Breng stakeholders in kaart</li>
+            <li>Maak een eerste inventarisatie van bestaande informatie</li>
+          </ul>
+        </div>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;border-top:3px solid var(--accent)">
+          <strong style="font-size:13px;color:var(--accent)">Stap 2 — Mandaat & Draagvlak</strong>
+          <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:8px">
+            <li>Bespreek met bestuur waarom TBB-inventarisatie nodig is</li>
+            <li>Bepaal samen de organisatiedoelen en kritieke zaken</li>
+            <li>Bespreek sturingsmechanismen en organisatiewaarden</li>
+            <li>Betrek de juiste stakeholders:
+              <ul style="margin-top:4px">
+                <li>Informatie-eigenaren</li>
+                <li>Lijnmanagement / proceseigenaren</li>
+                <li>Chief Information Officer (CIO)</li>
+                <li>Externe partners en toeleveranciers</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;border-top:3px solid var(--accent)">
+          <strong style="font-size:13px;color:var(--accent)">Stap 3 — TBB's inventariseren</strong>
+          <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:8px">
+            <li>Organiseer workshops met 5-8 personen per sessie</li>
+            <li>Stel een referentietabel op:
+              <ul style="margin-top:4px">
+                <li>Y-as: 5-punts waarderingsschaal</li>
+                <li>X-as: belangencategorieën (financieel, reputatie, juridisch, veiligheid)</li>
+              </ul>
+            </li>
+            <li>Laat deelnemers eerst individueel nadenken</li>
+            <li>Bevindingen toelichten en clusteren</li>
+            <li>Groepsbrede dialoog voeren</li>
+            <li>Processen waarderen en invullen in tabel</li>
+            <li>Presenteer resultaten aan bestuur ter validatie</li>
+          </ul>
+        </div>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;border-top:3px solid var(--accent)">
+          <strong style="font-size:13px;color:var(--accent)">Stap 4 — Vervolgstappen</strong>
+          <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:8px">
+            <li><strong>Verdieping:</strong> werk uit naar netwerk- en informatiesystemen (niveau 3). Begin met de zeer grote belangen.</li>
+            <li><strong>Eigenaarschap:</strong> wijs aan alle informatie een eigenaar toe. Dit helpt bij risicobeheer.</li>
+            <li><strong>Actualisering:</strong> dit is geen eenmalige exercitie. Richt een periodiek herzieningsproces in. Stem de frequentie af met het bestuur.</li>
+            <li><strong>Risicoanalyse:</strong> gebruik de TBB's als input. Identificeer specifieke dreigingen per belang. Evalueer huidige maatregelen en bepaal aanvullende maatregelen.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 style="font-size:14px;color:var(--text-primary);margin:20px 0 12px">Referentietabel (voorbeeld)</h3>
+      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;overflow-x:auto">
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:10px">De referentietabel is het centrale instrument. De Y-as toont de waardering, de X-as de belangencategorieën. Per cel vult u in welke informatie, processen of systemen in die combinatie vallen.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">WAARDERING</th><th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">FINANCIEEL</th><th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">REPUTATIE</th><th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">JURIDISCH</th><th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">VEILIGHEID</th><th style="text-align:left;padding:8px;color:var(--text-muted);font-size:10px">TBB-NIVEAU</th></tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border-light)"><td style="padding:8px"><strong>Zeer groot belang</strong></td><td style="padding:8px;color:var(--text-secondary)">Kernprocessen financiële admin</td><td style="padding:8px;color:var(--text-secondary)">Klantvertrouwen, mediacrisis</td><td style="padding:8px;color:var(--text-secondary)">Staatsgeheimen</td><td style="padding:8px;color:var(--text-secondary)">Levensbedreigend</td><td style="padding:8px"><span style="color:var(--red);font-weight:600">TBB-1 / TBB-2</span></td></tr>
+            <tr style="border-bottom:1px solid var(--border-light);background:var(--bg-elevated)"><td style="padding:8px"><strong>Groot belang</strong></td><td style="padding:8px;color:var(--text-secondary)">Belangrijke contracten, IP</td><td style="padding:8px;color:var(--text-secondary)">Partnerrelaties</td><td style="padding:8px;color:var(--text-secondary)">Persoonsgegevens, vertrouwelijk</td><td style="padding:8px;color:var(--text-secondary)">Fysieke veiligheid</td><td style="padding:8px"><span style="color:var(--orange);font-weight:600">TBB-2 / TBB-3</span></td></tr>
+            <tr style="border-bottom:1px solid var(--border-light)"><td style="padding:8px"><strong>Matig belang</strong></td><td style="padding:8px;color:var(--text-secondary)">Operationele processen</td><td style="padding:8px;color:var(--text-secondary)">Interne communicatie</td><td style="padding:8px;color:var(--text-secondary)">Compliance, dep. vertrouwelijk</td><td style="padding:8px;color:var(--text-secondary)">Bedrijfscontinuïteit</td><td style="padding:8px"><span style="color:var(--yellow);font-weight:600">TBB-3 / TBB-4</span></td></tr>
+            <tr style="border-bottom:1px solid var(--border-light);background:var(--bg-elevated)"><td style="padding:8px"><strong>Beperkt belang</strong></td><td style="padding:8px;color:var(--text-secondary)">Ondersteunende processen</td><td style="padding:8px;color:var(--text-secondary)">Interne documenten</td><td style="padding:8px;color:var(--text-secondary)">Algemene bedrijfsinformatie</td><td style="padding:8px;color:var(--text-secondary)">Comfort, efficiency</td><td style="padding:8px"><span style="color:var(--green);font-weight:600">TBB-4</span></td></tr>
+            <tr><td style="padding:8px"><strong>Geen belang</strong></td><td style="padding:8px;color:var(--text-secondary)">Openbare informatie</td><td style="padding:8px;color:var(--text-secondary)">Publieke informatie</td><td style="padding:8px;color:var(--text-secondary)">Geen restricties</td><td style="padding:8px;color:var(--text-secondary)">Geen impact</td><td style="padding:8px"><span style="color:var(--text-muted)">Geen TBB</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:14px;color:var(--text-primary);margin:20px 0 12px">Praktische tips</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:16px">
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:14px">
+          <strong style="font-size:12px;color:var(--green)">Do's</strong>
+          <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:6px">
+            <li>Begin breed, verfijn later — "perfect is the enemy of good enough"</li>
+            <li>Betrek het bestuur vroeg voor mandaat en draagvlak</li>
+            <li>Gebruik workshops voor dialoog, niet alleen vragenlijsten</li>
+            <li>Documenteer aannames en beslissingen</li>
+            <li>Plan periodieke herziening in (minimaal jaarlijks)</li>
+            <li>Koppel TBB's direct aan eigenaren</li>
+          </ul>
+        </div>
+        <div style="background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:var(--radius);padding:14px">
+          <strong style="font-size:12px;color:var(--red)">Don'ts</strong>
+          <ul style="font-size:11px;color:var(--text-secondary);line-height:1.6;padding-left:16px;margin-top:6px">
+            <li>Maak het geen eenmalige exercitie — TBB's veranderen</li>
+            <li>Rubriceer niet te hoog (leidt tot inefficiëntie) of te laag (leidt tot onvoldoende bescherming)</li>
+            <li>Laat de inventarisatie niet alleen door IT doen — het is een bedrijfsbrede exercitie</li>
+            <li>Ga niet direct naar systemen (niveau 3) zonder eerst doelen en processen te begrijpen</li>
+            <li>Vergeet externe partners en toeleveranciers niet</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="font-size:11px;color:var(--text-muted)"><strong>Bron:</strong> <a href="https://www.ncsc.nl/risicomanagement/hoe-breng-ik-mijn-te-beschermen-belangen-kaart" style="color:var(--accent)">NCSC — Hoe breng ik mijn te beschermen belangen in kaart?</a></p>
+    </div>
+
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

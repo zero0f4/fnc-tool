@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — Bronnen & Referenties</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <link rel="manifest" href="manifest.json">
+  <script src="theme.js"></script>
+  <style>
+    .bron-section { margin-bottom: 28px; }
+    .bron-section h2 { font-size: 15px; color: var(--text-primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+    .bron-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow-sm); display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+    .bron-card:hover { box-shadow: var(--shadow-md); }
+    .bron-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .bron-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+    .bron-meta { font-size: 10px; color: var(--text-muted); margin-top: 4px; font-family: var(--font-mono); }
+    .bron-link { font-size: 11px; color: var(--accent); text-decoration: none; white-space: nowrap; padding: 4px 10px; border: 1px solid var(--accent); border-radius: var(--radius); transition: all 0.15s; }
+    .bron-link:hover { background: var(--accent); color: white; }
+    .bron-tag { display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: 8px; font-weight: 500; margin-right: 4px; margin-top: 4px; }
+    .tag-wet { background: rgba(220,38,38,0.08); color: var(--red); }
+    .tag-norm { background: rgba(37,99,235,0.08); color: var(--accent); }
+    .tag-fw { background: rgba(5,150,105,0.08); color: var(--green); }
+    .tag-tool { background: rgba(124,58,237,0.08); color: var(--purple); }
+    .tag-overheid { background: rgba(217,119,6,0.08); color: var(--yellow); }
+    @media (max-width: 600px) { .bron-card { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay"></div>
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="sources" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">Bronnen & Referenties</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">Bronnen &amp; Referenties</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Bronnen & Referenties</div>
+        <div class="page-subtitle">Alle gebruikte bronnen, normen en frameworks in deze tool</div>
+      </div>
+      <div class="global-search">
+        <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+        <div id="globalSearchResults" class="global-search-results"></div>
+      </div>
+    </div>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <div class="content-area" style="max-width:900px">
+
+      <!-- WETGEVING & BELEID -->
+      <div class="bron-section">
+        <h2>Wetgeving & Overheidsbeleid</h2>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">ABRO 2026 — Algemene Beveiligingseisen voor Rijksoverheidsopdrachten</div>
+            <div class="bron-desc">Beveiligingseisen voor leveranciers die werken met Te Beschermen Belangen van de Rijksoverheid en politie. Vervangt ABDO 2019. Vastgesteld december 2025.</div>
+            <div class="bron-meta">Staatscourant 2025, nr. 42214 · Ministerie van Defensie & BZK</div>
+            <span class="bron-tag tag-wet">Wetgeving</span>
+          </div>
+          <a href="https://zoek.officielebekendmakingen.nl/stcrt-2025-42214.pdf" target="_blank" class="bron-link">PDF <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">ABDO 2019 — Algemene Beveiligingseisen voor Defensieopdrachten</div>
+            <div class="bron-desc">Voorganger van ABRO 2026. Gold alleen voor opdrachten van het Ministerie van Defensie. Blijft gelden voor bestaande contracten.</div>
+            <div class="bron-meta">Versie 1.1 · November 2019 · Ministerie van Defensie</div>
+            <span class="bron-tag tag-wet">Wetgeving</span>
+          </div>
+          <a href="https://www.defensie.nl/downloads/beleidsnota-s/2020/02/04/abdo-2019" target="_blank" class="bron-link">Link <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">Cyberbeveiligingswet (Cbw) — Nederlandse implementatie NIS2</div>
+            <div class="bron-desc">Nederlandse vertaling van de EU NIS2-richtlijn. Maakt cybersecurity wettelijk verplicht voor overheidsorganisaties en essentiële diensten. Verwacht Q2 2026.</div>
+            <div class="bron-meta">Tweede Kamer · Ministerie van Justitie en Veiligheid</div>
+            <span class="bron-tag tag-wet">Wetgeving</span>
+          </div>
+          <a href="https://www.digitaleoverheid.nl/overzicht-van-alle-onderwerpen/cyberbeveiligingswet/" target="_blank" class="bron-link">Link <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">BIO 2.0 — Baseline Informatiebeveiliging Overheid</div>
+            <div class="bron-desc">Verplicht normenkader voor informatiebeveiliging bij alle Nederlandse overheidsorganisaties. Versie 1.3 gepubliceerd maart 2026. Juridisch gekoppeld aan de Cyberbeveiligingswet.</div>
+            <div class="bron-meta">Staatscourant 2026, nr. 7416 · Ministerie van BZK</div>
+            <span class="bron-tag tag-overheid">Overheid</span><span class="bron-tag tag-norm">Norm</span>
+          </div>
+          <a href="https://www.bio-overheid.nl/category/producten/bio" target="_blank" class="bron-link">Link <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">VIRBI 2013 — Voorschrift Informatiebeveiliging Rijksdienst Bijzondere Informatie</div>
+            <div class="bron-desc">Regels voor de beveiliging van bijzondere (gerubriceerde) informatie bij de Rijksoverheid. Basis voor het rubriceringsstelsel.</div>
+            <div class="bron-meta">Besluit van 1 juni 2013 · Rijksoverheid</div>
+            <span class="bron-tag tag-wet">Wetgeving</span>
+          </div>
+          <a href="https://wetten.overheid.nl/BWBR0033507/2013-06-01" target="_blank" class="bron-link">Link <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+      </div>
+
+      <!-- INTERNATIONALE NORMEN -->
+      <div class="bron-section">
+        <h2>Internationale Normen & Standaarden</h2>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">ISO/IEC 27001:2022 — Informatiebeveiligingsmanagementsystemen</div>
+            <div class="bron-desc">Internationale norm voor het opzetten, implementeren en onderhouden van een ISMS. Certificeerbaar. Annex A bevat 93 beheersmaatregelen.</div>
+            <div class="bron-meta">ISO · Derde editie · Oktober 2022</div>
+            <span class="bron-tag tag-norm">Norm</span>
+          </div>
+          <a href="https://www.iso.org/standard/27001" target="_blank" class="bron-link">ISO <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">ISO/IEC 27002:2022 — Beheersmaatregelen voor informatiebeveiliging</div>
+            <div class="bron-desc">Referentie-set van 93 beheersmaatregelen in 4 thema's: Organisatorisch, Mensen, Fysiek, Technologisch. Ondersteunt ISO 27001.</div>
+            <div class="bron-meta">ISO · Derde editie · Februari 2022</div>
+            <span class="bron-tag tag-norm">Norm</span>
+          </div>
+          <a href="https://www.iso.org/standard/75652.html" target="_blank" class="bron-link">ISO <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">ISO 45001:2018 — Managementsystemen voor gezondheid en veiligheid op het werk</div>
+            <div class="bron-desc">Internationale norm voor arbeidsveiligheid. Relevant voor fysieke beveiligingsmaatregelen en personele veiligheid.</div>
+            <div class="bron-meta">ISO · Eerste editie · Maart 2018</div>
+            <span class="bron-tag tag-norm">Norm</span>
+          </div>
+          <a href="https://www.iso.org/standard/45001" target="_blank" class="bron-link">ISO <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">EN 50131 — Alarmsystemen / Inbraakbeveiligingssystemen</div>
+            <div class="bron-desc">Europese norm voor inbraakalarmsystemen. Definieert beveiligingsgraden 1-4 voor detectie, signalering en alarmopvolging.</div>
+            <div class="bron-meta">CENELEC · Meerdere delen</div>
+            <span class="bron-tag tag-norm">Norm</span>
+          </div>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">EN 50600 — Datacenter faciliteiten en infrastructuur</div>
+            <div class="bron-desc">Europese norm voor ontwerp, bouw en beheer van datacenters. Relevant voor fysieke beveiliging van IT-infrastructuur.</div>
+            <div class="bron-meta">CENELEC · Meerdere delen</div>
+            <span class="bron-tag tag-norm">Norm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAVO & EU -->
+      <div class="bron-section">
+        <h2>NAVO & EU Beveiligingsbeleid</h2>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">NAVO Beveiligingsbeleid — C-M(2002)49</div>
+            <div class="bron-desc">Het overkoepelende NAVO-beveiligingsbeleid dat de basis vormt voor de bescherming van gerubriceerde informatie binnen het bondgenootschap. Definieert de rubriceringsniveaus NATO RESTRICTED, NATO CONFIDENTIAL, NATO SECRET en COSMIC TOP SECRET.</div>
+            <div class="bron-meta">NAVO · Oorspronkelijk 2002, meerdere revisies</div>
+            <span class="bron-tag tag-wet">Beleid</span>
+          </div>
+          <a href="https://www.nato.int/cps/en/natohq/topics_69277.htm" target="_blank" class="bron-link">NATO <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">EU Beveiligingsregels — Besluit 2013/488/EU</div>
+            <div class="bron-desc">Beveiligingsregels van de Raad van de EU voor de bescherming van gerubriceerde EU-informatie. Definieert EU RESTRICTED, EU CONFIDENTIAL, EU SECRET en EU TOP SECRET.</div>
+            <div class="bron-meta">Raad van de Europese Unie · 23 september 2013</div>
+            <span class="bron-tag tag-wet">Beleid</span>
+          </div>
+          <a href="https://eur-lex.europa.eu/legal-content/NL/TXT/?uri=CELEX:32013D0488" target="_blank" class="bron-link">EUR-Lex <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">NATO CCDCOE — Cooperative Cyber Defence Centre of Excellence</div>
+            <div class="bron-desc">NAVO-kenniscentrum voor cyberdefensie in Tallinn, Estland. Ontwikkelt doctrine, trainingen en onderzoek op het gebied van cyberoperaties en -verdediging.</div>
+            <div class="bron-meta">NAVO · Tallinn, Estland</div>
+            <span class="bron-tag tag-overheid">Organisatie</span>
+          </div>
+          <a href="https://ccdcoe.org/" target="_blank" class="bron-link">CCDCOE <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">Equivalentietabel Rubriceringen</div>
+            <div class="bron-desc">De ABRO hanteert Nederlandse rubriceringen die overeenkomen met NAVO- en EU-equivalenten: Dep.V = NATO RESTRICTED = EU RESTRICTED, Stg.C = NATO CONFIDENTIAL, Stg.G = NATO SECRET, Stg.ZG = COSMIC TOP SECRET.</div>
+            <div class="bron-meta">Verwerkt in FNC Tool TBB Stelsel pagina</div>
+            <span class="bron-tag tag-norm">Referentie</span>
+          </div>
+          <a href="tbb.html" class="bron-link">TBB <span data-icon="arrow-right" data-icon-size="12"></span></a>
+        </div>
+      </div>
+
+      <!-- FRAMEWORKS -->
+      <div class="bron-section">
+        <h2>Cybersecurity Frameworks</h2>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">NIST Cybersecurity Framework (CSF) 2.0</div>
+            <div class="bron-desc">Risk-based framework met 6 functies: Govern, Identify, Protect, Detect, Respond, Recover. 22 categorieën, 106 subcategorieën. Breed toegepast wereldwijd.</div>
+            <div class="bron-meta">NIST · CSWP 29 · Februari 2024 · Publiek domein</div>
+            <span class="bron-tag tag-fw">Framework</span>
+          </div>
+          <a href="https://www.nist.gov/cyberframework" target="_blank" class="bron-link">NIST <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">NIST SP 800-61 Rev. 3 — Incident Response</div>
+            <div class="bron-desc">Richtlijnen voor incident response, gekoppeld aan CSF 2.0. Vervangt het klassieke 4-fasenmodel met een CSF-geïntegreerde aanpak.</div>
+            <div class="bron-meta">NIST · April 2025 · Publiek domein</div>
+            <span class="bron-tag tag-fw">Framework</span>
+          </div>
+          <a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" class="bron-link">NIST <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">CSA Cloud Control Matrix (CCM) v4</div>
+            <div class="bron-desc">Cloud Security Alliance framework voor cloudbeveiliging. 17 domeinen, ~197 controls. Specifiek gericht op cloudservices en SaaS/PaaS/IaaS.</div>
+            <div class="bron-meta">Cloud Security Alliance · Versie 4</div>
+            <span class="bron-tag tag-fw">Framework</span>
+          </div>
+          <a href="https://cloudsecurityalliance.org/artifacts/cloud-controls-matrix-v4" target="_blank" class="bron-link">CSA <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">Diamond Model of Intrusion Analysis</div>
+            <div class="bron-desc">Analytisch model voor het beschrijven van cyberinbreuken via 4 componenten: Adversary, Capability, Infrastructure, Victim. Ontwikkeld door Caltagirone, Pendergast & Betz.</div>
+            <div class="bron-meta">2013 · Center for Cyber Intelligence Analysis and Threat Research</div>
+            <span class="bron-tag tag-fw">Model</span>
+          </div>
+          <a href="https://www.activeresponse.org/wp-content/uploads/2013/07/diamond.pdf" target="_blank" class="bron-link">PDF <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+      </div>
+
+      <!-- TECHNISCHE BRONNEN -->
+      <div class="bron-section">
+        <h2>Technische Bronnen</h2>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">JSCU Logging Essentials</div>
+            <div class="bron-desc">Technische baseline van de Joint Sigint Cyber Unit Nederland voor Windows Event Logging. 194 event IDs in 16 categorieën. Richtlijnen voor centraal verzamelen via WEF/WEC.</div>
+            <div class="bron-meta">JSCU-NL · Apache 2.0 licentie · GitHub</div>
+            <span class="bron-tag tag-tool">Open Source</span>
+          </div>
+          <a href="https://github.com/JSCU-NL/logging-essentials" target="_blank" class="bron-link">GitHub <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">MITRE ATT&CK Framework</div>
+            <div class="bron-desc">Kennisbank van tactieken, technieken en procedures (TTPs) van cyberaanvallers. Gebruikt in combinatie met het Diamond Model voor dreigingsanalyse.</div>
+            <div class="bron-meta">MITRE Corporation · Continu bijgewerkt</div>
+            <span class="bron-tag tag-fw">Framework</span>
+          </div>
+          <a href="https://attack.mitre.org/" target="_blank" class="bron-link">MITRE <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+      </div>
+
+      <!-- OVERHEID -->
+      <div class="bron-section">
+        <h2>Overheidsinstanties & Informatie</h2>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">NCSC — Hoe breng ik mijn te beschermen belangen in kaart?</div>
+            <div class="bron-desc">Praktische handleiding van het Nationaal Cyber Security Centrum voor het inventariseren van te beschermen belangen (kroonjuwelen) in 4 stappen.</div>
+            <div class="bron-meta">NCSC · Nationaal Cyber Security Centrum</div>
+            <span class="bron-tag tag-overheid">Overheid</span>
+          </div>
+          <a href="https://www.ncsc.nl/risicomanagement/hoe-breng-ik-mijn-te-beschermen-belangen-kaart" target="_blank" class="bron-link">NCSC <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">NBIV — Nationaal Bureau voor Verbindingsbeveiliging</div>
+            <div class="bron-desc">Centraal aanspreekpunt voor beveiligingsvraagstukken bij gerubriceerde opdrachten. Geeft ABRO-verklaringen uit en houdt toezicht op naleving.</div>
+            <div class="bron-meta">Onderdeel van de AIVD</div>
+            <span class="bron-tag tag-overheid">Overheid</span>
+          </div>
+          <a href="https://www.aivd.nl/onderwerpen/informatiebeveiliging" target="_blank" class="bron-link">AIVD <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">Beveiligingseisen bij overheidsopdrachten (ABRO)</div>
+            <div class="bron-desc">Rijksoverheid informatiepagina over beveiligingseisen bij opdrachten met risico's voor de nationale veiligheid.</div>
+            <div class="bron-meta">Rijksoverheid.nl</div>
+            <span class="bron-tag tag-overheid">Overheid</span>
+          </div>
+          <a href="https://www.rijksoverheid.nl/onderwerpen/zakendoen-met-het-rijk/beveiligingseisen-abro" target="_blank" class="bron-link">Link <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+
+        <div class="bron-card">
+          <div>
+            <div class="bron-title">Wpbr — Wet particuliere beveiligingsorganisaties en recherchebureaus</div>
+            <div class="bron-desc">Wet die eisen stelt aan particuliere beveiligingsorganisaties, waaronder screening van personeel. Relevant voor personele beveiliging.</div>
+            <div class="bron-meta">Overheid.nl</div>
+            <span class="bron-tag tag-wet">Wetgeving</span>
+          </div>
+          <a href="https://wetten.overheid.nl/BWBR0008973" target="_blank" class="bron-link">Wet <span data-icon="external" data-icon-size="12"></span></a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>
