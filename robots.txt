@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fnc-tool.nl/sitemap.xml
+Sitemap: https://zero0f4.github.io/fnc-tool/sitemap.xml

@@ -7,7 +7,7 @@ Static PWA voor ABRO 2026 eisencheck, framework-mappings en Rijksoverheid-normen
 ### Cloudflare Pages (aanbevolen)
 
 **Eenmalig:**
-1. Domein registreren (bv `fnc-tool.nl`) bij TransIP/Versio
+1. Domein registreren of GitHub Pages gebruiken
 2. DNS naar Cloudflare delegeren (NS-records van CF instellen bij registrar)
 3. Op dash.cloudflare.com → **Pages** → Create project → Direct Upload of Git
 4. Upload deze folder

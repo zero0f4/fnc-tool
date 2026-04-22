@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fnc-tool.nl/</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/home.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/home.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/werkblad.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/werkblad.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/abdo.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/abdo.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/jscu.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/jscu.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/tbb.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/tbb.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/diamond.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/diamond.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/bronnen.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/bronnen.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fnc-tool.nl/handleiding.html</loc>
+    <loc>https://zero0f4.github.io/fnc-tool/handleiding.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
