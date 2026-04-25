@@ -1,7 +1,6 @@
-Contact: https://zero0f4.github.io/fnc-tool/security
+Contact: https://github.com/zero0f4/fnc-tool/security/advisories/new
+Contact: mailto:zero0f4@users.noreply.github.com
 Expires: 2027-04-22T00:00:00.000Z
 Preferred-Languages: nl, en
 Canonical: https://zero0f4.github.io/fnc-tool/.well-known/security.txt
-
-# Vul Contact aan met je e-mail of vul bovenstaande security-URL
-# Geldig tot 22 april 2027 — vervolgens refreshen.
+Acknowledgments: https://github.com/zero0f4/fnc-tool/security/advisories
