@@ -102,6 +102,9 @@
       <a href="handleiding.html" class="nav-item" style="text-decoration:none">
         <span class="nav-icon" data-icon="manual"></span> Handleiding
       </a>
+      <a href="changelog.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="info"></span> Wijzigingsblad
+      </a>
     </nav>
     <div class="sidebar-frameworks">
       <div class="sidebar-hint">
@@ -119,10 +122,15 @@
       <div>
         <div class="page-title">ABRO Werkblad</div>
         <div class="page-subtitle">Werkblad voor uw organisatie — bepaal van toepassing zijn en voeg notities toe</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--text-muted);max-width:560px;line-height:1.5">
+          <span style="color:#eab308;font-weight:600">⚠ Disclaimer —</span> de tool kan fouten of verkeerde interpretaties bevatten. De gebruiker is altijd zelf verantwoordelijk voor controle van de resultaten tegen de officiële bronteksten. <a href="home.html#disclaimer" style="color:var(--accent)">Volledige disclaimer</a>.
+        </div>
       </div>
       <div class="page-actions">
         <button class="btn" id="exportCsvWb"><span data-icon="export-csv"></span> Export CSV</button>
         <button class="btn" id="exportXlsxWb"><span data-icon="export-csv"></span> Export Excel</button>
+        <button class="btn" id="importWbBtn"><span data-icon="upload"></span> Import</button>
+        <input type="file" id="importWbFile" accept=".csv,.xlsx" style="display:none" />
         <div style="position:relative;display:inline-block" id="printMenuWrap">
           <button class="btn" id="printWb"><span data-icon="print"></span> Print / PDF ▾</button>
           <div id="printMenu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:100;min-width:240px">
@@ -547,6 +555,98 @@
     XLSX.writeFile(wb, 'fnc-werkblad-' + new Date().toISOString().slice(0,10) + '.xlsx');
   });
 
+  // Import (CSV of XLSX) — herstelt status + notities op basis van ID-kolom
+  function statusFromLabel(label) {
+    const map = {
+      'Van toepassing': 'yes',
+      'Niet van toepassing': 'no',
+      'Nader te bepalen': 'tbd',
+      'Nog niet beoordeeld': 'none',
+    };
+    return map[(label || '').trim()] || null;
+  }
+
+  async function applyImportRows(rows) {
+    if (!rows || rows.length === 0) { alert('Bestand leeg.'); return; }
+    // Verwacht header rij — vind kolommen
+    const header = rows[0].map(h => (h || '').toString().trim().toLowerCase());
+    const idCol = header.findIndex(h => h === 'id');
+    const statusCol = header.findIndex(h => h === 'status');
+    const noteCol = header.findIndex(h => h === 'notitie' || h === 'note');
+    if (idCol < 0) { alert('Geen kolom "ID" gevonden in bestand.'); return; }
+
+    let count = 0, skipped = 0;
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const eid = (r[idCol] || '').toString().trim();
+      if (!eid) continue;
+      // Verifieer ID bestaat in ABRO_DATA
+      const exists = ABRO_DATA.requirements.find(x => x.id === eid);
+      if (!exists) { skipped++; continue; }
+      if (statusCol >= 0) {
+        const st = statusFromLabel(r[statusCol]);
+        if (st && st !== 'none') setStatus(eid, st);
+      }
+      if (noteCol >= 0) {
+        const nt = (r[noteCol] || '').toString();
+        if (nt) {
+          if (!state[eid]) state[eid] = {};
+          state[eid].note = nt;
+          saveState(state);
+        }
+      }
+      count++;
+    }
+    render();
+    alert('Import klaar: ' + count + ' eisen verwerkt' + (skipped ? ' (' + skipped + ' onbekende ID\'s overgeslagen)' : '') + '.');
+  }
+
+  document.getElementById('importWbBtn').addEventListener('click', () => {
+    document.getElementById('importWbFile').click();
+  });
+
+  document.getElementById('importWbFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const ext = file.name.toLowerCase().split('.').pop();
+    try {
+      if (ext === 'csv') {
+        const text = await file.text();
+        // Simpele CSV parser (verwerkt quoted values)
+        const rows = [];
+        const lines = text.split(/\r?\n/).filter(l => l.length);
+        for (const line of lines) {
+          const cols = [];
+          let cur = '', inQ = false;
+          for (let i = 0; i < line.length; i++) {
+            const c = line[i];
+            if (c === '"') {
+              if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+              else inQ = !inQ;
+            } else if (c === ',' && !inQ) {
+              cols.push(cur); cur = '';
+            } else { cur += c; }
+          }
+          cols.push(cur);
+          rows.push(cols);
+        }
+        await applyImportRows(rows);
+      } else if (ext === 'xlsx') {
+        if (typeof XLSX === 'undefined') { alert('Excel library niet geladen.'); return; }
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf);
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, {header: 1, defval: ''});
+        await applyImportRows(rows);
+      } else {
+        alert('Onbekend bestandstype. Gebruik .csv of .xlsx.');
+      }
+    } catch (err) {
+      alert('Import-fout: ' + err.message);
+    }
+    e.target.value = '';   // reset zodat zelfde file weer geupload kan worden
+  });
+
   // Print
   document.getElementById('printWb').addEventListener('click', () => {
     document.body.setAttribute('data-print-label', 'ABRO Werkblad');
@@ -585,14 +685,48 @@
   updateProfileDisplay();
 
   document.getElementById('profileTBB').addEventListener('change', () => {
+    const type = document.getElementById('profileType').value;
+    const tbb = document.getElementById('profileTBB').value;
+    if (type === 'cloud' && tbb !== '4' && tbb !== '') {
+      // Mag niet — reset naar 4
+      document.getElementById('profileTBB').value = '4';
+      alert('Cloud-dienst kan alleen op TBB4 (Departementaal Vertrouwelijk).');
+      return;
+    }
     savedProfile.tbb = document.getElementById('profileTBB').value;
     localStorage.setItem('fnc_werkblad_profile', JSON.stringify(savedProfile));
   });
+  function applyCloudConstraint() {
+    const type = document.getElementById('profileType').value;
+    const tbbSelect = document.getElementById('profileTBB');
+    if (type === 'cloud') {
+      // Cloud is alleen toegestaan op TBB4 — forceer + blokkeer
+      tbbSelect.value = '4';
+      savedProfile.tbb = '4';
+      Array.from(tbbSelect.options).forEach(o => {
+        o.disabled = (o.value !== '4' && o.value !== '');
+      });
+      tbbSelect.title = 'Cloud-dienst kan alleen op TBB4 (Departementaal Vertrouwelijk)';
+      // Visueel merken
+      tbbSelect.style.background = 'rgba(34,197,94,0.08)';
+      tbbSelect.style.borderColor = 'rgba(34,197,94,0.45)';
+    } else {
+      Array.from(tbbSelect.options).forEach(o => o.disabled = false);
+      tbbSelect.title = '';
+      tbbSelect.style.background = '';
+      tbbSelect.style.borderColor = '';
+    }
+  }
+
   document.getElementById('profileType').addEventListener('change', () => {
     savedProfile.type = document.getElementById('profileType').value;
+    applyCloudConstraint();
     localStorage.setItem('fnc_werkblad_profile', JSON.stringify(savedProfile));
     updateProfileDisplay();
   });
+
+  // Bij eerste load ook constraint toepassen als clouddienst al was opgeslagen
+  applyCloudConstraint();
 
   document.getElementById('applyProfile').addEventListener('click', () => {
     const tbb = document.getElementById('profileTBB').value;

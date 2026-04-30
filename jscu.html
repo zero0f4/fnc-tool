@@ -16,10 +16,32 @@
     .jscu-stat { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; text-align: center; border-top: 3px solid var(--fw-jscu); }
     .jscu-stat strong { font-family: var(--font-mono); font-size: 22px; color: var(--fw-jscu); display: block; }
     .jscu-stat span { font-size: 11px; color: var(--text-muted); }
-    .jscu-search { margin-bottom: 20px; display: flex; gap: 12px; align-items: center; }
-    .jscu-search input { flex: 1; max-width: 400px; padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--font-sans); font-size: 13px; background: var(--bg-surface); color: var(--text-primary); }
+    .jscu-index { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 20px; border-left: 3px solid var(--fw-jscu); }
+    .jscu-index .index-title { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
+    .jscu-index .index-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 14px; }
+    .jscu-index .index-meta b { color: var(--fw-jscu); font-family: var(--font-mono); }
+    .jscu-index-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .jscu-cat-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--bg-elevated); border: 1px solid var(--border); font-size: 12px; cursor: pointer; transition: all .15s; color: var(--text-primary); }
+    .jscu-cat-chip:hover { border-color: var(--fw-jscu); background: rgba(16,185,129,0.06); }
+    .jscu-cat-chip.active { background: var(--fw-jscu); color: white; border-color: var(--fw-jscu); }
+    .jscu-cat-chip .cnt { font-family: var(--font-mono); font-size: 10px; opacity: 0.7; padding: 1px 6px; background: rgba(0,0,0,0.15); border-radius: 8px; }
+    .jscu-cat-chip.active .cnt { background: rgba(255,255,255,0.25); opacity: 1; }
+    .jscu-cat-chip.clear { border-style: dashed; }
+    .jscu-search { margin-bottom: 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .jscu-search input { flex: 1; min-width: 240px; max-width: 400px; padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--font-sans); font-size: 13px; background: var(--bg-surface); color: var(--text-primary); }
     .jscu-search input:focus { outline: none; border-color: var(--fw-jscu); box-shadow: 0 0 0 2px rgba(16,185,129,0.1); }
     .jscu-search .count { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--bg-elevated); padding: 4px 10px; border-radius: 20px; }
+    .jscu-search .btn-sm { font-size: 12px; padding: 6px 12px; border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .jscu-search .btn-sm:hover { border-color: var(--fw-jscu); color: var(--fw-jscu); }
+    .jscu-search .btn-search { background: var(--fw-jscu); color: white; border-color: var(--fw-jscu); }
+    .jscu-search .btn-search:hover { background: var(--fw-jscu); color: white; opacity: 0.9; }
+    .jscu-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .jscu-stat-pill { font-size: 11px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg-elevated); display: inline-flex; align-items: center; gap: 6px; }
+    .jscu-stat-pill b { font-family: var(--font-mono); font-weight: 700; }
+    .jscu-stat-pill.status-actief { border-color: rgba(34,197,94,0.45); background: rgba(34,197,94,0.10); color: #22c55e; }
+    .jscu-stat-pill.status-niet { border-color: rgba(239,68,68,0.45); background: rgba(239,68,68,0.10); color: #ef4444; }
+    .jscu-stat-pill.status-nvt { border-color: rgba(148,163,184,0.45); background: rgba(148,163,184,0.10); color: var(--text-secondary); }
+    .jscu-stat-pill.status-todo { border-color: rgba(234,179,8,0.45); background: rgba(234,179,8,0.10); color: #eab308; }
     .jscu-table { width: 100%; border-collapse: collapse; }
     .jscu-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 10px 8px; text-align: left; border-bottom: 2px solid var(--border); font-weight: 600; position: sticky; top: 0; background: var(--bg-base); z-index: 1; }
     .jscu-table td { padding: 8px; border-bottom: 1px solid var(--border-light); font-size: 12px; vertical-align: top; }
@@ -31,6 +53,12 @@
     .notes { color: var(--text-secondary); font-size: 11px; margin-top: 2px; }
     .gpo { color: var(--text-muted); font-size: 10px; font-family: var(--font-mono); margin-top: 3px; word-break: break-all; }
     .channel-badge { font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; border-radius: 3px; background: rgba(16,185,129,0.08); color: var(--fw-jscu); border: 1px solid rgba(16,185,129,0.2); }
+    .ev-status { font-size: 11px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-surface); color: var(--text-primary); width: 100%; max-width: 130px; }
+    .ev-status.s-actief { border-color: rgba(34,197,94,0.5); background: rgba(34,197,94,0.08); }
+    .ev-status.s-niet { border-color: rgba(239,68,68,0.5); background: rgba(239,68,68,0.08); }
+    .ev-status.s-nvt { border-color: rgba(148,163,184,0.5); background: rgba(148,163,184,0.08); }
+    .ev-note { font-size: 11px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-surface); color: var(--text-primary); width: 100%; font-family: var(--font-sans); }
+    .ev-note:focus, .ev-status:focus { outline: none; border-color: var(--fw-jscu); }
     .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--accent); text-decoration: none; font-weight: 500; }
     .back-link:hover { text-decoration: underline; }
   </style>
@@ -84,6 +112,9 @@
       <a href="handleiding.html" class="nav-item" style="text-decoration:none">
         <span class="nav-icon" data-icon="manual"></span> Handleiding
       </a>
+      <a href="changelog.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="info"></span> Wijzigingsblad
+      </a>
     </nav>
     <div class="sidebar-frameworks">
       <div class="sidebar-hint">
@@ -110,6 +141,9 @@
       <div>
         <div class="page-title">JSCU Logging Essentials</div>
         <div class="page-subtitle">Joint Sigint Cyber Unit Nederland — Windows Event Logging Baseline — 194 Event IDs</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--text-muted);max-width:560px;line-height:1.5">
+          <span style="color:#eab308;font-weight:600">⚠ Disclaimer —</span> de tool kan fouten of verkeerde interpretaties bevatten. De gebruiker is altijd zelf verantwoordelijk voor controle van de resultaten. <a href="home.html#disclaimer" style="color:var(--accent)">Volledige disclaimer</a>.
+        </div>
       </div>
       <div class="global-search">
         <input type="text" id="globalSearch" placeholder="Zoek door alles...">
@@ -125,25 +159,37 @@
     </a>
 
     <div class="content-area">
-      <div class="jscu-header-bar">
-        <div class="jscu-stat"><strong id="totalEvents">194</strong><span>Event IDs</span></div>
-        <div class="jscu-stat"><strong id="totalCats">16</strong><span>Categorieën</span></div>
-        <div class="jscu-stat"><strong>Win 10+</strong><span>Minimaal OS</span></div>
-        <div class="jscu-stat"><strong>6 mnd</strong><span>Aanbevolen retentie</span></div>
+      <div class="jscu-index">
+        <div class="index-title"><span data-icon="sources" data-icon-size="14" style="vertical-align:-2px;margin-right:6px"></span>Logging Index</div>
+        <div class="index-meta">
+          <b><span id="totalEvents">194</span></b> Event IDs verdeeld over
+          <b><span id="totalCats">16</span></b> categorieën · OS-baseline: <b>Win 10+</b> · Aanbevolen retentie: <b>6 maanden</b> · Channel: voornamelijk Security/Microsoft-Windows
+        </div>
+        <div class="jscu-index-grid" id="catIndex"></div>
       </div>
 
-      <div class="jscu-search">
-        <input type="text" id="searchInput" placeholder="Zoek op Event ID, categorie, beschrijving, channel...">
+      <form class="jscu-search" id="searchForm" autocomplete="off" onsubmit="return false;">
+        <input type="text" id="searchInput" placeholder="Zoek op Event ID, categorie, subcategorie, beschrijving, channel of GPO-pad...">
+        <button type="submit" class="btn-sm btn-search" id="searchBtn" title="Zoek (Enter)"><span data-icon="search" data-icon-size="14"></span> Zoek</button>
+        <button type="button" class="btn-sm" id="searchClear" title="Wis zoekopdracht">Wis</button>
         <span class="count"><span id="resultCount">194</span> events</span>
-      </div>
+        <button type="button" class="btn-sm" id="exportJson" title="Exporteer status + notities als JSON"><span data-icon="download" data-icon-size="14"></span> Export JSON</button>
+        <button type="button" class="btn-sm" id="importJson" title="Importeer eerder opgeslagen JSON"><span data-icon="upload" data-icon-size="14"></span> Import JSON</button>
+        <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+        <button type="button" class="btn-sm" id="resetWerkblad" title="Wis alle status + notities">Reset werkblad</button>
+      </form>
+
+      <div class="jscu-stats" id="jscuStats"></div>
 
       <table class="jscu-table">
         <thead>
           <tr>
-            <th style="width:80px">Event ID</th>
+            <th style="width:70px">Event ID</th>
             <th>Beschrijving</th>
             <th style="width:80px">Channel</th>
             <th style="width:70px">Level</th>
+            <th style="width:140px">Status</th>
+            <th style="width:220px">Notitie</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -152,48 +198,99 @@
   </main>
 </div>
 
-<script src="abro-data.js"></script>
+<script src="jscu-events.js"></script>
 <script>
 (function() {
   const searchInput = document.getElementById('searchInput');
   const tableBody = document.getElementById('tableBody');
   const resultCount = document.getElementById('resultCount');
-  const catNav = document.getElementById('catNav');
+  const catIndex = document.getElementById('catIndex');
+  const statsEl = document.getElementById('jscuStats');
+  const STORAGE_KEY = 'fnc:jscuWerkblad';
 
-  // Build category nav
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function loadWerkblad() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveWerkblad(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  let werkblad = loadWerkblad();
+
+  if (typeof JSCU_EVENTS === 'undefined' || !Array.isArray(JSCU_EVENTS)) {
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">JSCU event-data niet geladen.</td></tr>';
+    return;
+  }
+
+  // Counts per categorie
   const cats = {};
   JSCU_EVENTS.forEach(ev => {
     if (!cats[ev.category]) cats[ev.category] = 0;
     cats[ev.category]++;
   });
 
-  let catNavHtml = '';
-  Object.entries(cats).forEach(([cat, count]) => {
-    catNavHtml += '<button class="nav-item cat-btn" data-cat="' + cat + '">' +
-      '<span class="nav-icon ch-icon ch-4" style="font-size:8px;width:18px;height:18px;background:var(--fw-jscu)">' + count + '</span> ' +
-      cat + '</button>';
-  });
-  catNav.innerHTML = catNavHtml;
+  document.getElementById('totalEvents').textContent = JSCU_EVENTS.length;
+  document.getElementById('totalCats').textContent = Object.keys(cats).length;
 
-  // Cat nav click — filter to that category
-  document.querySelectorAll('.cat-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      searchInput.value = btn.dataset.cat;
-      renderTable();
+  // Index chips bovenaan
+  let chipsHtml = '';
+  Object.entries(cats)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([cat, count]) => {
+      chipsHtml += '<span class="jscu-cat-chip" data-cat="' + escapeHtml(cat) + '">' +
+        escapeHtml(cat) + ' <span class="cnt">' + count + '</span></span>';
     });
+  chipsHtml += '<span class="jscu-cat-chip clear" data-cat="">Toon alles</span>';
+  catIndex.innerHTML = chipsHtml;
+
+  function highlightChip(cat) {
+    document.querySelectorAll('.jscu-cat-chip').forEach(c => {
+      c.classList.toggle('active', (c.dataset.cat || '') === (cat || ''));
+    });
+  }
+  catIndex.addEventListener('click', (e) => {
+    const chip = e.target.closest('.jscu-cat-chip');
+    if (!chip) return;
+    searchInput.value = chip.dataset.cat || '';
+    renderTable();
+    highlightChip(chip.dataset.cat || '');
   });
+
+  function renderStats() {
+    const total = JSCU_EVENTS.length;
+    let actief = 0, niet = 0, nvt = 0;
+    JSCU_EVENTS.forEach(ev => {
+      const s = werkblad[ev.event_id] && werkblad[ev.event_id].status;
+      if (s === 'actief') actief++;
+      else if (s === 'niet') niet++;
+      else if (s === 'nvt') nvt++;
+    });
+    const todo = total - actief - niet - nvt;
+    statsEl.innerHTML =
+      '<span class="jscu-stat-pill status-actief">Actief <b>' + actief + '</b></span>' +
+      '<span class="jscu-stat-pill status-niet">Niet actief <b>' + niet + '</b></span>' +
+      '<span class="jscu-stat-pill status-nvt">N.v.t. <b>' + nvt + '</b></span>' +
+      '<span class="jscu-stat-pill status-todo">Te beoordelen <b>' + todo + '</b></span>' +
+      '<span class="jscu-stat-pill">Totaal <b>' + total + '</b></span>';
+  }
 
   function renderTable() {
-    const search = searchInput.value.toLowerCase();
+    const search = (searchInput.value || '').toLowerCase().trim();
     const filtered = JSCU_EVENTS.filter(ev => {
       if (!search) return true;
       return ev.event_id.toLowerCase().includes(search) ||
         ev.category.toLowerCase().includes(search) ||
         ev.subcategory.toLowerCase().includes(search) ||
-        ev.notes.toLowerCase().includes(search) ||
-        ev.channel.toLowerCase().includes(search) ||
-        ev.provider.toLowerCase().includes(search) ||
-        (ev.gpo && ev.gpo.toLowerCase().includes(search));
+        (ev.notes || '').toLowerCase().includes(search) ||
+        (ev.channel || '').toLowerCase().includes(search) ||
+        (ev.provider || '').toLowerCase().includes(search) ||
+        (ev.gpo || '').toLowerCase().includes(search);
     });
 
     resultCount.textContent = filtered.length;
@@ -205,30 +302,148 @@
       if (ev.category !== currentCat) {
         currentCat = ev.category;
         const catCount = filtered.filter(e => e.category === currentCat).length;
-        html += '<tr class="jscu-cat-row"><td colspan="4">' + currentCat + ' (' + catCount + ')</td></tr>';
+        html += '<tr class="jscu-cat-row"><td colspan="6">' + escapeHtml(currentCat) + ' (' + catCount + ')</td></tr>';
       }
+      const wb = werkblad[ev.event_id] || {};
+      const status = wb.status || '';
+      const note = wb.note || '';
+      const sCls = status ? ' s-' + status : '';
 
-      html += '<tr class="jscu-row">' +
-        '<td><span class="eid">' + ev.event_id + '</span></td>' +
+      html += '<tr class="jscu-row" data-eid="' + escapeHtml(ev.event_id) + '">' +
+        '<td><span class="eid">' + escapeHtml(ev.event_id) + '</span></td>' +
         '<td>' +
-          '<div class="subcat">' + ev.subcategory + '</div>' +
-          '<div class="notes">' + ev.notes + '</div>' +
-          (ev.gpo ? '<div class="gpo">GPO: ' + ev.gpo + '</div>' : '') +
-          '<div class="notes" style="margin-top:4px;color:var(--text-muted)">Provider: ' + ev.provider + '</div>' +
+          '<div class="subcat">' + escapeHtml(ev.subcategory) + '</div>' +
+          '<div class="notes">' + escapeHtml(ev.notes) + '</div>' +
+          (ev.gpo ? '<div class="gpo">GPO: ' + escapeHtml(ev.gpo) + '</div>' : '') +
+          '<div class="notes" style="margin-top:4px;color:var(--text-muted)">Provider: ' + escapeHtml(ev.provider) + '</div>' +
         '</td>' +
-        '<td><span class="channel-badge">' + ev.channel + '</span></td>' +
-        '<td style="font-size:11px;color:var(--text-secondary)">' + ev.level + '</td>' +
+        '<td><span class="channel-badge">' + escapeHtml(ev.channel) + '</span></td>' +
+        '<td style="font-size:11px;color:var(--text-secondary)">' + escapeHtml(ev.level) + '</td>' +
+        '<td>' +
+          '<select class="ev-status' + sCls + '" data-eid="' + escapeHtml(ev.event_id) + '">' +
+            '<option value="">— Te beoordelen</option>' +
+            '<option value="actief"' + (status === 'actief' ? ' selected' : '') + '>Actief</option>' +
+            '<option value="niet"' + (status === 'niet' ? ' selected' : '') + '>Niet actief</option>' +
+            '<option value="nvt"' + (status === 'nvt' ? ' selected' : '') + '>N.v.t.</option>' +
+          '</select>' +
+        '</td>' +
+        '<td><input class="ev-note" type="text" data-eid="' + escapeHtml(ev.event_id) + '" value="' + escapeHtml(note) + '" placeholder="Notitie..."></td>' +
       '</tr>';
     });
 
     if (filtered.length === 0) {
-      html = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">Geen events gevonden</td></tr>';
+      html = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">Geen events gevonden</td></tr>';
     }
 
     tableBody.innerHTML = html;
+    renderStats();
   }
 
-  searchInput.addEventListener('input', renderTable);
+  // Werkblad: wijzigingen opslaan via event-delegation
+  tableBody.addEventListener('change', (e) => {
+    const t = e.target;
+    if (t.classList.contains('ev-status')) {
+      const eid = t.dataset.eid;
+      const v = t.value;
+      werkblad[eid] = werkblad[eid] || {};
+      if (v) werkblad[eid].status = v; else delete werkblad[eid].status;
+      if (!werkblad[eid].status && !werkblad[eid].note) delete werkblad[eid];
+      saveWerkblad(werkblad);
+      // Re-color select
+      t.className = 'ev-status' + (v ? ' s-' + v : '');
+      renderStats();
+    }
+  });
+  tableBody.addEventListener('input', (e) => {
+    const t = e.target;
+    if (t.classList.contains('ev-note')) {
+      const eid = t.dataset.eid;
+      const v = t.value;
+      werkblad[eid] = werkblad[eid] || {};
+      if (v) werkblad[eid].note = v; else delete werkblad[eid].note;
+      if (!werkblad[eid].status && !werkblad[eid].note) delete werkblad[eid];
+      saveWerkblad(werkblad);
+    }
+  });
+
+  // Search — alleen filteren bij bevestiging (knop, Enter, of Wis)
+  function applySearch() {
+    const v = searchInput.value.trim();
+    highlightChip(cats[v] ? v : '');
+    renderTable();
+  }
+  document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    applySearch();
+  });
+  document.getElementById('searchBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    applySearch();
+  });
+  document.getElementById('searchClear').addEventListener('click', () => {
+    searchInput.value = '';
+    applySearch();
+    searchInput.focus();
+  });
+  // Live filter: filter direct mee tijdens typen (knop/Enter blijven werken voor expliciete bevestiging)
+  searchInput.addEventListener('input', applySearch);
+
+  // Export
+  document.getElementById('exportJson').addEventListener('click', () => {
+    const payload = {
+      type: 'fnc-jscu-werkblad',
+      version: 1,
+      exported_at: new Date().toISOString(),
+      events: werkblad
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,10);
+    a.href = url; a.download = 'jscu-werkblad-' + stamp + '.json';
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+  });
+
+  // Import
+  const importFile = document.getElementById('importFile');
+  document.getElementById('importJson').addEventListener('click', () => importFile.click());
+  importFile.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        const incoming = data && data.events ? data.events : data;
+        if (typeof incoming !== 'object' || !incoming) throw new Error('Ongeldig formaat');
+        let count = 0;
+        Object.keys(incoming).forEach(eid => {
+          const row = incoming[eid] || {};
+          werkblad[eid] = werkblad[eid] || {};
+          if (row.status) werkblad[eid].status = row.status;
+          if (row.note) werkblad[eid].note = row.note;
+          count++;
+        });
+        saveWerkblad(werkblad);
+        renderTable();
+        alert('Geïmporteerd: ' + count + ' events.');
+      } catch (err) {
+        alert('Import mislukt: ' + err.message);
+      }
+      importFile.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  // Reset
+  document.getElementById('resetWerkblad').addEventListener('click', () => {
+    if (!confirm('Alle status + notities wissen?')) return;
+    werkblad = {};
+    saveWerkblad(werkblad);
+    renderTable();
+  });
+
   renderTable();
 })();
 </script>

@@ -161,6 +161,9 @@
       <a href="handleiding.html" class="nav-item" style="text-decoration:none">
         <span class="nav-icon" data-icon="manual"></span> Handleiding
       </a>
+      <a href="changelog.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="info"></span> Wijzigingsblad
+      </a>
     </nav>
     <div class="sidebar-frameworks">
       <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
@@ -653,6 +656,72 @@
             <li><strong>Exfiltration (T1041):</strong> Netwerklogging detecteert ongebruikelijke uitgaande datastromen</li>
           </ul>
           <p style="margin-top:8px"><strong>Tip:</strong> Gebruik de ATT&CK Navigator (<a href="https://mitre-attack.github.io/attack-navigator/" target="_blank" style="color:var(--accent)">attack-navigator</a>) om visueel in kaart te brengen welke technieken jouw logging-configuratie afdekt.</p>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- MITRE D3FEND -->
+      <!-- ============================================ -->
+      <div class="dm-section" id="d3fend">
+        <h2>MITRE D3FEND — Defensieve Tegenhanger</h2>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          <strong>MITRE D3FEND</strong> (Detection, Denial &amp; Disruption Framework Empowering Network Defense) is de defensieve tegenhanger van ATT&amp;CK.
+          Waar ATT&amp;CK beschrijft <em>wat de aanvaller doet</em>, beschrijft D3FEND <em>welke verdedigingstechnieken die aanval kunnen tegenhouden, detecteren of verstoren</em>.
+          Beheerd door MITRE, gefinancierd door de NSA. Zie <a href="https://d3fend.mitre.org" target="_blank" style="color:var(--accent)">d3fend.mitre.org</a>.
+        </p>
+
+        <h3>De 6 D3FEND-tactieken (defensief)</h3>
+        <div class="dm-cards">
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--accent)"></span> Model</h4>
+            <p>Het in kaart brengen van eigen assets, identiteiten, netwerk en gegevens — basis voor elke verdediging.</p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--green)"></span> Harden</h4>
+            <p>Hardening: configuratie-baselines, patching, application allow-listing, encryptie at rest/in transit.</p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--yellow)"></span> Detect</h4>
+            <p>Detectie via logs, file integrity monitoring, netwerkanalyse, EDR-telemetrie, SIEM-correlaties.</p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--orange,#f59e0b)"></span> Isolate</h4>
+            <p>Segmentatie, sandboxing, broker-patronen, microsegmentatie en zero-trust netwerktoegang.</p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--red)"></span> Deceive</h4>
+            <p>Honeypots, decoy-credentials, canary-tokens — laat de aanvaller zich verraden voordat schade ontstaat.</p>
+          </div>
+          <div class="dm-card">
+            <h4><span class="dot" style="background:var(--purple)"></span> Evict</h4>
+            <p>Verwijderen van aanwezigheid: account-revocatie, session-termination, host-isolation, herinstallatie.</p>
+          </div>
+        </div>
+
+        <h3>ATT&amp;CK ↔ D3FEND mapping</h3>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">
+          D3FEND koppelt elke defensieve techniek expliciet aan de offensieve ATT&amp;CK-techniek(en) die hij kan tegengaan, via "digital artifacts" (logbestanden, processen, netwerkstromen).
+          Daarmee wordt de aanpak <em>tweezijdig</em>: je kunt vanuit een aanvalstechniek zoeken naar bijbehorende verdedigingen, of andersom je bestaande verdedigingen toetsen op dekking.
+        </p>
+        <div class="dm-relation">
+          <span style="color:var(--red);font-weight:600">ATT&CK techniek</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--green);font-weight:600">D3FEND techniek</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">via "digital artifact" (proces, file, netwerkstroom, account)</span>
+        </div>
+
+        <h3>Verband met ABRO &amp; JSCU Logging</h3>
+        <div class="dm-example">
+          <h4>Hoe vertaalt D3FEND zich naar uw werkblad?</h4>
+          <ul>
+            <li><strong>Model</strong> ↔ ABRO Hoofdstuk 1 (Bestuur): asset-management, classificatie, autorisatieoverzichten.</li>
+            <li><strong>Harden</strong> ↔ ABRO Hoofdstuk 4 (Cyber): baseline-configuratie, patchmanagement, encryptie.</li>
+            <li><strong>Detect</strong> ↔ JSCU Logging-eisen + SIEM: de 194 Event IDs leveren de telemetrie waarop D3FEND-detecties draaien.</li>
+            <li><strong>Isolate</strong> ↔ ABRO Hoofdstuk 4 + 5: netwerksegmentatie, zone-modellen, cloud-isolatie.</li>
+            <li><strong>Deceive</strong> ↔ aanvullend op ABRO; nuttig voor TBB 2/1 omgevingen met hoog dreigingsprofiel.</li>
+            <li><strong>Evict</strong> ↔ Incident Response (zie verderop): containment, eradication, recovery.</li>
+          </ul>
+          <p style="margin-top:8px"><strong>Tip:</strong> gebruik D3FEND als checklist <em>na</em> de ATT&CK-mapping. Voor elke ATT&CK-techniek waarvoor u risico ziet, zoek de D3FEND-counterparts en toets of die in uw architectuur en in ABRO/JSCU-logging zijn afgedekt.</p>
         </div>
       </div>
 

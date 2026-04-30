@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNC Tool — Wijzigingsblad</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FNC Tool">
+  <meta name="theme-color" content="#2563eb">
+  <script src="theme.js"></script>
+  <style>
+    .cl-entry { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 18px; border-left: 3px solid var(--accent); }
+    .cl-entry.current { border-left-color: var(--green); }
+    .cl-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+    .cl-version { font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--text-primary); }
+    .cl-entry.current .cl-version { color: var(--green); }
+    .cl-date { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+    .cl-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    .cl-tag.now { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.35); }
+    .cl-tag.prev { background: var(--bg-elevated); color: var(--text-muted); border: 1px solid var(--border); }
+    .cl-section { margin-top: 12px; }
+    .cl-section h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin: 0 0 6px 0; font-weight: 600; }
+    .cl-section ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+    .cl-section ul li b { color: var(--text-primary); font-weight: 600; }
+    .cl-cat { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 4px; font-family: var(--font-mono); margin-right: 6px; vertical-align: 1px; }
+    .cl-cat.feat { background: rgba(37,99,235,0.10); color: var(--accent); }
+    .cl-cat.fix { background: rgba(239,68,68,0.10); color: #ef4444; }
+    .cl-cat.docs { background: rgba(139,92,246,0.10); color: var(--purple); }
+    .cl-cat.data { background: rgba(217,119,6,0.10); color: var(--yellow); }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <button class="mobile-menu-btn" id="menuBtn" aria-label="Menu openen"><span data-icon="menu" data-icon-size="20"></span></button>
+  <div class="mobile-menu-overlay" id="menuOverlay"></div>
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon" data-icon="info" data-icon-size="20"></span>
+        <span class="logo-text"><strong>FNC</strong> Tool</span>
+      </div>
+      <div class="version-badge">Wijzigingsblad</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="home"></span> Homepagina
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Pagina's</div>
+      <a href="werkblad.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> ABRO Werkblad
+      </a>
+      <a href="index.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="requirements"></span> ABRO 2026 Eisen
+      </a>
+      <a href="index.html#gaps" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Gap Analyse
+      </a>
+      <a href="abdo.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="abdo"></span> ABDO Vergelijking
+      </a>
+      <a href="jscu.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--fw-jscu)" data-icon="jscu"></span> JSCU Logging
+      </a>
+      <a href="tbb.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="tbb"></span> TBB Stelsel
+      </a>
+      <a href="tbb.html#toepassingen" class="nav-item" style="text-decoration:none;font-size:12px;padding-left:28px">
+        <span class="nav-icon" data-icon="chevron-right" data-icon-size="12"></span> Typen toepassingen
+      </a>
+      <a href="diamond.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" style="color:var(--purple)" data-icon="knowledge"></span> Kennisbank
+      </a>
+      <a href="bronnen.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="sources"></span> Bronnen
+      </a>
+      <a href="handleiding.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="manual"></span> Handleiding
+      </a>
+      <a href="changelog.html" class="nav-item active" style="text-decoration:none">
+        <span class="nav-icon" data-icon="info"></span> Wijzigingsblad
+      </a>
+    </nav>
+    <div class="sidebar-frameworks">
+      <div class="sidebar-hint">
+        Overzicht van alle wijzigingen per versie. Huidige versie wordt onderaan de homepagina getoond.
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Wissel licht/donker thema">
+        <span class="theme-toggle-icon" data-icon="theme-dark"></span>
+        <span class="theme-toggle-label">Donker thema</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="home.html"><span data-icon="home" data-icon-size="14"></span> Home</a>
+      <span class="crumb-sep" data-icon="chevron-right" data-icon-size="12"></span>
+      <span class="crumb-current">Wijzigingsblad</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Wijzigingsblad</div>
+        <div class="page-subtitle">Overzicht van wijzigingen per versie van de FNC Tool</div>
+      </div>
+      <div class="global-search">
+        <input type="text" id="globalSearch" placeholder="Zoek door alles...">
+        <div id="globalSearchResults" class="global-search-results"></div>
+      </div>
+    </div>
+
+    <a href="home.html" class="back-home-mobile">
+      <span data-icon="arrow-left" data-icon-size="16"></span> Terug naar home
+    </a>
+
+    <div class="manual-content">
+
+      <div class="cl-entry current">
+        <div class="cl-head">
+          <span class="cl-version">v1.3</span>
+          <span class="cl-date">2026-04-30</span>
+          <span class="cl-tag now">Huidig</span>
+        </div>
+
+        <div class="cl-section">
+          <h4>Toegevoegd</h4>
+          <ul>
+            <li><span class="cl-cat feat">FEAT</span> <b>JSCU Werkblad</b> — per Event ID een status (Te beoordelen / Actief / Niet actief / N.v.t.) en notitie, met statistiekenbalk, Export/Import JSON en Reset.</li>
+            <li><span class="cl-cat feat">FEAT</span> <b>JSCU Logging Index</b> — categorie-chips bovenaan met aantal Event IDs per categorie; klikbaar als filter.</li>
+            <li><span class="cl-cat feat">FEAT</span> <b>ABRO Werkblad — Import</b> — eerder geëxporteerd CSV/XLSX-werkblad weer inlezen (status + notitie per eis-ID).</li>
+            <li><span class="cl-cat feat">FEAT</span> <b>Cloud → TBB&nbsp;4 lock</b> in ABRO Werkblad: bij type toepassing <em>Clouddienst</em> wordt TBB-niveau automatisch op 4 gezet en zijn andere niveaus uitgeschakeld.</li>
+            <li><span class="cl-cat docs">DOC</span> <b>MITRE D3FEND</b>-sectie toegevoegd aan Kennisbank — 6 defensieve tactieken (Model, Harden, Detect, Isolate, Deceive, Evict) en mapping naar ABRO &amp; JSCU.</li>
+            <li><span class="cl-cat docs">DOC</span> <b>Wijzigingsblad</b> (deze pagina) — overzicht van versies en wijzigingen.</li>
+            <li><span class="cl-cat feat">FEAT</span> <b>Upload-icoon</b> toegevoegd aan iconenset (Lucide-stijl) voor importknoppen.</li>
+            <li><span class="cl-cat docs">DOC</span> <b>Disclaimer aangescherpt</b> — expliciete melding dat de tool fouten of verkeerde interpretaties kan bevatten en dat de gebruiker altijd zelf verantwoordelijk is voor controle, toepassing en advies. Geen aansprakelijkheid. Korte disclaimer-banner ook op ABRO Werkblad en JSCU Logging.</li>
+            <li><span class="cl-cat fix">FIX</span> <b>Service-worker network-first</b> voor HTML/JS/CSS — updates komen voortaan automatisch door zonder cache-clear (sw bumped naar v10).</li>
+            <li><span class="cl-cat fix">FIX</span> <b>TBB-vaststelling correct toegewezen aan opdrachtgever</b>, niet aan NBIV. Tekst op TBB Stelsel-pagina (typen toepassingen + samenvattingstabel) en home-disclaimer aangepast: de aanbestedende dienst / Rijksoverheid bepaalt het TBB-niveau en het type toepassing; het NBIV adviseert en accrediteert.</li>
+          </ul>
+        </div>
+
+        <div class="cl-section">
+          <h4>Aangepast</h4>
+          <ul>
+            <li><span class="cl-cat data">DATA</span> <b>Cloud-eisen alleen op TBB&nbsp;4</b>: regels 5.2.4, 5.2.5, 5.3.2 en 5.3.4 zijn van <code>tbb:[1,2,3,4]</code> teruggebracht naar <code>tbb:[4]</code>. Verbodsregel 5.1.1 blijft <code>[1,2,3]</code>.</li>
+            <li><span class="cl-cat data">DATA</span> <b>TBB Stelsel — H5 Cloud-rij</b>: alleen ✓ bij TBB‑4; TBB‑3, TBB‑2 en TBB‑1 nu ✗. Toelichting onder de tabel herschreven.</li>
+            <li><span class="cl-cat data">DATA</span> <b>Typen toepassingen — Clouddienst</b>: groene callout "Cloud kan uitsluitend op TBB‑4" toegevoegd; tegenstrijdige TBB-1/2-uitzonderingen verwijderd.</li>
+            <li><span class="cl-cat docs">DOC</span> <b>Handleiding</b> uitgebreid: §05a (Werkblad cloud-lock + import), §08 (D3FEND in Kennisbank), §09 (JSCU Werkblad), FAQ.</li>
+            <li><span class="cl-cat docs">DOC</span> Bronnen: <b>MITRE D3FEND</b>-bron toegevoegd naast ATT&amp;CK.</li>
+            <li><span class="cl-cat docs">DOC</span> Home-tegel "Kennisbank" beschrijving aangepast: ATT&amp;CK + D3FEND.</li>
+          </ul>
+        </div>
+
+        <div class="cl-section">
+          <h4>Opgelost</h4>
+          <ul>
+            <li><span class="cl-cat fix">FIX</span> <b>JSCU-pagina laadde geen events</b> — verkeerd databestand werd opgehaald (<code>abro-data.js</code>) en er werd verwezen naar een verwijderd <code>catNav</code>-element. Beide gerepareerd; tabel en zoeken werken nu.</li>
+            <li><span class="cl-cat fix">FIX</span> Service-worker cache opgehoogd naar <code>fnc-tool-v9</code>; <code>jscu-events.js</code> en <code>changelog.html</code> nu in de pre-cache.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cl-entry">
+        <div class="cl-head">
+          <span class="cl-version">v1.2</span>
+          <span class="cl-date">2026-04-14</span>
+          <span class="cl-tag prev">Eerder</span>
+        </div>
+        <div class="cl-section">
+          <h4>Hoofdpunten</h4>
+          <ul>
+            <li><span class="cl-cat feat">FEAT</span> ABRO Werkblad geïntroduceerd — status + notitie per eis, profiel-invulhulp (TBB + type toepassing), statistiekenbalk en selectief printen.</li>
+            <li><span class="cl-cat feat">FEAT</span> Excel-export (<code>.xlsx</code>) toegevoegd naast CSV en PDF — voor ABRO Eisen én Werkblad.</li>
+            <li><span class="cl-cat feat">FEAT</span> JSCU Logging Essentials-pagina (194 Event IDs in 16 categorieën, lookup en GPO-pad).</li>
+            <li><span class="cl-cat feat">FEAT</span> Kennisbank uitgebreid: Diamond Model, Cyber Kill Chain, MITRE ATT&amp;CK, Supply Chain, Incident Response, Zero Trust, Shared Responsibility.</li>
+            <li><span class="cl-cat feat">FEAT</span> Globale zoekbalk over ABRO-eisen, JSCU-events, controls en pagina's.</li>
+            <li><span class="cl-cat feat">FEAT</span> PWA-installatie (iPad / Android / desktop) met service-worker en offline-werking.</li>
+            <li><span class="cl-cat feat">FEAT</span> Licht/donker-thema met persistent voorkeur.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cl-entry">
+        <div class="cl-head">
+          <span class="cl-version">v1.1</span>
+          <span class="cl-date">2026-03</span>
+          <span class="cl-tag prev">Eerder</span>
+        </div>
+        <div class="cl-section">
+          <h4>Hoofdpunten</h4>
+          <ul>
+            <li><span class="cl-cat data">DATA</span> Volledige ABRO 2026: 445 eisen verdeeld over 5 hoofdstukken (Bestuur, Personeel, Fysiek, Cyber, Cloud).</li>
+            <li><span class="cl-cat feat">FEAT</span> Framework-mapping (ISO 27001/27002, NIST CSF 2.0, BIO 2.0, CSA CCM, ABDO 2019, JSCU, EN 50131/50600, Wpbr).</li>
+            <li><span class="cl-cat feat">FEAT</span> Gap Analyse met dekking per eis (volledig / deels / gap) op basis van geselecteerde certificeringen.</li>
+            <li><span class="cl-cat feat">FEAT</span> ABDO 2019 ↔ ABRO 2026 vergelijkingspagina.</li>
+            <li><span class="cl-cat feat">FEAT</span> TBB-stelsel-pagina met de 4 niveaus en typen toepassingen.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="home-footer" style="margin-top:20px">
+        FNC Tool · Wijzigingsblad · Privacyvriendelijk
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="abro-data.js"></script>
+<script src="frameworks-ref.js"></script>
+<script src="icons.js"></script>
+<script src="menu.js"></script>
+<script src="globalsearch.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js")}</script>
+<script src="easter.js"></script>
+</body>
+</html>

@@ -244,7 +244,7 @@
           <span data-icon="knowledge" data-icon-size="20" style="color:var(--purple);align-self:start;margin-top:2px"></span>
           <div>
             <strong style="font-size:12px;color:var(--text-primary)">Kennisbank</strong>
-            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Achtergrondkennis: Diamond Model, Cyber Kill Chain, MITRE ATT&CK, Supply Chain Security, Incident Response, Zero Trust en Shared Responsibility Model. Compleet naslagwerk per onderwerp.</div>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:2px">Achtergrondkennis: Diamond Model, Cyber Kill Chain, MITRE ATT&CK + D3FEND, Supply Chain Security, Incident Response, Zero Trust en Shared Responsibility Model. Compleet naslagwerk per onderwerp.</div>
           </div>
         </a>
 
@@ -271,22 +271,31 @@
       </p>
     </div>
 
-    <div class="home-disclaimer">
-      <strong>Disclaimer</strong><br>
-      Deze tool is een hulpmiddel voor het inzichtelijk maken van de relatie tussen ABRO 2026-eisen en bestaande
-      certificeringen en normenkaders. De informatie is met zorg samengesteld maar is geen vervanging voor
-      professioneel advies. Framework-beschrijvingen zijn in eigen woorden opgesteld en betreffen geen
-      officiële normteksten. Voor de officiële teksten wordt verwezen naar de respectievelijke uitgevende
-      instanties (NEN, ISO, NIST, CSA). De ABRO 2026 en ABDO 2019 zijn openbare overheidsdocumenten.
-      JSCU Logging Essentials is beschikbaar onder Apache 2.0 licentie.
-      Aan de inhoud van deze tool kunnen geen rechten worden ontleend. Dit is geen formele tool van de Rijksoverheid en wordt niet onderhouden of gevalideerd door enige overheidsinstantie.
-      <br><br>
+    <div class="home-disclaimer" id="disclaimer">
+      <div class="disc-title"><span data-icon="gaps" data-icon-size="14"></span> Disclaimer — lees vóór gebruik</div>
+      <p style="margin:0 0 8px 0">
+        De FNC Tool is een <strong>hulpmiddel</strong> voor het inzichtelijk maken van de ABRO 2026-eisen en hun verband met bestaande certificeringen, frameworks en logging-baselines. Hoewel de inhoud met zorg is samengesteld, kan de tool <strong>fouten, onvolledigheden of verkeerde interpretaties</strong> bevatten. De ABRO, frameworks en achterliggende regelgeving zijn aan verandering onderhevig; deze tool loopt mogelijk achter op de meest actuele teksten.
+      </p>
+      <p style="margin:0 0 6px 0"><strong>De gebruiker is altijd zelf verantwoordelijk voor:</strong></p>
+      <ul>
+        <li>Het <strong>controleren</strong> van resultaten, mappings en aanduidingen tegen de officiële brontekst (Staatscourant, NEN/ISO, NIST, CSA, JSCU‑NL, etc.).</li>
+        <li>Het <strong>toepassen</strong> van de ABRO en aanvullende eisen op de eigen organisatie en opdracht — uitsluitend de <strong>opdrachtgever</strong> (de aanbestedende dienst / Rijksoverheid) bepaalt het TBB-niveau en het type toepassing. Het NBIV adviseert en accrediteert, maar stelt het TBB-niveau zelf niet vast.</li>
+        <li>Het <strong>inwinnen van professioneel advies</strong> (compliance, juridisch, beveiliging) bij interpretatievragen of bij het nemen van beslissingen op basis van de tool.</li>
+        <li>De <strong>juistheid en volledigheid</strong> van eigen ingevulde werkblad-status en notities, en het bewaren van eigen back-ups (export).</li>
+      </ul>
+      <p style="margin:0 0 8px 0">
+        Aan de inhoud van deze tool kunnen <strong>geen rechten worden ontleend</strong>. Dit is <strong>geen formele tool</strong> van de Rijksoverheid; de tool wordt niet onderhouden, beoordeeld of gevalideerd door enige overheidsinstantie. Framework-beschrijvingen zijn in eigen woorden opgesteld en zijn geen officiële normteksten — voor de gezaghebbende teksten wordt verwezen naar de uitgevende instanties (NEN, ISO, NIST, CSA, JSCU). De ABRO 2026 en ABDO 2019 zijn openbare overheidsdocumenten; JSCU Logging Essentials is beschikbaar onder Apache 2.0.
+      </p>
+      <p style="margin:0">
+        De maker en de gebruikte tools aanvaarden <strong>geen aansprakelijkheid</strong> voor schade, verlies of gevolgen die voortvloeien uit het gebruik van — of vertrouwen op — de inhoud van deze tool. Door de tool te gebruiken stemt u in met deze voorwaarden.
+      </p>
+      <br>
       <strong>Privacy</strong><br>
       Deze tool draait volledig in je browser. Ingevulde werkblad-data wordt alleen lokaal opgeslagen (localStorage) en gaat niet naar een server. Er wordt geen tracking, geen analytics en geen cookies gebruikt.
     </div>
 
     <div class="home-footer">
-      FNC Tool v1.2 · by zero0f4 &middot; Build 2026-04-14
+      FNC Tool v1.3 · by zero0f4 &middot; Build 2026-04-30 &middot; <a href="changelog.html" style="color:var(--accent);text-decoration:none">Wijzigingsblad</a>
     </div>
   </main>
 </div>

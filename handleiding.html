@@ -62,6 +62,9 @@
       <a href="handleiding.html" class="nav-item active" style="text-decoration:none">
         <span class="nav-icon" data-icon="manual"></span> Handleiding
       </a>
+      <a href="changelog.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="info"></span> Wijzigingsblad
+      </a>
     </nav>
     <div class="sidebar-frameworks">
       <div class="sidebar-hint">
@@ -247,6 +250,9 @@
           <li>De tool toont welke ABRO-hoofdstukken dan van toepassing zijn.</li>
           <li>Klik op <strong>Toepassen op werkblad</strong> om automatisch te filteren.</li>
         </ol>
+        <div class="manual-callout">
+          <strong>Cloud → TBB4:</strong> kiest u type toepassing <em>Clouddienst</em>, dan wordt het TBB-niveau automatisch op <strong>TBB 4</strong> gezet en zijn andere TBB-niveaus uitgeschakeld. Een clouddienst kan onder de ABRO uitsluitend op TBB 4 worden toegestaan.
+        </div>
         <h3>Per eis beoordelen</h3>
         <ol class="manual-step-list">
           <li>Per eis kiest u een status: <strong>Van toepassing</strong>, <strong>Nader te bepalen</strong>, <strong>Niet van toepassing</strong>, of laat open.</li>
@@ -264,6 +270,14 @@
           <li>Van toepassing + nader</li>
           <li>Alles zonder filters</li>
         </ul>
+        <h3>Importeren — eerder werkblad terugzetten</h3>
+        <p>Een eerder geëxporteerd werkblad kunt u weer inlezen, bijvoorbeeld na een audit, op een nieuw apparaat of om resultaten met een collega te delen.</p>
+        <ol class="manual-step-list">
+          <li>Klik rechtsboven op <span data-icon="upload" class="icon-inline"></span> <strong>Import</strong>.</li>
+          <li>Kies een eerder geëxporteerd <code>.csv</code>- of <code>.xlsx</code>-bestand.</li>
+          <li>De tool leest per eis-ID de kolommen <strong>Status</strong> en <strong>Notitie</strong> en zet die terug in het werkblad.</li>
+          <li>Bestaande beoordelingen worden overschreven door de geïmporteerde waarden.</li>
+        </ol>
       </section>
 
       <section class="manual-section" id="notities">
@@ -323,6 +337,7 @@
           <li><strong>Diamond Model</strong> — dreigingsanalyse met 4 componenten: Adversary, Capability, Infrastructure, Victim</li>
           <li><strong>Cyber Kill Chain</strong> — de 7 fasen van een gerichte aanval (Lockheed Martin)</li>
           <li><strong>MITRE ATT&amp;CK</strong> — kennisbank met tactieken, technieken en procedures van aanvallers</li>
+          <li><strong>MITRE D3FEND</strong> — defensieve tegenhanger: 6 tactieken (Model, Harden, Detect, Isolate, Deceive, Evict) met directe koppeling naar ATT&amp;CK-technieken</li>
           <li><strong>Supply Chain Security</strong> — risico's en maatregelen in de toeleveringsketen</li>
           <li><strong>Incident Response</strong> — aanpak volgens NIST SP 800-61 Rev. 3 en CSF 2.0</li>
           <li><strong>Zero Trust</strong> — "never trust, always verify"-principe</li>
@@ -332,22 +347,44 @@
       </section>
 
       <section class="manual-section" id="jscu-logging">
-        <h2><span class="sec-num">09</span> JSCU Logging — Event ID lookup</h2>
+        <h2><span class="sec-num">09</span> JSCU Logging — Event ID lookup &amp; werkblad</h2>
         <p>
           De pagina <strong>JSCU Logging</strong> bevat <strong>194 Windows Event IDs</strong> in 16 categorieën, die door
           de Joint Sigint Cyber Unit Nederland zijn aangewezen als baseline voor detectie en forensisch onderzoek.
+          De pagina werkt zowel als naslag als als <strong>werkblad</strong>: per Event ID kunt u vastleggen of de logging in uw omgeving actief is.
         </p>
+        <h3>Logging Index — categorie-chips</h3>
+        <p>
+          Bovenaan de pagina staat een <strong>index</strong> met chips per categorie (bijv. Account Activity, Microsoft Defender, Sysmon). Per chip ziet u het aantal Event IDs in die categorie.
+        </p>
+        <ul>
+          <li>Klik op een chip om alleen events uit die categorie te tonen.</li>
+          <li>Klik op <strong>Toon alles</strong> om het filter te wissen.</li>
+          <li>De actieve chip licht in JSCU-groen op.</li>
+        </ul>
         <h3>Event ID opzoeken</h3>
         <ol class="manual-step-list">
-          <li>Open de pagina JSCU Logging.</li>
-          <li>Typ in de zoekbalk het Event ID (bijv. <code>4624</code>) of trefwoord (bijv. <code>logon</code>).</li>
-          <li>De tabel filtert direct op uw invoer.</li>
-          <li>Per event ziet u: channel, subcategorie, beschrijving en het GPO-pad om het in te schakelen.</li>
+          <li>Typ in de zoekbalk een Event ID (bijv. <code>4624</code>), categorie, subcategorie, channel, provider of GPO-pad.</li>
+          <li>De tabel filtert direct op uw invoer; bij een exacte categorie-match licht de bijbehorende chip op.</li>
+          <li>Per event ziet u: Event ID, subcategorie, beschrijving, provider, channel, level en het volledige GPO-pad om het in te schakelen.</li>
+        </ol>
+        <h3>JSCU Werkblad — status &amp; notitie per Event ID</h3>
+        <p>Per regel kunt u uw eigen beoordeling vastleggen:</p>
+        <ul>
+          <li><strong>Status</strong>: <em>Te beoordelen</em> (default), <em>Actief</em>, <em>Niet actief</em> of <em>N.v.t.</em></li>
+          <li><strong>Notitie</strong>: vrije tekst — bv. SIEM-regelnaam, GPO waarin het is ingeschakeld, of een uitzondering.</li>
+        </ul>
+        <p>Bovenaan de tabel staat een statistiekenbalk met de tellingen per status; deze ververst direct bij elke wijziging. Alles wordt automatisch lokaal opgeslagen in <code>localStorage</code> (sleutel <code>fnc:jscuWerkblad</code>).</p>
+        <h3>Export, import &amp; reset</h3>
+        <ol class="manual-step-list">
+          <li><span data-icon="download" class="icon-inline"></span> <strong>Export JSON</strong> — download een JSON-bestand met alle status-waarden en notities (datum in bestandsnaam).</li>
+          <li><span data-icon="upload" class="icon-inline"></span> <strong>Import JSON</strong> — lees een eerder geëxporteerd bestand weer in. Bestaande waarden worden samengevoegd; geïmporteerde waarden hebben voorrang.</li>
+          <li><strong>Reset werkblad</strong> — wist alle status-waarden en notities. De event-data zelf blijft staan.</li>
         </ol>
         <h3>Gebruik in SIEM</h3>
         <p>
           Deze baseline is bedoeld als vertrekpunt voor uw SIEM/SOAR-configuratie. Aanbevolen retentie is minimaal
-          6 maanden. Complementair aan AV, IDS en EDR.
+          6 maanden. Complementair aan AV, IDS en EDR. Gebruik het werkblad om te documenteren welke events u al verwerkt — handig als bewijslast bij audits.
         </p>
       </section>
 
@@ -515,6 +552,9 @@
 
           <dt>Worden mijn notities gesynchroniseerd tussen apparaten?</dt>
           <dd>Nee. Notities worden lokaal per apparaat opgeslagen. Exporteer ze via CSV als u ze wilt delen of overzetten.</dd>
+
+          <dt>Wordt het JSCU Werkblad meegenomen in een export?</dt>
+          <dd>Het JSCU Werkblad heeft een eigen Export/Import (JSON), los van de ABRO CSV/XLSX. Bewaar de JSON als bewijs of om over te zetten.</dd>
 
           <dt>Welke browser kan ik het beste gebruiken?</dt>
           <dd>Chrome, Edge, Safari en Firefox werken allemaal. Voor installatie als iPad-app heeft u Safari nodig.</dd>

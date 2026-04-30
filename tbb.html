@@ -203,6 +203,9 @@
       <a href="handleiding.html" class="nav-item" style="text-decoration:none">
         <span class="nav-icon" data-icon="manual"></span> Handleiding
       </a>
+      <a href="changelog.html" class="nav-item" style="text-decoration:none">
+        <span class="nav-icon" data-icon="info"></span> Wijzigingsblad
+      </a>
     </nav>
     <div class="sidebar-frameworks">
       <div class="sidebar-hint">
@@ -470,16 +473,16 @@
             <tr>
               <td><strong>H5 — Cloud</strong><br><span style="font-size:11px;color:var(--text-muted)">Cloudservices, datasoevereiniteit, leveranciersbeheer</span></td>
               <td class="check">&#x2713;</td>
-              <td class="check">&#x2713;</td>
-              <td class="opt" title="Onder voorwaarden">&#x25CF;</td>
-              <td class="na" title="Niet toegestaan">&#x2717;</td>
+              <td class="na" title="Cloud uitsluitend op TBB-4">&#x2717;</td>
+              <td class="na" title="Cloud uitsluitend op TBB-4">&#x2717;</td>
+              <td class="na" title="Cloud uitsluitend op TBB-4">&#x2717;</td>
             </tr>
           </tbody>
         </table>
 
         <p style="margin-top:12px;font-size:12px;color:var(--text-muted)">
-          &#x2713; = Verplicht &nbsp;&nbsp; &#x25CF; = Onder strikte voorwaarden &nbsp;&nbsp; &#x2717; = Cloud niet toegestaan<br>
-          <em>Bij TBB-1 is cloudgebruik in principe niet toegestaan. Bij TBB-2 alleen met expliciete goedkeuring en aanvullende maatregelen.</em>
+          &#x2713; = Verplicht &nbsp;&nbsp; &#x2717; = Niet toegestaan<br>
+          <em>Hoofdstuk 5 (Cloud) is alleen van toepassing als type toepassing een <strong>clouddienst</strong> is — en dat is onder de ABRO uitsluitend toegestaan op <strong>TBB&nbsp;4</strong>. Voor TBB 1, 2 of 3 is publieke cloud niet toegestaan.</em>
         </p>
 
         <p style="margin-top:12px">
@@ -548,7 +551,7 @@
       <div class="tbb-section" id="toepassingen">
         <h2>Typen toepassingen — Welke eisen gelden voor uw situatie?</h2>
         <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
-          De ABRO kent 4 typen toepassingen. Afhankelijk van hoe uw organisatie in aanraking komt met het TBB zijn verschillende hoofdstukken van toepassing. Het NBIV stelt vooraf vast welk type van toepassing is.
+          De ABRO kent 4 typen toepassingen. Afhankelijk van hoe uw organisatie in aanraking komt met het TBB zijn verschillende hoofdstukken van toepassing. De <strong>opdrachtgever</strong> stelt vooraf vast welk type van toepassing is (eventueel met advies van het NBIV).
         </p>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px">
@@ -672,13 +675,14 @@
                 <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(5,150,105,0.08);color:var(--green);font-weight:600">H4 Cyber</span>
                 <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(217,119,6,0.08);color:var(--yellow);font-weight:600">H5 Cloud</span>
               </div>
+              <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);border-radius:var(--radius);padding:8px 10px;margin-bottom:8px;font-size:11px;color:var(--text-primary)">
+                <strong style="color:var(--green)">Cloud kan uitsluitend op TBB&nbsp;4.</strong> Voor TBB 1, 2 of 3 is een publieke cloud-toepassing onder de ABRO niet toegestaan — gebruik dan digitale of fysieke opslag in een gecontroleerde omgeving.
+              </div>
               <div style="font-size:11px;color:var(--text-muted);line-height:1.5">
-                <strong>Waar moet u aan denken:</strong>
+                <strong>Waar moet u aan denken (TBB&nbsp;4):</strong>
                 <ul style="padding-left:14px;margin-top:4px">
                   <li>Alles van digitale opslag, plus:</li>
-                  <li><strong style="color:var(--red)">TBB-1: cloudgebruik NIET toegestaan</strong></li>
-                  <li><strong style="color:var(--orange)">TBB-2: alleen met expliciete goedkeuring NBIV + aanvullende maatregelen</strong></li>
-                  <li>Datasoevereiniteit: data moet binnen Nederland of EER blijven</li>
+                  <li>Datasoevereiniteit: data binnen Nederland of EER</li>
                   <li>Leveranciersmanagement: inzicht in de volledige keten</li>
                   <li>Classificatie van data in de cloud</li>
                   <li>Monitoring en logging in de cloudomgeving</li>
@@ -711,7 +715,7 @@
               <tr><td style="padding:8px"><strong>H5</strong> Cloud</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--text-muted)">—</td><td style="text-align:center;padding:8px;color:var(--green)">&#x2713;</td></tr>
             </tbody>
           </table>
-          <p style="font-size:10px;color:var(--text-muted);margin-top:8px">&#x2713; = van toepassing · — = niet standaard van toepassing. Het NBIV bepaalt uiteindelijk welke eisen gelden voor uw specifieke situatie.</p>
+          <p style="font-size:10px;color:var(--text-muted);margin-top:8px">&#x2713; = van toepassing · — = niet standaard van toepassing. De <strong>opdrachtgever</strong> bepaalt uiteindelijk welke eisen voor uw specifieke situatie gelden (NBIV adviseert).</p>
         </div>
       </div>
 

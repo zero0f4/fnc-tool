@@ -1285,18 +1285,37 @@ body {
   margin: 32px auto 16px;
   max-width: 800px;
   padding: 16px 20px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
+  background: rgba(234,179,8,0.06);
+  border: 1px solid rgba(234,179,8,0.35);
+  border-left: 3px solid #eab308;
   border-radius: var(--radius);
-  font-size: 11px;
-  color: var(--text-muted);
-  line-height: 1.6;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.65;
 }
 
 .home-disclaimer strong {
-  color: var(--text-secondary);
-  font-size: 11px;
+  color: var(--text-primary);
+  font-size: 12px;
 }
+
+.home-disclaimer .disc-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #eab308;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.home-disclaimer ul {
+  margin: 6px 0 6px 0;
+  padding-left: 18px;
+}
+.home-disclaimer ul li { margin-bottom: 3px; }
 
 /* ============ PRINT STYLES ============ */
 @page {
