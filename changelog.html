@@ -123,9 +123,27 @@
 
       <div class="cl-entry current">
         <div class="cl-head">
-          <span class="cl-version">v1.3</span>
+          <span class="cl-version">v1.4</span>
           <span class="cl-date">2026-04-30</span>
           <span class="cl-tag now">Huidig</span>
+        </div>
+        <div class="cl-section">
+          <h4>JSCU Logging — schone filteropzet</h4>
+          <ul>
+            <li><span class="cl-cat feat">FEAT</span> Twee onafhankelijke filters: <b>categorie-chip</b> (klik = drill in één categorie) en <b>vrije zoektekst</b> (zoekt door Event ID, categorie, subcategorie, beschrijving, channel, provider en GPO-pad).</li>
+            <li><span class="cl-cat feat">FEAT</span> Bij typen wordt een actieve categorie-chip automatisch losgelaten — je zoekt dan door alle 194 events.</li>
+            <li><span class="cl-cat feat">FEAT</span> Status-banner "Actieve filters" met × per filter om individueel te wissen.</li>
+            <li><span class="cl-cat fix">FIX</span> Filterresultaat werd niet correct toegepast op categoriechips; haystack-filter herschreven als één gecombineerde lowercase-string voor robuuste deelmatch.</li>
+            <li><span class="cl-cat fix">FIX</span> Self-heal voor stale service-worker — bij missende JSCU_EVENTS-data wordt SW automatisch ge-unregistreerd en de pagina herladen.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cl-entry">
+        <div class="cl-head">
+          <span class="cl-version">v1.3</span>
+          <span class="cl-date">2026-04-30</span>
+          <span class="cl-tag prev">Eerder</span>
         </div>
 
         <div class="cl-section">

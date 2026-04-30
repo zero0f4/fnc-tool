@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fnc-tool-v10';
+const CACHE_NAME = 'fnc-tool-v11';
 const ASSETS = [
   'home.html',
   'index.html',

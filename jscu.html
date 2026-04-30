@@ -11,6 +11,22 @@
   <meta name="apple-mobile-web-app-title" content="FNC Tool">
   <meta name="theme-color" content="#2563eb">
   <script src="theme.js"></script>
+  <script>
+    // Self-heal: stale-cache reset als JSCU_EVENTS ontbreekt (eenmalig, eerste bezoek na update)
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        if (typeof JSCU_EVENTS === 'undefined' && 'serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (rs) {
+            return Promise.all(rs.map(function (r) { return r.unregister(); }));
+          }).then(function () {
+            return caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            });
+          }).then(function () { location.reload(); });
+        }
+      }, 800);
+    });
+  </script>
   <style>
     .jscu-header-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
     .jscu-stat { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; text-align: center; border-top: 3px solid var(--fw-jscu); }
@@ -139,7 +155,7 @@
 
     <div class="page-header">
       <div>
-        <div class="page-title">JSCU Logging Essentials</div>
+        <div class="page-title">JSCU Logging Essentials <span style="font-size:10px;font-family:var(--font-mono);color:var(--fw-jscu);background:rgba(16,185,129,0.10);padding:2px 8px;border-radius:6px;border:1px solid rgba(16,185,129,0.3);vertical-align:6px;margin-left:8px">build 1.4</span></div>
         <div class="page-subtitle">Joint Sigint Cyber Unit Nederland — Windows Event Logging Baseline — 194 Event IDs</div>
         <div style="margin-top:8px;font-size:11px;color:var(--text-muted);max-width:560px;line-height:1.5">
           <span style="color:#eab308;font-weight:600">⚠ Disclaimer —</span> de tool kan fouten of verkeerde interpretaties bevatten. De gebruiker is altijd zelf verantwoordelijk voor controle van de resultaten. <a href="home.html#disclaimer" style="color:var(--accent)">Volledige disclaimer</a>.
@@ -180,6 +196,7 @@
       </form>
 
       <div class="jscu-stats" id="jscuStats"></div>
+      <div id="activeFilters" style="display:none;font-size:12px;color:var(--text-secondary);margin-bottom:12px;padding:8px 12px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius)"></div>
 
       <table class="jscu-table">
         <thead>
@@ -254,12 +271,15 @@
       c.classList.toggle('active', (c.dataset.cat || '') === (cat || ''));
     });
   }
+  // Twee onafhankelijke filters: activeCategory (chip) + searchInput (vrije tekst)
+  let activeCategory = '';
   catIndex.addEventListener('click', (e) => {
     const chip = e.target.closest('.jscu-cat-chip');
     if (!chip) return;
-    searchInput.value = chip.dataset.cat || '';
+    activeCategory = chip.getAttribute('data-cat') || '';
+    searchInput.value = '';
+    highlightChip(activeCategory);
     renderTable();
-    highlightChip(chip.dataset.cat || '');
   });
 
   function renderStats() {
@@ -283,14 +303,13 @@
   function renderTable() {
     const search = (searchInput.value || '').toLowerCase().trim();
     const filtered = JSCU_EVENTS.filter(ev => {
+      if (activeCategory && ev.category !== activeCategory) return false;
       if (!search) return true;
-      return ev.event_id.toLowerCase().includes(search) ||
-        ev.category.toLowerCase().includes(search) ||
-        ev.subcategory.toLowerCase().includes(search) ||
-        (ev.notes || '').toLowerCase().includes(search) ||
-        (ev.channel || '').toLowerCase().includes(search) ||
-        (ev.provider || '').toLowerCase().includes(search) ||
-        (ev.gpo || '').toLowerCase().includes(search);
+      const haystack = [
+        ev.event_id, ev.category, ev.subcategory,
+        ev.notes, ev.channel, ev.provider, ev.gpo
+      ].map(s => String(s || '').toLowerCase()).join(' | ');
+      return haystack.indexOf(search) !== -1;
     });
 
     resultCount.textContent = filtered.length;
@@ -337,7 +356,26 @@
 
     tableBody.innerHTML = html;
     renderStats();
+    updateActiveFilters();
   }
+
+  function updateActiveFilters() {
+    const af = document.getElementById('activeFilters');
+    const search = (searchInput.value || '').trim();
+    const parts = [];
+    if (activeCategory) parts.push('Categorie: <b>' + escapeHtml(activeCategory) + '</b> <button data-clear="cat" style="margin-left:4px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px">×</button>');
+    if (search) parts.push('Zoekterm: <b>' + escapeHtml(search) + '</b> <button data-clear="search" style="margin-left:4px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px">×</button>');
+    if (parts.length === 0) { af.style.display = 'none'; return; }
+    af.style.display = 'block';
+    af.innerHTML = '<strong style="color:var(--fw-jscu)">Actieve filters:</strong> ' + parts.join(' &nbsp;·&nbsp; ');
+  }
+  document.getElementById('activeFilters').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-clear]');
+    if (!b) return;
+    if (b.dataset.clear === 'cat') { activeCategory = ''; highlightChip(''); }
+    if (b.dataset.clear === 'search') { searchInput.value = ''; }
+    renderTable();
+  });
 
   // Werkblad: wijzigingen opslaan via event-delegation
   tableBody.addEventListener('change', (e) => {
@@ -366,27 +404,24 @@
     }
   });
 
-  // Search — alleen filteren bij bevestiging (knop, Enter, of Wis)
-  function applySearch() {
-    const v = searchInput.value.trim();
-    highlightChip(cats[v] ? v : '');
-    renderTable();
-  }
-  document.getElementById('searchForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    applySearch();
-  });
-  document.getElementById('searchBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    applySearch();
-  });
+  // Vrije-tekst-zoekveld werkt onafhankelijk van categorie-chip — beide filters AND-en
+  document.getElementById('searchForm').addEventListener('submit', (e) => { e.preventDefault(); renderTable(); });
+  document.getElementById('searchBtn').addEventListener('click', (e) => { e.preventDefault(); renderTable(); });
   document.getElementById('searchClear').addEventListener('click', () => {
     searchInput.value = '';
-    applySearch();
+    activeCategory = '';
+    highlightChip('');
+    renderTable();
     searchInput.focus();
   });
-  // Live filter: filter direct mee tijdens typen (knop/Enter blijven werken voor expliciete bevestiging)
-  searchInput.addEventListener('input', applySearch);
+  // Bij typen: categorie-filter automatisch loslaten zodat je door alle 194 events zoekt
+  searchInput.addEventListener('input', () => {
+    if (activeCategory) {
+      activeCategory = '';
+      highlightChip('');
+    }
+    renderTable();
+  });
 
   // Export
   document.getElementById('exportJson').addEventListener('click', () => {
