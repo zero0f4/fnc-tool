@@ -5894,7 +5894,7 @@ const ABRO_REQUIREMENTS = [
   {
     id: '5.2.4', section: '5.2', chapter: 5,
     description: 'Wijzigingen in een voor de Bijzondere Opdracht relevante Assurance­ verklaring of wijzigingen van maatregelen die raken aan de CSA CCM controls worden voorafgaand aan implementatie ter goedkeuring voorgelegd aan NBIV.',
-    tbb: [1,2,3,4],
+    tbb: [4],
     iso27001: { controls: ['A.5.23','A.5.11'], coverage: 'partial', note: 'A.5.23 Cloudservices, A.5.11 Teruggave. ABRO vereist specifiek exitstrategie met vernietiging data bij beeindiging' },
     nist: { controls: ['GV.SC-05'], coverage: 'partial', note: 'NIST dekt supply chain assurance' },
     bio: { controls: ['15.2.1'], coverage: 'partial', note: 'BIO dekt monitoring leveranciers' },
@@ -5907,7 +5907,7 @@ const ABRO_REQUIREMENTS = [
   {
     id: '5.2.5', section: '5.2', chapter: 5,
     description: 'CSP heeft een opdrachtspecifiek Cloud-beveiligingshoofdstuk opgenomen in het Beveiligingsplan waarin is vastgelegd: • hoe de CSA CCM controls geïmplementeerd zijn en waar ­eventuele afwijkingen zijn van de controls; • welke aanvullende maatregelen van toepassing zijn op basis van de Risicoanalyse. Aanvullende maatregelen zijn vastgesteld in afstemming met NBIV en goedgekeurd door Opdrachtgever.',
-    tbb: [1,2,3,4],
+    tbb: [4],
     iso27001: { controls: ['A.5.23','A.5.29','A.5.30'], coverage: 'partial', note: 'A.5.23 Cloudservices, A.5.29 Informatiebeveiliging bij verstoring, A.5.30 ICT-gereedheid. ABRO vereist specifiek BC/DR voor cloudservices met NBIV-goedkeuring' },
     nist: { controls: [], coverage: 'partial', note: 'NIST dekt cloudbeveiliging indirect' },
     bio: { controls: [], coverage: 'partial', note: 'BIO dekt leveranciersbeoordeling' },
@@ -5934,7 +5934,7 @@ const ABRO_REQUIREMENTS = [
   {
     id: '5.3.2', section: '5.3', chapter: 5,
     description: 'De verdeling van rollen en verantwoordelijkheden tussen CSP en Opdrachtgever voor de implementatie en uitvoering van de beveiligingsmaatregelen die van toepassing zijn op de Cloud-dienst zijn vastgelegd in een SLA en DAP. Een afschrift hiervan is opgenomen in het Beveiligingsplan.',
-    tbb: [1,2,3,4],
+    tbb: [4],
     iso27001: { controls: ['A.5.23','A.5.15','A.8.2'], coverage: 'partial', note: 'A.5.23 Cloudservices, A.5.15 Toegangsbeleid, A.8.2 Privileged access. ABRO vereist identiteitsbeheer conform H4 Cyber-eisen' },
     nist: { controls: [], coverage: 'partial', note: 'NIST dekt cloudbeveiliging' },
     bio: { controls: [], coverage: 'partial', note: 'BIO dekt cloudgerelateerde maatregelen' },
@@ -5960,7 +5960,7 @@ const ABRO_REQUIREMENTS = [
   {
     id: '5.3.4', section: '5.3', chapter: 5,
     description: 'CSP richt de Cloud-dienst en -infrastructuur in volgens het concept Secure by default.',
-    tbb: [1,2,3,4],
+    tbb: [4],
     iso27001: { controls: ['A.5.23','A.8.8','A.8.9'], coverage: 'partial', note: 'A.5.23 Cloudservices, A.8.8 Kwetsbaarheidsbeheer, A.8.9 Configuratiebeheer. ABRO vereist hardening en patchmanagement cloudresources' },
     nist: { controls: [], coverage: 'partial', note: 'NIST dekt cloudbeveiliging' },
     bio: { controls: [], coverage: 'partial', note: 'BIO dekt cloudgerelateerde maatregelen' },
