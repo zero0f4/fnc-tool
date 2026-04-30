@@ -581,7 +581,7 @@
       const eid = (r[idCol] || '').toString().trim();
       if (!eid) continue;
       // Verifieer ID bestaat in ABRO_DATA
-      const exists = ABRO_DATA.requirements.find(x => x.id === eid);
+      const exists = ABRO_REQUIREMENTS.find(x => x.id === eid);
       if (!exists) { skipped++; continue; }
       if (statusCol >= 0) {
         const st = statusFromLabel(r[statusCol]);
